@@ -4,162 +4,126 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Business Acquisition Assessor</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root {
-  --bg:#0d0f18;--card:#141720;--card2:#1c2030;--border:#252a3d;
-  --accent:#4c9eff;--purple:#7c6bff;--green:#00c896;--red:#ff5a5a;
-  --yellow:#ffc542;--orange:#ff8c42;--teal:#00d4c8;
-  --text:#e6e8f0;--muted:#6b7291;--muted2:#9097b8;
+  --bg:#0d0f18; --card:#141720; --card2:#1c2030; --border:#252a3d;
+  --accent:#4c9eff; --green:#00c896; --red:#ff5a5a; --yellow:#ffc542;
+  --orange:#ff8c42; --purple:#7c6bff; --teal:#00d4c8;
+  --text:#e6e8f0; --muted:#6b7291; --muted2:#9097b8;
   --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
-
-/* TOPBAR */
 .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
 .topbar-logo{font-size:15px;font-weight:800;color:var(--accent);}
-.topbar-right{display:flex;align-items:center;gap:16px;}
-.back-link{font-size:11px;color:var(--muted);text-decoration:none;transition:color .15s;}
+.back-link{font-size:11px;color:var(--muted);text-decoration:none;}
 .back-link:hover{color:var(--accent);}
-.demo-badge{font-size:10px;background:rgba(255,197,66,0.15);color:var(--yellow);padding:3px 10px;border-radius:20px;font-weight:600;}
-
-/* TABS */
-.tabs{display:flex;gap:4px;padding:0 24px;border-bottom:1px solid var(--border);background:var(--card);}
-.tab{padding:12px 18px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--muted);transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-1px;}
-.tab:hover{color:var(--text);}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-
-.main{max-width:1200px;margin:0 auto;padding:28px 20px 80px;}
-.tab-content{display:none;}.tab-content.active{display:block;}
-
-/* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;}
-.card-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--card);padding:0 20px;}
+.tab-btn{padding:13px 20px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.page{display:none;max-width:1100px;margin:0 auto;padding:28px 20px 80px;}
+.page.active{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px 26px;margin-bottom:16px;}
+.card h3{font-size:14px;font-weight:700;margin-bottom:4px;}
 .card-sub{font-size:11px;color:var(--muted);margin-bottom:18px;}
-
-/* GRID */
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.form-group{display:flex;flex-direction:column;gap:5px;}
-.form-group.full{grid-column:1/-1;}
-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;}
-input,textarea,select{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:7px;font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;width:100%;}
-input:focus,textarea:focus,select:focus{border-color:var(--accent);}
-textarea{resize:vertical;min-height:110px;line-height:1.6;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.full{grid-column:1/-1;}
+.fgroup{display:flex;flex-direction:column;gap:5px;}
+label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+input,select,textarea{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:7px;font-size:13px;font-family:var(--font);outline:none;width:100%;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+textarea{resize:vertical;min-height:100px;line-height:1.6;}
 select option{background:var(--card2);}
-.input-pre{font-size:11px;color:var(--muted);margin-top:4px;}
-
-/* BUTTONS */
-.btn{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:var(--font);}
+.btn{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:var(--font);transition:all .15s;}
 .btn-primary{background:var(--accent);color:#fff;}
-.btn-primary:hover{opacity:.88;}
-.btn-primary:disabled{opacity:.45;cursor:not-allowed;}
-.btn-outline{background:none;border:1px solid var(--border);color:var(--muted2);}
-.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
-.btn-danger{background:none;border:1px solid rgba(255,90,90,0.3);color:var(--red);}
-.btn-danger:hover{background:rgba(255,90,90,0.1);}
-.btn-full{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;}
+.btn-primary:hover{opacity:.85;}
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--muted2);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-big{width:100%;padding:14px;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.api-bar{background:rgba(76,158,255,.07);border:1px solid rgba(76,158,255,.2);border-radius:8px;padding:12px 16px;display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.api-bar input{flex:1;min-width:200px;}
+.api-bar a{color:var(--accent);text-decoration:none;font-size:11px;}
+.error{background:rgba(255,90,90,.1);border:1px solid rgba(255,90,90,.3);color:var(--red);border-radius:7px;padding:10px 14px;font-size:12px;margin-bottom:14px;display:none;}
+.error.show{display:block;}
 
-/* SCORE RING */
-.score-ring{display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;font-size:22px;font-weight:800;border:3px solid;}
-.score-high{border-color:var(--green);color:var(--green);}
-.score-mid{border-color:var(--yellow);color:var(--yellow);}
-.score-low{border-color:var(--red);color:var(--red);}
-
-/* BUSINESS CARDS (dashboard) */
-.biz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:24px;}
-.biz-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;cursor:pointer;transition:all .2s;position:relative;}
+/* DASHBOARD */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;}
+.stat .n{font-size:28px;font-weight:800;margin-bottom:2px;}
+.stat .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+.biz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;}
+.biz-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;cursor:pointer;transition:all .2s;}
 .biz-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.biz-card.no-analysis{opacity:.85;}
-.biz-card .bc-type{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;}
-.biz-card .bc-name{font-size:15px;font-weight:700;margin-bottom:4px;}
-.biz-card .bc-price{font-size:12px;color:var(--muted2);margin-bottom:12px;}
-.biz-card .bc-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
-.bc-meta-item{font-size:11px;color:var(--muted);background:var(--card2);padding:3px 8px;border-radius:4px;}
-.biz-card .bc-bottom{display:flex;align-items:center;justify-content:space-between;}
-.biz-card .bc-score{font-size:13px;font-weight:700;}
-.bc-actions{display:flex;gap:8px;position:absolute;top:12px;right:12px;opacity:0;transition:opacity .15s;}
-.biz-card:hover .bc-actions{opacity:1;}
-.bc-action-btn{background:var(--card2);border:1px solid var(--border);color:var(--muted);padding:4px 8px;border-radius:5px;font-size:10px;cursor:pointer;transition:all .15s;}
-.bc-action-btn:hover{border-color:var(--accent);color:var(--accent);}
-.bc-action-btn.del:hover{border-color:var(--red);color:var(--red);}
-
-/* BADGES */
+.biz-card .type{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;}
+.biz-card .name{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biz-card .price{font-size:12px;color:var(--muted2);margin-bottom:12px;}
+.biz-card .bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+.score-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;border:2.5px solid;}
+.sc-green{border-color:var(--green);color:var(--green);}
+.sc-yellow{border-color:var(--yellow);color:var(--yellow);}
+.sc-red{border-color:var(--red);color:var(--red);}
 .badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;}
-.b-strong{background:rgba(0,200,150,.15);color:var(--green);}
-.b-consider{background:rgba(255,197,66,.15);color:var(--yellow);}
-.b-caution{background:rgba(255,140,66,.15);color:var(--orange);}
-.b-pass{background:rgba(255,90,90,.15);color:var(--red);}
-.b-pending{background:rgba(107,114,145,.15);color:var(--muted2);}
+.bg-green{background:rgba(0,200,150,.15);color:var(--green);}
+.bg-yellow{background:rgba(255,197,66,.15);color:var(--yellow);}
+.bg-orange{background:rgba(255,140,66,.15);color:var(--orange);}
+.bg-red{background:rgba(255,90,90,.15);color:var(--red);}
+.bg-muted{background:rgba(107,114,145,.15);color:var(--muted2);}
+.del-btn{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:3px 6px;border-radius:4px;}
+.del-btn:hover{color:var(--red);background:rgba(255,90,90,.1);}
+.empty{text-align:center;padding:60px 20px;}
+.empty .icon{font-size:44px;margin-bottom:14px;}
+.empty h3{font-size:16px;color:var(--muted2);margin-bottom:8px;}
+.empty p{font-size:13px;color:var(--muted);max-width:380px;margin:0 auto 20px;line-height:1.7;}
 
-/* ANALYSIS OUTPUT */
-.analysis-section{margin-bottom:24px;}
-.analysis-section h3{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
-.score-overview{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:16px;}
-.score-details{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;}
-.score-item{background:var(--card2);border-radius:8px;padding:12px;text-align:center;}
-.score-item .si-val{font-size:18px;font-weight:700;margin-bottom:2px;}
-.score-item .si-label{font-size:10px;color:var(--muted);}
+/* LOADING */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.loading-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:40px 48px;text-align:center;max-width:380px;}
+.spinner{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.lstep{font-size:12px;color:var(--muted);margin-top:7px;opacity:0;transition:opacity .3s;}
+.lstep.show{opacity:1;color:var(--green);}
 
-.flag{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:7px;margin-bottom:8px;font-size:12px;line-height:1.5;}
+/* RESULTS PANEL */
+.results-panel{display:none;}
+.results-panel.show{display:block;}
+.result-header{background:linear-gradient(135deg,#1a1040,var(--card));border:1px solid rgba(76,158,255,.2);border-radius:12px;padding:24px 28px;margin-bottom:16px;}
+.score-big{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;border:3px solid;flex-shrink:0;}
+.sub-scores{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;}
+.sub-score{background:var(--card2);border-radius:8px;padding:12px;text-align:center;}
+.sub-score .v{font-size:20px;font-weight:800;margin-bottom:2px;}
+.sub-score .l{font-size:10px;color:var(--muted);}
+.flag{display:flex;gap:10px;padding:10px 14px;border-radius:7px;margin-bottom:8px;font-size:12px;line-height:1.6;align-items:flex-start;}
 .flag-red{background:rgba(255,90,90,.08);border:1px solid rgba(255,90,90,.2);}
 .flag-yellow{background:rgba(255,197,66,.08);border:1px solid rgba(255,197,66,.2);}
 .flag-green{background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.2);}
-.flag-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.flag-icon{flex-shrink:0;}
+.section-title{font-size:13px;font-weight:700;color:var(--accent);padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:12px;}
+.q-item{display:flex;gap:10px;background:var(--card2);border-radius:7px;padding:10px 12px;margin-bottom:7px;font-size:12px;line-height:1.6;align-items:flex-start;}
+.q-num{color:var(--accent);font-weight:700;flex-shrink:0;min-width:20px;}
+.q-cat{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 6px;border-radius:3px;flex-shrink:0;white-space:nowrap;}
+.qc-fin{background:rgba(0,200,150,.15);color:var(--green);}
+.qc-ops{background:rgba(76,158,255,.15);color:var(--accent);}
+.qc-leg{background:rgba(255,90,90,.15);color:var(--red);}
+.qc-mkt{background:rgba(255,197,66,.15);color:var(--yellow);}
+.qc-sta{background:rgba(124,107,255,.15);color:var(--purple);}
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.val-box{background:var(--card2);border-radius:8px;padding:12px;text-align:center;}
+.val-box .v{font-size:16px;font-weight:700;margin-bottom:2px;}
+.val-box .l{font-size:10px;color:var(--muted);}
 
-.question-item{display:flex;gap:12px;padding:10px 12px;background:var(--card2);border-radius:7px;margin-bottom:8px;font-size:12px;line-height:1.5;}
-.q-num{font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;padding-top:1px;}
-.q-cat{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:2px 6px;border-radius:3px;white-space:nowrap;flex-shrink:0;align-self:flex-start;margin-top:2px;}
-.qc-financial{background:rgba(0,200,150,.15);color:var(--green);}
-.qc-operational{background:rgba(76,158,255,.15);color:var(--accent);}
-.qc-legal{background:rgba(255,90,90,.15);color:var(--red);}
-.qc-market{background:rgba(255,197,66,.15);color:var(--yellow);}
-.qc-staff{background:rgba(124,107,255,.15);color:var(--purple);}
-
-/* FILE DROP */
-.file-drop{border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;}
-.file-drop:hover,.file-drop.drag-over{border-color:var(--accent);background:rgba(76,158,255,.04);}
-.file-drop input{display:none;}
-.file-drop .fd-icon{font-size:24px;margin-bottom:8px;}
-.file-drop .fd-text{font-size:12px;color:var(--muted);}
-.file-drop .fd-text strong{color:var(--text);}
-.file-list{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
-.file-item{display:flex;align-items:center;gap:8px;background:var(--card2);border-radius:6px;padding:7px 10px;font-size:11px;}
-.file-item .fi-name{flex:1;color:var(--muted2);}
-.file-item .fi-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;}
-.file-item .fi-remove:hover{color:var(--red);}
-.file-item .fi-status{font-size:10px;color:var(--green);}
-
-/* LOADING */
-.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;}
-.loading-overlay.show{display:flex;}
-.loading-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:40px 48px;text-align:center;max-width:400px;}
-.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.loading-steps{margin-top:14px;display:flex;flex-direction:column;gap:7px;}
-.loading-step{font-size:12px;color:var(--muted);opacity:0;transition:opacity .3s;}
-.loading-step.show{opacity:1;color:var(--green);}
-
-/* API KEY ROW */
-.api-row{background:rgba(76,158,255,.06);border:1px solid rgba(76,158,255,.15);border-radius:8px;padding:12px 16px;display:flex;gap:12px;align-items:center;margin-bottom:16px;}
-.api-row input{flex:1;background:var(--card2);}
-.api-note{font-size:11px;color:var(--muted);}
-.api-note a{color:var(--accent);text-decoration:none;}
-
-/* EMPTY STATE */
-.empty{text-align:center;padding:60px 20px;color:var(--muted);}
-.empty-icon{font-size:48px;margin-bottom:16px;}
-.empty h3{font-size:16px;color:var(--muted2);margin-bottom:8px;}
-.empty p{font-size:13px;line-height:1.7;max-width:400px;margin:0 auto 20px;}
-
-/* ERROR */
-.error-box{background:rgba(255,90,90,.08);border:1px solid rgba(255,90,90,.25);border-radius:8px;padding:10px 14px;color:var(--red);font-size:12px;margin-bottom:14px;display:none;}
-.error-box.show{display:block;}
+/* COMPARE */
+.cmp-table{width:100%;border-collapse:collapse;}
+.cmp-table th,.cmp-table td{padding:10px 14px;text-align:center;border-bottom:1px solid var(--border);font-size:12px;}
+.cmp-table th{background:var(--card2);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+.cmp-table td:first-child{text-align:left;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
 
 @media(max-width:640px){
-  .form-grid{grid-template-columns:1fr;}
-  .score-details{grid-template-columns:1fr 1fr;}
-  .biz-grid{grid-template-columns:1fr;}
+  .grid2{grid-template-columns:1fr;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .sub-scores{grid-template-columns:1fr 1fr;}
+  .val-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -167,863 +131,665 @@ select option{background:var(--card2);}
 
 <div class="topbar">
   <div class="topbar-logo">🏢 Business Acquisition Assessor</div>
-  <div class="topbar-right">
-    <span class="demo-badge" id="demoBadge" style="display:none">Demo Mode</span>
-    <a href="index.html" class="back-link">← Portfolio</a>
-  </div>
+  <a href="index.html" class="back-link">← Back to portfolio</a>
 </div>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('dashboard')">📊 My Businesses</button>
-  <button class="tab" onclick="switchTab('assess')">➕ Assess a Business</button>
-  <button class="tab" onclick="switchTab('compare')" id="compareTab">⚖️ Compare</button>
+  <button class="tab-btn active" id="tab1" onclick="showPage('dashboard')">📊 My Pipeline</button>
+  <button class="tab-btn" id="tab2" onclick="showPage('assess')">➕ Assess a Business</button>
+  <button class="tab-btn" id="tab3" onclick="showPage('compare')">⚖️ Compare</button>
 </div>
 
-<div class="main">
-
-  <!-- ============ DASHBOARD ============ -->
-  <div class="tab-content active" id="tab-dashboard">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-      <div>
-        <div style="font-size:20px;font-weight:800;margin-bottom:4px;">Business Pipeline</div>
-        <div style="font-size:12px;color:var(--muted)" id="dashSubtitle">Businesses sent by your broker, assessed and scored.</div>
-      </div>
-      <button class="btn btn-primary" onclick="switchTab('assess')">+ Assess New Business</button>
+<!-- PAGE: DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <div>
+      <div style="font-size:20px;font-weight:800;margin-bottom:3px;">Business Pipeline</div>
+      <div style="font-size:12px;color:var(--muted);">All businesses your broker has sent you — assessed and scored.</div>
     </div>
+    <button class="btn btn-primary" onclick="showPage('assess')">+ Assess New Business</button>
+  </div>
+  <div class="stats-row" id="statsRow"></div>
+  <div class="biz-grid" id="bizGrid"></div>
+  <div class="empty" id="emptyMsg" style="display:none;">
+    <div class="icon">🏢</div>
+    <h3>No businesses yet</h3>
+    <p>Add businesses your broker sends you and get a full AI assessment — scores, red flags, and questions to ask.</p>
+    <button class="btn btn-primary" onclick="showPage('assess')" style="margin-right:10px;">+ Assess a Business</button>
+    <button class="btn btn-ghost" onclick="runDemo()">Try demo first →</button>
+  </div>
+</div>
 
-    <!-- Summary stats -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;" id="dashStats"></div>
+<!-- PAGE: ASSESS -->
+<div class="page" id="page-assess">
 
-    <!-- Business cards -->
-    <div class="biz-grid" id="bizGrid"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <div>
+      <div style="font-size:20px;font-weight:800;margin-bottom:3px;">Assess a Business</div>
+      <div style="font-size:12px;color:var(--muted);">Fill in what you know — Claude will do the rest.</div>
+    </div>
+    <button class="btn btn-ghost" onclick="runDemo()">Load demo data →</button>
+  </div>
 
-    <!-- Empty state -->
-    <div class="empty" id="emptyState" style="display:none">
-      <div class="empty-icon">🏢</div>
-      <h3>No businesses yet</h3>
-      <p>Your broker has sent you some opportunities? Add them here and let AI help you decide whether to buy or pass.</p>
-      <button class="btn btn-primary" onclick="switchTab('assess')">+ Assess First Business</button>
-      <br><br>
-      <button class="btn btn-outline" onclick="loadDemo()" style="margin-top:8px">Or try a demo →</button>
+  <!-- API KEY -->
+  <div class="api-bar">
+    <span style="font-size:12px;font-weight:600;color:var(--muted2);flex-shrink:0;">🔑 Claude API Key</span>
+    <input type="password" id="apiKey" placeholder="sk-ant-api03-...  (needed for AI analysis)">
+    <span style="font-size:11px;color:var(--muted);">No key? <a onclick="runDemo();return false;" href="#">Try demo →</a> &nbsp;|&nbsp; <a href="https://console.anthropic.com" target="_blank">Get a key ↗</a></span>
+  </div>
+
+  <!-- FORM -->
+  <div class="card">
+    <h3>Business Overview</h3>
+    <div class="card-sub">Basic details from the broker listing</div>
+    <div class="grid2">
+      <div class="fgroup"><label>Business Name</label><input type="text" id="f-name" placeholder="e.g. Sunshine Pool Services"></div>
+      <div class="fgroup"><label>Industry / Type</label><input type="text" id="f-type" placeholder="e.g. Pool cleaning, GP clinic, Childcare"></div>
+      <div class="fgroup"><label>Location</label><input type="text" id="f-loc" placeholder="e.g. Brisbane, QLD"></div>
+      <div class="fgroup"><label>Years in Operation</label><input type="number" id="f-years" placeholder="e.g. 8" min="0"></div>
+      <div class="fgroup"><label>Asking Price ($AUD)</label><input type="number" id="f-price" placeholder="e.g. 650000"></div>
+      <div class="fgroup"><label>Business Structure</label>
+        <select id="f-structure">
+          <option value="">Select...</option>
+          <option>Sole Trader</option><option>Partnership</option>
+          <option>Pty Ltd Company</option><option>Trust</option><option>Franchise</option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <!-- ============ ASSESS ============ -->
-  <div class="tab-content" id="tab-assess">
-
-    <!-- API KEY -->
-    <div class="api-row">
-      <div style="flex-shrink:0;font-size:12px;font-weight:600;color:var(--muted2);">🔑 Claude API Key</div>
-      <input type="password" id="apiKey" placeholder="sk-ant-api03-... (enter once, used for analysis)">
-      <div class="api-note">No key? <a href="#" onclick="loadDemo();return false">Try demo mode →</a> · <a href="https://console.anthropic.com" target="_blank">Get a key ↗</a></div>
-    </div>
-
-    <!-- FORM -->
-    <div class="card">
-      <div class="card-title">Business Overview</div>
-      <div class="card-sub">Basic details from the broker listing</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Business Name / ID</label>
-          <input type="text" id="bizName" placeholder="e.g. Sunshine Pool Services or Business #3">
-        </div>
-        <div class="form-group">
-          <label>Business Type / Industry</label>
-          <input type="text" id="bizType" placeholder="e.g. Pool cleaning, GP clinic, Childcare">
-        </div>
-        <div class="form-group">
-          <label>Location</label>
-          <input type="text" id="bizLocation" placeholder="e.g. Brisbane, QLD">
-        </div>
-        <div class="form-group">
-          <label>Years in Operation</label>
-          <input type="number" id="bizYears" placeholder="e.g. 8" min="0">
-        </div>
-        <div class="form-group">
-          <label>Asking Price ($AUD)</label>
-          <input type="number" id="askingPrice" placeholder="e.g. 650000" min="0">
-        </div>
-        <div class="form-group">
-          <label>Business Structure</label>
-          <select id="bizStructure">
-            <option value="">Select...</option>
-            <option>Sole Trader</option>
-            <option>Partnership</option>
-            <option>Pty Ltd Company</option>
-            <option>Trust</option>
-            <option>Franchise</option>
-          </select>
-        </div>
+  <div class="card">
+    <h3>Financial Snapshot</h3>
+    <div class="card-sub">Most recent 12 months — leave blank if unknown</div>
+    <div class="grid2">
+      <div class="fgroup"><label>Annual Revenue ($AUD)</label><input type="number" id="f-rev" placeholder="e.g. 820000"></div>
+      <div class="fgroup"><label>Net Profit / Owner Earnings ($AUD)</label><input type="number" id="f-profit" placeholder="e.g. 180000"></div>
+      <div class="fgroup"><label>EBITDA ($AUD)</label><input type="number" id="f-ebitda" placeholder="e.g. 210000"></div>
+      <div class="fgroup"><label>Revenue Trend (Last 3 Years)</label>
+        <select id="f-growth">
+          <option value="">Unknown</option>
+          <option value="declining fast">Declining fast (>15% down)</option>
+          <option value="declining slightly">Declining slightly</option>
+          <option value="flat">Flat (0–5%)</option>
+          <option value="growing">Growing (5–20%)</option>
+          <option value="growing fast">Growing fast (>20%)</option>
+        </select>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Financial Snapshot</div>
-      <div class="card-sub">Last 12 months or most recent financials (leave blank if unknown)</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Annual Revenue ($AUD)</label>
-          <input type="number" id="annualRevenue" placeholder="e.g. 820000">
-        </div>
-        <div class="form-group">
-          <label>Net Profit / Owner's Earnings ($AUD)</label>
-          <input type="number" id="netProfit" placeholder="e.g. 180000">
-          <div class="input-pre">Include owner's salary if it's a lifestyle business</div>
-        </div>
-        <div class="form-group">
-          <label>EBITDA ($AUD)</label>
-          <input type="number" id="ebitda" placeholder="e.g. 210000">
-        </div>
-        <div class="form-group">
-          <label>Revenue Growth (Last 3 Years)</label>
-          <select id="revenueGrowth">
-            <option value="">Unknown</option>
-            <option value="declining_fast">Declining fast (>15% down)</option>
-            <option value="declining">Declining (<15% down)</option>
-            <option value="flat">Flat (0–5%)</option>
-            <option value="growing">Growing (5–20%)</option>
-            <option value="growing_fast">Growing fast (>20%)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Stock / Inventory Value ($AUD)</label>
-          <input type="number" id="stockValue" placeholder="e.g. 45000">
-        </div>
-        <div class="form-group">
-          <label>Plant & Equipment Value ($AUD)</label>
-          <input type="number" id="plantValue" placeholder="e.g. 120000">
-        </div>
-        <div class="form-group">
-          <label>Number of Employees</label>
-          <input type="number" id="numEmployees" placeholder="e.g. 5" min="0">
-        </div>
-        <div class="form-group">
-          <label>Owner Involvement</label>
-          <select id="ownerInvolvement">
-            <option value="">Unknown</option>
-            <option value="owner_operator">Owner-operator (works full time)</option>
-            <option value="part_time">Owner works part time</option>
-            <option value="managed">Fully managed / passive</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Lease / Premises</label>
-          <select id="premises">
-            <option value="">Unknown</option>
-            <option value="leased">Leased premises</option>
-            <option value="owned">Owned by vendor (included)</option>
-            <option value="home_based">Home-based</option>
-            <option value="mobile">Mobile / no fixed premises</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Reason for Sale</label>
-          <input type="text" id="reasonSale" placeholder="e.g. Retirement, health, moving interstate">
-        </div>
+      <div class="fgroup"><label>Stock / Inventory Value ($AUD)</label><input type="number" id="f-stock" placeholder="e.g. 45000"></div>
+      <div class="fgroup"><label>Plant &amp; Equipment Value ($AUD)</label><input type="number" id="f-plant" placeholder="e.g. 120000"></div>
+      <div class="fgroup"><label>Number of Employees</label><input type="number" id="f-staff" placeholder="e.g. 5" min="0"></div>
+      <div class="fgroup"><label>Owner Involvement</label>
+        <select id="f-owner">
+          <option value="">Unknown</option>
+          <option value="owner-operator (works full time in the business)">Owner-operator (full time)</option>
+          <option value="part-time owner involvement">Owner works part time</option>
+          <option value="fully managed / passive investment">Fully managed / passive</option>
+        </select>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Broker Information Memorandum</div>
-      <div class="card-sub">Paste anything the broker has sent you — emails, descriptions, information memos, financials copy-pasted from PDFs</div>
-      <div class="form-group">
-        <textarea id="brokerNotes" rows="8" placeholder="Paste all broker info here — the more detail the better. Include any notes, emails, summaries, key selling points they've mentioned, contracts in place, customer base info, anything you have..."></textarea>
+      <div class="fgroup"><label>Premises</label>
+        <select id="f-premises">
+          <option value="">Unknown</option>
+          <option value="leased premises">Leased</option>
+          <option value="owned by vendor and included">Owned, included in sale</option>
+          <option value="home-based">Home-based</option>
+          <option value="mobile / no fixed premises">Mobile</option>
+        </select>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Upload Broker Documents (PDF)</div>
-      <div class="card-sub">Drag and drop PDF files — text will be extracted and sent to Claude</div>
-      <div class="file-drop" id="fileDrop" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-        <input type="file" id="fileInput" accept=".pdf,.txt" multiple onchange="handleFiles(this.files)">
-        <div class="fd-icon">📄</div>
-        <div class="fd-text"><strong>Click to upload</strong> or drag and drop<br>PDF or TXT files — up to 5 files</div>
-      </div>
-      <div class="file-list" id="fileList"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Your Notes & Concerns</div>
-      <div class="card-sub">Anything specific you want Claude to focus on or questions already on your mind</div>
-      <div class="form-group">
-        <textarea id="yourNotes" rows="4" placeholder="e.g. I'm worried about customer concentration — the broker mentioned 40% revenue comes from one contract. Also not sure about the lease terms. What should I look out for?"></textarea>
-      </div>
-    </div>
-
-    <div class="error-box" id="errorBox"></div>
-
-    <button class="btn btn-primary btn-full" id="analyseBtn" onclick="runAnalysis()">
-      🔍 Analyse This Business
-    </button>
-    <div style="text-align:center;margin-top:10px;">
-      <button class="btn btn-outline" onclick="loadDemo()" style="font-size:11px">Load demo data instead</button>
+      <div class="fgroup"><label>Reason for Sale</label><input type="text" id="f-reason" placeholder="e.g. Retirement, health, moving"></div>
     </div>
   </div>
 
-  <!-- ============ COMPARE ============ -->
-  <div class="tab-content" id="tab-compare">
-    <div id="compareContent"></div>
+  <div class="card">
+    <h3>Broker Information</h3>
+    <div class="card-sub">Paste anything the broker sent you — emails, information memorandums, summaries, financials</div>
+    <textarea id="f-broker" rows="9" placeholder="Paste all broker information here. The more detail you provide, the better the analysis. Include customer base info, revenue breakdown, assets, staff details, lease terms — anything you have."></textarea>
+  </div>
+
+  <div class="card">
+    <h3>Your Notes &amp; Concerns</h3>
+    <div class="card-sub">Anything specific you want Claude to focus on</div>
+    <textarea id="f-notes" rows="4" placeholder="e.g. I'm worried about customer concentration. Also not sure if the price is fair. What should I look out for?"></textarea>
+  </div>
+
+  <div class="error" id="errBox"></div>
+
+  <button class="btn btn-primary btn-big" onclick="runAnalysis()">🔍 Analyse This Business</button>
+  <div style="text-align:center;margin-top:10px;">
+    <button class="btn btn-ghost" onclick="runDemo()" style="font-size:11px;">Or load pool cleaning demo →</button>
+  </div>
+
+  <!-- RESULTS (shown below form after analysis) -->
+  <div class="results-panel" id="resultsPanel">
+    <div style="height:1px;background:var(--border);margin:32px 0;"></div>
+    <div style="font-size:18px;font-weight:800;margin-bottom:20px;">📋 Assessment Results</div>
+    <div id="resultsContent"></div>
   </div>
 
 </div>
 
-<!-- LOADING OVERLAY -->
-<div class="loading-overlay" id="loadingOverlay">
+<!-- PAGE: COMPARE -->
+<div class="page" id="page-compare">
+  <div style="font-size:20px;font-weight:800;margin-bottom:6px;">Compare Businesses</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:24px;">Side-by-side view of all assessed businesses.</div>
+  <div id="compareContent"></div>
+</div>
+
+<!-- LOADING -->
+<div class="overlay" id="loadingOverlay">
   <div class="loading-box">
     <div class="spinner"></div>
-    <div style="font-size:15px;font-weight:700;margin-bottom:6px;">Analysing business...</div>
-    <div style="font-size:12px;color:var(--muted)">Claude is reviewing all documents and financials</div>
-    <div class="loading-steps">
-      <div class="loading-step" id="ls1">✓ Reading financial data</div>
-      <div class="loading-step" id="ls2">✓ Assessing broker documents</div>
-      <div class="loading-step" id="ls3">✓ Calculating valuation multiples</div>
-      <div class="loading-step" id="ls4">✓ Identifying risks & red flags</div>
-      <div class="loading-step" id="ls5">✓ Generating broker questions</div>
-    </div>
-  </div>
-</div>
-
-<!-- ANALYSIS MODAL -->
-<div class="loading-overlay" id="analysisModal" style="align-items:flex-start;padding:30px 20px;overflow-y:auto;" onclick="closeAnalysisModal(event)">
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;width:100%;max-width:860px;margin:auto;" id="analysisBox">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);">
-      <div>
-        <div style="font-size:16px;font-weight:800;" id="am-name"></div>
-        <div style="font-size:11px;color:var(--muted)" id="am-type"></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div id="am-badge"></div>
-        <button onclick="closeAnalysisModal()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
-      </div>
-    </div>
-    <div style="padding:24px;" id="am-body"></div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Analysing business...</div>
+    <div style="font-size:12px;color:var(--muted);">Claude is reviewing all the details</div>
+    <div id="lstep1" class="lstep">✓ Reading financial data</div>
+    <div id="lstep2" class="lstep">✓ Reviewing broker documents</div>
+    <div id="lstep3" class="lstep">✓ Calculating valuation multiples</div>
+    <div id="lstep4" class="lstep">✓ Identifying risks and red flags</div>
+    <div id="lstep5" class="lstep">✓ Generating broker questions</div>
   </div>
 </div>
 
 <script>
-// PDF.js setup
-if(typeof pdfjsLib !== 'undefined') pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+// ---- STATE ----
+var saved = [];
+try { saved = JSON.parse(localStorage.getItem('biz_v2') || '[]'); } catch(e) { saved = []; }
+function persist() { try { localStorage.setItem('biz_v2', JSON.stringify(saved)); } catch(e) {} }
 
-// ============ STATE ============
-let businesses = JSON.parse(localStorage.getItem('biz_assessor_v1') || '[]');
-let uploadedFiles = []; // {name, text}
-
-function saveState() { localStorage.setItem('biz_assessor_v1', JSON.stringify(businesses)); }
-
-// ============ DEMO DATA ============
-function loadDemo() {
-  document.getElementById('demoBadge').style.display = '';
-  document.getElementById('bizName').value = 'Sunshine Pool Services';
-  document.getElementById('bizType').value = 'Pool Cleaning & Maintenance';
-  document.getElementById('bizLocation').value = 'Brisbane, QLD';
-  document.getElementById('bizYears').value = '9';
-  document.getElementById('askingPrice').value = '650000';
-  document.getElementById('bizStructure').value = 'Sole Trader';
-  document.getElementById('annualRevenue').value = '420000';
-  document.getElementById('netProfit').value = '148000';
-  document.getElementById('ebitda').value = '165000';
-  document.getElementById('revenueGrowth').value = 'growing';
-  document.getElementById('stockValue').value = '22000';
-  document.getElementById('plantValue').value = '85000';
-  document.getElementById('numEmployees').value = '4';
-  document.getElementById('ownerInvolvement').value = 'owner_operator';
-  document.getElementById('premises').value = 'mobile';
-  document.getElementById('reasonSale').value = 'Retirement — owner is 67 and wants to travel');
-  document.getElementById('brokerNotes').value = `INFORMATION MEMORANDUM — SUNSHINE POOL SERVICES
-Asking Price: $650,000 + SAV
-
-Business Overview:
-Established in 2015, Sunshine Pool Services is a leading residential and commercial pool cleaning and maintenance business operating across Brisbane's inner north and north-west suburbs. The business has a loyal, recurring customer base of 312 active accounts, serviced on weekly and fortnightly schedules.
-
-Revenue Breakdown:
-- Residential weekly/fortnightly service: $285,000 (68%)
-- Chemical supply & retail: $72,000 (17%)
-- Equipment installation & repairs: $63,000 (15%)
-
-Customer Base:
-Average customer tenure is 4.2 years. Top 10 customers represent 18% of revenue. No single customer exceeds 5%. Long-term commercial contract with Northside Fitness (3 pools) worth $38,000/year — contract expires Oct 2026, renewal pending.
-
-Staff:
-4 part-time technicians (all casual). Owner performs approximately 35% of service rounds personally. 2 senior technicians have been with the business 3+ years and are expected to stay post-sale.
-
-Route:
-All 312 accounts within a 25km radius. Fully systemised routes using Skimmer software. All customer data, route details, and service histories are documented and transferable.
-
-Reason for Sale:
-Owner (67) is retiring after 9 years. Has indicated willingness to provide 3 months of handover support included in the price.
-
-Assets Included:
-- 3 x service vans (2020 Toyota HiAce, 2019 Ford Transit, 2018 Toyota HiAce)
-- Full equipment inventory including pumps, filters, testing kits
-- Customer database and Skimmer software licence
-- Business name, phone number, and Google My Business (4.8★, 187 reviews)
-
-Financials (FY2025):
-Revenue: $420,000
-COGS: $142,000
-Gross Profit: $278,000 (66.2% margin)
-Overheads: $113,000
-EBITDA: $165,000
-Net Profit (pre owner salary): $148,000`;
-  document.getElementById('yourNotes').value = 'Concerned about the owner being so involved — will customers leave? Also want to understand the commercial contract renewal risk. Is the asking price fair for this type of business?';
-  switchTab('assess');
-  // Run mock analysis for demo
-  runDemoAnalysis();
+// ---- TABS ----
+function showPage(name) {
+  ['dashboard','assess','compare'].forEach(function(p) {
+    document.getElementById('page-' + p).classList.remove('active');
+  });
+  document.getElementById('tab1').classList.remove('active');
+  document.getElementById('tab2').classList.remove('active');
+  document.getElementById('tab3').classList.remove('active');
+  document.getElementById('page-' + name).classList.add('active');
+  var tabMap = {dashboard:'tab1', assess:'tab2', compare:'tab3'};
+  document.getElementById(tabMap[name]).classList.add('active');
+  if (name === 'compare') renderCompare();
+  if (name === 'dashboard') renderDashboard();
+  window.scrollTo(0, 0);
 }
 
-function runDemoAnalysis() {
-  const demoResult = {
-    name: 'Sunshine Pool Services',
-    type: 'Pool Cleaning & Maintenance',
-    askingPrice: 650000,
-    score: 74,
-    recommendation: 'consider',
-    summary: 'Sunshine Pool Services is a well-established, systemised pool maintenance business with strong recurring revenue and a loyal customer base. The asking price of $650,000 represents a multiple of approximately 3.94× EBITDA — slightly above the typical range for owner-operated service businesses (2.5–3.5×). The business has genuine strengths including 312 recurring accounts, documented routes, and experienced staff, but carries key risks around owner dependency, an expiring commercial contract, and the casual nature of all staff. Overall this is a solid opportunity that warrants serious due diligence before proceeding.',
-    financialScore: 72,
-    businessScore: 76,
-    riskScore: 65,
-    valuationScore: 68,
+// ---- DASHBOARD ----
+function renderDashboard() {
+  var grid = document.getElementById('bizGrid');
+  var empty = document.getElementById('emptyMsg');
+  var stats = document.getElementById('statsRow');
+
+  if (saved.length === 0) {
+    grid.innerHTML = '';
+    stats.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  var total = saved.length;
+  var strongBuy = 0, consider = 0, passCount = 0;
+  saved.forEach(function(b) {
+    if (b.recommendation === 'strong_buy') strongBuy++;
+    else if (b.recommendation === 'consider') consider++;
+    else if (b.recommendation === 'caution' || b.recommendation === 'pass') passCount++;
+  });
+
+  stats.innerHTML =
+    statCard(total, 'Total Assessed', var_accent()) +
+    statCard(strongBuy, 'Strong Buy', var_green()) +
+    statCard(consider, 'Consider', var_yellow()) +
+    statCard(passCount, 'Pass / Caution', var_red());
+
+  var html = '';
+  saved.forEach(function(b) {
+    var sc = scoreColor(b.score);
+    var rec = recLabel(b.recommendation);
+    var recBg = recBadgeClass(b.recommendation);
+    html += '<div class="biz-card" onclick="viewResult(' + b.id + ')">';
+    html += '<div style="display:flex;justify-content:space-between;">';
+    html += '<div class="type">' + (b.type || 'Business') + '</div>';
+    html += '<button class="del-btn" onclick="event.stopPropagation();deleteBiz(' + b.id + ')">🗑</button>';
+    html += '</div>';
+    html += '<div class="name">' + esc(b.name) + '</div>';
+    html += '<div class="price">' + (b.askingPrice ? '$' + num(b.askingPrice) + ' asking' : 'Price TBC') + (b.location ? ' · ' + esc(b.location) : '') + '</div>';
+    if (b.annualRevenue || b.netProfit) {
+      html += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">';
+      if (b.annualRevenue) html += '<span style="font-size:11px;background:var(--card2);padding:2px 8px;border-radius:4px;color:var(--muted2)">Rev $' + shortNum(b.annualRevenue) + '</span>';
+      if (b.netProfit) html += '<span style="font-size:11px;background:var(--card2);padding:2px 8px;border-radius:4px;color:var(--muted2)">Profit $' + shortNum(b.netProfit) + '</span>';
+      html += '</div>';
+    }
+    html += '<div class="bottom">';
+    html += '<div class="score-circle ' + sc + '">' + b.score + '</div>';
+    html += '<span class="badge ' + recBg + '">' + rec + '</span>';
+    html += '<span style="font-size:10px;color:var(--muted);">' + fmtDate(b.date) + '</span>';
+    html += '</div></div>';
+  });
+  grid.innerHTML = html;
+}
+
+function statCard(n, label, color) {
+  return '<div class="stat"><div class="n" style="color:' + color + '">' + n + '</div><div class="l">' + label + '</div></div>';
+}
+
+function deleteBiz(id) {
+  if (!confirm('Remove this business?')) return;
+  saved = saved.filter(function(b) { return b.id !== id; });
+  persist();
+  renderDashboard();
+}
+
+function viewResult(id) {
+  var b = saved.find(function(x) { return x.id === id; });
+  if (!b) return;
+  showPage('assess');
+  fillForm(b);
+  showResults(b);
+}
+
+// ---- FORM HELPERS ----
+function getVal(id) { return document.getElementById(id).value.trim(); }
+function setVal(id, v) { document.getElementById(id).value = v || ''; }
+
+function fillForm(b) {
+  setVal('f-name', b.name);
+  setVal('f-type', b.type);
+  setVal('f-loc', b.location);
+  setVal('f-years', b.years);
+  setVal('f-price', b.askingPrice);
+  setVal('f-structure', b.structure);
+  setVal('f-rev', b.annualRevenue);
+  setVal('f-profit', b.netProfit);
+  setVal('f-ebitda', b.ebitda);
+  setVal('f-growth', b.growth);
+  setVal('f-stock', b.stock);
+  setVal('f-plant', b.plant);
+  setVal('f-staff', b.staff);
+  setVal('f-owner', b.owner);
+  setVal('f-premises', b.premises);
+  setVal('f-reason', b.reason);
+  setVal('f-broker', b.brokerNotes);
+  setVal('f-notes', b.yourNotes);
+}
+
+function readForm() {
+  return {
+    name: getVal('f-name') || 'Unnamed Business',
+    type: getVal('f-type'),
+    location: getVal('f-loc'),
+    years: getVal('f-years'),
+    askingPrice: getVal('f-price'),
+    structure: getVal('f-structure'),
+    annualRevenue: getVal('f-rev'),
+    netProfit: getVal('f-profit'),
+    ebitda: getVal('f-ebitda'),
+    growth: getVal('f-growth'),
+    stock: getVal('f-stock'),
+    plant: getVal('f-plant'),
+    staff: getVal('f-staff'),
+    owner: getVal('f-owner'),
+    premises: getVal('f-premises'),
+    reason: getVal('f-reason'),
+    brokerNotes: getVal('f-broker'),
+    yourNotes: getVal('f-notes')
+  };
+}
+
+// ---- ANALYSIS ----
+function runAnalysis() {
+  var apiKey = getVal('apiKey');
+  var err = document.getElementById('errBox');
+  err.className = 'error';
+
+  if (!apiKey) {
+    err.textContent = 'Please enter your Claude API key above. Or click "Load demo data" to try without one.';
+    err.className = 'error show';
+    return;
+  }
+
+  var data = readForm();
+  showLoading();
+
+  var multipleE = (data.askingPrice && data.ebitda) ? (parseFloat(data.askingPrice) / parseFloat(data.ebitda)).toFixed(2) + 'x' : 'unknown';
+  var multipleP = (data.askingPrice && data.netProfit) ? (parseFloat(data.askingPrice) / parseFloat(data.netProfit)).toFixed(2) + 'x' : 'unknown';
+
+  var prompt = 'You are a senior Australian business acquisition advisor. Analyse this business opportunity and return ONLY a valid JSON object. No explanation outside the JSON.\n\n';
+  prompt += 'BUSINESS: ' + data.name + '\n';
+  prompt += 'Type: ' + (data.type || 'Unknown') + '\n';
+  prompt += 'Location: ' + (data.location || 'Unknown') + '\n';
+  prompt += 'Years operating: ' + (data.years || 'Unknown') + '\n';
+  prompt += 'Structure: ' + (data.structure || 'Unknown') + '\n';
+  prompt += 'Asking price: ' + (data.askingPrice ? '$' + data.askingPrice : 'Unknown') + '\n';
+  prompt += 'Annual revenue: ' + (data.annualRevenue ? '$' + data.annualRevenue : 'Unknown') + '\n';
+  prompt += 'Net profit: ' + (data.netProfit ? '$' + data.netProfit : 'Unknown') + '\n';
+  prompt += 'EBITDA: ' + (data.ebitda ? '$' + data.ebitda : 'Unknown') + '\n';
+  prompt += 'Revenue growth: ' + (data.growth || 'Unknown') + '\n';
+  prompt += 'Stock value: ' + (data.stock ? '$' + data.stock : 'Unknown') + '\n';
+  prompt += 'Plant & equipment: ' + (data.plant ? '$' + data.plant : 'Unknown') + '\n';
+  prompt += 'Employees: ' + (data.staff || 'Unknown') + '\n';
+  prompt += 'Owner involvement: ' + (data.owner || 'Unknown') + '\n';
+  prompt += 'Premises: ' + (data.premises || 'Unknown') + '\n';
+  prompt += 'Reason for sale: ' + (data.reason || 'Not stated') + '\n';
+  prompt += 'EBITDA multiple: ' + multipleE + '\n';
+  prompt += 'Profit multiple: ' + multipleP + '\n\n';
+  prompt += 'BROKER INFO:\n' + (data.brokerNotes || 'None provided') + '\n\n';
+  prompt += 'BUYER CONCERNS:\n' + (data.yourNotes || 'None') + '\n\n';
+  prompt += 'Return this JSON (no trailing commas):\n';
+  prompt += '{"score":0-100,"recommendation":"strong_buy|consider|caution|pass","summary":"2-3 sentences","financialScore":0-100,"businessScore":0-100,"riskScore":0-100,"valuationScore":0-100,';
+  prompt += '"flags":[{"type":"red|yellow|green","text":"specific finding"}],';
+  prompt += '"questions":[{"cat":"Financial|Operational|Legal|Market|Staff","q":"specific question"}],';
+  prompt += '"valuation":{"multipleEbitda":3.5,"fairRange":"$X-$Y","negotiateTarget":"$X","note":"2 sentences on price fairness"}}\n\n';
+  prompt += 'Rules: 3-5 red flags, 2-4 yellow, 2-4 green. 18-22 questions across all categories. All specific to THIS business. Australian context. riskScore: higher = safer.';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-opus-4-6',
+      max_tokens: 4000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data2) {
+    hideLoading();
+    if (data2.error) { showErr('API error: ' + data2.error.message); return; }
+    var raw = (data2.content && data2.content[0]) ? data2.content[0].text : '';
+    var match = raw.match(/\{[\s\S]*\}/);
+    if (!match) { showErr('Could not parse response. Please try again.'); return; }
+    var result;
+    try { result = JSON.parse(match[0]); } catch(e) { showErr('JSON parse error. Please try again.'); return; }
+    var biz = buildBiz(data, result);
+    saved = saved.filter(function(x) { return x.name !== biz.name; });
+    saved.unshift(biz);
+    persist();
+    showResults(biz);
+  })
+  .catch(function(e) {
+    hideLoading();
+    showErr('Error: ' + e.message);
+  });
+}
+
+function buildBiz(data, result) {
+  return {
+    id: Date.now(),
+    name: data.name, type: data.type, location: data.location,
+    years: data.years, askingPrice: parseFloat(data.askingPrice) || 0,
+    structure: data.structure, annualRevenue: parseFloat(data.annualRevenue) || 0,
+    netProfit: parseFloat(data.netProfit) || 0, ebitda: parseFloat(data.ebitda) || 0,
+    growth: data.growth, stock: data.stock, plant: data.plant,
+    staff: data.staff, owner: data.owner, premises: data.premises,
+    reason: data.reason, brokerNotes: data.brokerNotes, yourNotes: data.yourNotes,
+    score: result.score || 0, recommendation: result.recommendation || 'consider',
+    summary: result.summary || '', financialScore: result.financialScore || 0,
+    businessScore: result.businessScore || 0, riskScore: result.riskScore || 0,
+    valuationScore: result.valuationScore || 0,
+    flags: result.flags || [], questions: result.questions || [],
+    valuation: result.valuation || {},
+    date: new Date().toISOString()
+  };
+}
+
+function showResults(b) {
+  var panel = document.getElementById('resultsPanel');
+  var content = document.getElementById('resultsContent');
+  panel.className = 'results-panel show';
+
+  var sc = scoreColor(b.score);
+  var rec = recLabel(b.recommendation);
+  var recBg = recBadgeClass(b.recommendation);
+
+  var html = '';
+
+  // Header
+  html += '<div class="result-header">';
+  html += '<div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">';
+  html += '<div class="score-big ' + sc + '">' + b.score + '</div>';
+  html += '<div><div style="font-size:16px;font-weight:800;">' + esc(b.name) + '</div>';
+  html += '<div style="font-size:12px;color:var(--muted2);margin-bottom:6px;">' + (b.type || '') + (b.location ? ' · ' + b.location : '') + '</div>';
+  html += '<span class="badge ' + recBg + '" style="font-size:12px;padding:4px 12px;">' + rec + '</span></div></div>';
+  html += '<div style="font-size:13px;color:var(--muted2);line-height:1.7;">' + esc(b.summary) + '</div>';
+  html += '<div class="sub-scores">';
+  html += subScore(b.financialScore, 'Financial Health');
+  html += subScore(b.businessScore, 'Business Quality');
+  html += subScore(b.riskScore, 'Risk Level');
+  html += subScore(b.valuationScore, 'Valuation Fairness');
+  html += '</div></div>';
+
+  // Red flags
+  var reds = (b.flags || []).filter(function(f) { return f.type === 'red'; });
+  if (reds.length) {
+    html += '<div class="card"><div class="section-title">🔴 Red Flags — Must Investigate</div>';
+    reds.forEach(function(f) {
+      html += '<div class="flag flag-red"><span class="flag-icon">🚨</span><span>' + esc(f.text) + '</span></div>';
+    });
+    html += '</div>';
+  }
+
+  // Yellow warnings
+  var yellows = (b.flags || []).filter(function(f) { return f.type === 'yellow'; });
+  if (yellows.length) {
+    html += '<div class="card"><div class="section-title">🟡 Caution Points</div>';
+    yellows.forEach(function(f) {
+      html += '<div class="flag flag-yellow"><span class="flag-icon">⚠️</span><span>' + esc(f.text) + '</span></div>';
+    });
+    html += '</div>';
+  }
+
+  // Greens
+  var greens = (b.flags || []).filter(function(f) { return f.type === 'green'; });
+  if (greens.length) {
+    html += '<div class="card"><div class="section-title">🟢 Positives</div>';
+    greens.forEach(function(f) {
+      html += '<div class="flag flag-green"><span class="flag-icon">✅</span><span>' + esc(f.text) + '</span></div>';
+    });
+    html += '</div>';
+  }
+
+  // Valuation
+  if (b.valuation && (b.valuation.fairRange || b.valuation.note)) {
+    html += '<div class="card"><div class="section-title">💰 Valuation Analysis</div>';
+    html += '<div class="val-grid">';
+    html += '<div class="val-box"><div class="v" style="color:var(--accent);">' + (b.valuation.multipleEbitda ? b.valuation.multipleEbitda + '×' : '—') + '</div><div class="l">EBITDA Multiple</div></div>';
+    html += '<div class="val-box"><div class="v" style="color:var(--green);font-size:13px;">' + (b.valuation.fairRange || '—') + '</div><div class="l">Fair Value Range</div></div>';
+    html += '<div class="val-box"><div class="v" style="color:var(--yellow);font-size:13px;">' + (b.valuation.negotiateTarget || '—') + '</div><div class="l">Negotiate Toward</div></div>';
+    html += '</div>';
+    if (b.valuation.note) html += '<div class="flag flag-yellow"><span class="flag-icon">💡</span><span>' + esc(b.valuation.note) + '</span></div>';
+    html += '</div>';
+  }
+
+  // Questions
+  var questions = b.questions || [];
+  if (questions.length) {
+    html += '<div class="card"><div class="section-title">❓ Questions to Ask Your Broker</div>';
+    html += '<div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Screenshot or print this list before your next broker conversation.</div>';
+    var cats = ['Financial', 'Operational', 'Legal', 'Market', 'Staff'];
+    var catClass = {Financial:'qc-fin', Operational:'qc-ops', Legal:'qc-leg', Market:'qc-mkt', Staff:'qc-sta'};
+    var qNum = 0;
+    cats.forEach(function(cat) {
+      var qs = questions.filter(function(q) { return q.cat === cat; });
+      if (!qs.length) return;
+      html += '<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">' + cat + '</div>';
+      qs.forEach(function(q) {
+        qNum++;
+        html += '<div class="q-item">';
+        html += '<span class="q-num">' + qNum + '.</span>';
+        html += '<span class="q-cat ' + (catClass[cat] || '') + '">' + cat + '</span>';
+        html += '<span>' + esc(q.q) + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div style="display:flex;gap:10px;margin-top:4px;">';
+  html += '<button class="btn btn-ghost" onclick="window.print()" style="flex:1;">🖨️ Print / Export</button>';
+  html += '<button class="btn btn-ghost" onclick="showPage(\'dashboard\')" style="flex:1;">← Back to Pipeline</button>';
+  html += '</div>';
+
+  content.innerHTML = html;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function subScore(v, label) {
+  var c = v >= 70 ? 'var(--green)' : v >= 50 ? 'var(--yellow)' : 'var(--red)';
+  return '<div class="sub-score"><div class="v" style="color:' + c + ';">' + v + '</div><div class="l">' + label + '</div></div>';
+}
+
+// ---- DEMO ----
+function runDemo() {
+  setVal('f-name', 'Sunshine Pool Services');
+  setVal('f-type', 'Pool Cleaning & Maintenance');
+  setVal('f-loc', 'Brisbane, QLD');
+  setVal('f-years', '9');
+  setVal('f-price', '650000');
+  setVal('f-structure', 'Sole Trader');
+  setVal('f-rev', '420000');
+  setVal('f-profit', '148000');
+  setVal('f-ebitda', '165000');
+  setVal('f-growth', 'growing');
+  setVal('f-stock', '22000');
+  setVal('f-plant', '85000');
+  setVal('f-staff', '4');
+  setVal('f-owner', 'owner-operator (works full time in the business)');
+  setVal('f-premises', 'mobile / no fixed premises');
+  setVal('f-reason', 'Retirement — owner is 67 and wants to travel');
+  setVal('f-broker', 'Established in 2015. 312 recurring accounts (weekly/fortnightly). Revenue: $420k. EBITDA: $165k. 4 casual staff. Owner does 35% of rounds personally. Commercial contract with Northside Fitness worth $38k/yr expires Oct 2026. 3 vans included. Skimmer software. 4.8 stars, 187 Google reviews. Owner doing 3-month handover.');
+  setVal('f-notes', 'Worried about owner dependency — will customers leave when he goes? Is the asking price fair? What about the commercial contract renewal?');
+  showPage('assess');
+
+  var demoResult = {
+    score: 74, recommendation: 'consider',
+    summary: 'Sunshine Pool Services is a well-run, systemised pool maintenance business with strong recurring revenue and loyal customers. The $650k asking price is slightly above fair value at 3.94x EBITDA — typical for this type of business is 2.5–3.5x. Key risks are owner dependency and an expiring commercial contract, but the business has genuine strengths worth pursuing with the right negotiation.',
+    financialScore: 72, businessScore: 76, riskScore: 65, valuationScore: 68,
     flags: [
-      {type:'red', text:'Owner performs 35% of service rounds — customer relationships may be personal to him. Key risk: revenue attrition post-sale.'},
-      {type:'red', text:'Northside Fitness commercial contract ($38,000/yr, 9% of revenue) expires Oct 2026 with renewal "pending" — this needs confirmation before settlement.'},
-      {type:'yellow', text:'All 4 staff are casual — no obligation to stay post-sale. Key staff retention should be a condition of purchase.'},
-      {type:'yellow', text:'Asking price at 3.94× EBITDA is at the high end. Typical range for this type of business is 2.5–3.5×. Negotiate toward $550,000–$580,000.'},
-      {type:'yellow', text:'Sole trader structure means all goodwill is in the owner\'s name. Transitioning phone number, Google reviews, and customer relationships needs careful planning.'},
-      {type:'green', text:'312 recurring accounts with 4.2yr average tenure is excellent — this is sticky, predictable revenue.'},
-      {type:'green', text:'No customer concentration risk — top 10 customers = 18%, no single client >5%.'},
-      {type:'green', text:'Fully systemised with Skimmer software — routes, histories, and customer data are transferable.'},
-      {type:'green', text:'3 vans and full equipment inventory included — low capex requirement post-purchase.'},
+      { type: 'red', text: 'Owner personally runs 35% of service rounds — customer relationships may follow him when he leaves. This is the single biggest risk to revenue post-sale.' },
+      { type: 'red', text: 'Northside Fitness contract ($38k/yr, 9% of revenue) expires Oct 2026 with renewal only "pending" — must be confirmed before settlement or priced into a reduced offer.' },
+      { type: 'yellow', text: 'All 4 staff are casual — zero legal obligation to stay post-sale. Retaining the 2 senior technicians should be a condition of purchase.' },
+      { type: 'yellow', text: 'Asking price of 3.94x EBITDA is above the typical 2.5–3.5x range for owner-operated service businesses. Target $550k–$580k in negotiation.' },
+      { type: 'yellow', text: 'Sole trader structure means goodwill, phone number, and Google reviews are all in the owner\'s name — transition plan needs to be part of the contract.' },
+      { type: 'green', text: '312 recurring accounts with 4.2yr average tenure is excellent — this is sticky, predictable revenue that will largely survive a sale.' },
+      { type: 'green', text: 'No customer concentration risk — top 10 customers = 18% of revenue, no single client over 5%.' },
+      { type: 'green', text: 'Fully systemised via Skimmer software with all routes, histories, and customer data transferable. Low operational risk.' },
+      { type: 'green', text: '3 vans and all equipment included — minimal capital expenditure required in the first 2 years post-purchase.' }
     ],
     questions: [
-      {cat:'Financial', q:'Can you provide 3 years of verified P&L statements and BAS lodgements? We need to confirm revenue trend and validate the $148k net profit figure.'},
-      {cat:'Financial', q:'What is the owner\'s salary or drawings included in the financials? This needs to be added back to get true EBITDA.'},
-      {cat:'Financial', q:'What are the full details of the Northside Fitness commercial contract? When exactly does it expire, what are the renewal terms, and has the client confirmed intent to renew?'},
-      {cat:'Financial', q:'Are there any outstanding debts, ATO obligations, or GST liabilities we should be aware of?'},
-      {cat:'Operational', q:'Which service rounds does the owner personally run, and have those customers been informed about the sale? What\'s the plan to transition those relationships?'},
-      {cat:'Operational', q:'What does the 3-month handover period actually look like? Will the owner actively introduce us to customers, or is it just training?'},
-      {cat:'Operational', q:'What is the current hourly cost per technician and are there any award rate increases pending?'},
-      {cat:'Operational', q:'How many of the 312 accounts are on formal service agreements vs. informal arrangements?'},
-      {cat:'Staff', q:'Have the 4 technicians been told the business is for sale? What is their likely reaction and will they stay?'},
-      {cat:'Staff', q:'Are there any key-person risks — is any one technician critical to customer relationships or operations?'},
-      {cat:'Legal', q:'Are all 3 vehicles registered, roadworthy, and free of finance? Please provide full vehicle service histories.'},
-      {cat:'Legal', q:'Is the Skimmer software licence transferable? Are there any locked-in annual fees?'},
-      {cat:'Legal', q:'Are there any pending customer complaints, insurance claims, or disputes we should know about?'},
-      {cat:'Legal', q:'What are the full chemical supplier agreements — are we locked into any supply contracts?'},
-      {cat:'Market', q:'What is the average price per service and when was pricing last increased? Is there room to raise prices?'},
-      {cat:'Market', q:'What is the churn rate on accounts — how many customers were lost vs. gained in the last 12 months?'},
-      {cat:'Market', q:'Who are the main competitors in the Brisbane north market and how is the business differentiated?'},
-      {cat:'Market', q:'Is there a waiting list for new customers? What is current capacity utilisation across the 4 technicians?'},
+      { cat: 'Financial', q: 'Can you provide 3 years of verified P&L statements and BAS lodgements to confirm the $148k net profit figure?' },
+      { cat: 'Financial', q: 'What are the owner\'s annual drawings/salary included in the financials? We need to add this back to get true EBITDA.' },
+      { cat: 'Financial', q: 'Are there any outstanding ATO debts, GST liabilities, or unpaid superannuation we should know about?' },
+      { cat: 'Financial', q: 'Full details on the Northside Fitness contract — exact expiry date, renewal terms, and written confirmation from the client that they intend to renew?' },
+      { cat: 'Operational', q: 'Which specific accounts does the owner personally service, and have any of those customers been told the business is for sale?' },
+      { cat: 'Operational', q: 'What does the 3-month handover actually include — will the owner personally introduce us to all his accounts, or is it just training on systems?' },
+      { cat: 'Operational', q: 'How many of the 312 accounts are on formal written service agreements vs informal arrangements?' },
+      { cat: 'Operational', q: 'What is the average revenue per account per year, and when was pricing last increased?' },
+      { cat: 'Staff', q: 'Have the 4 technicians been told the business is for sale? What is their reaction, and will they commit to staying post-sale?' },
+      { cat: 'Staff', q: 'What are the full employment terms for each technician — hours, pay rate, and any entitlements outstanding?' },
+      { cat: 'Staff', q: 'Are any staff involved in customer relationships in a way that creates key-person risk?' },
+      { cat: 'Legal', q: 'Are all 3 vehicles registered, roadworthy, and free of any finance or encumbrances? Please provide service histories.' },
+      { cat: 'Legal', q: 'Is the Skimmer software licence fully transferable to a new owner with no additional fees?' },
+      { cat: 'Legal', q: 'Are there any pending customer complaints, insurance claims, or WorkCover incidents in the last 3 years?' },
+      { cat: 'Legal', q: 'What are the chemical supply agreements — are we locked into any supplier contracts post-sale?' },
+      { cat: 'Market', q: 'What is the current churn rate — how many accounts were lost and gained in the last 12 months, and why?' },
+      { cat: 'Market', q: 'Is there a waitlist for new customers, and what is current capacity across the 4 technicians?' },
+      { cat: 'Market', q: 'Who are the main local competitors and what differentiates Sunshine Pool Services from them?' }
     ],
     valuation: {
       multipleEbitda: 3.94,
       fairRange: '$520,000 – $580,000',
-      negotiateTarget: '$575,000',
-      note: 'At the asking price of $650k the payback period is approximately 4.4 years. A fairer entry point of $575k gives a payback of 3.9 years assuming no revenue attrition. Consider making the offer subject to Northside contract renewal confirmation.'
+      negotiateTarget: '$565,000',
+      note: 'At $650k the payback period is 4.4 years. A negotiated price of $565k brings this to 3.8 years — much more reasonable. Consider making the offer conditional on Northside Fitness contract renewal confirmation, which also gives you leverage to reduce the price if it cannot be confirmed.'
     }
   };
-  displayDemoResult(demoResult);
+
+  var biz = buildBiz(readForm(), demoResult);
+  saved = saved.filter(function(x) { return x.name !== 'Sunshine Pool Services'; });
+  saved.unshift(biz);
+  persist();
+  showResults(biz);
 }
 
-function displayDemoResult(r) {
-  const biz = {
-    id: Date.now(),
-    name: r.name, type: r.type, location: 'Brisbane, QLD',
-    askingPrice: r.askingPrice, score: r.score, recommendation: r.recommendation,
-    summary: r.summary, flags: r.flags, questions: r.questions, valuation: r.valuation,
-    financialScore: r.financialScore, businessScore: r.businessScore,
-    riskScore: r.riskScore, valuationScore: r.valuationScore,
-    date: new Date().toISOString(), isDemo: true
-  };
-  businesses = businesses.filter(b=>!b.isDemo);
-  businesses.unshift(biz);
-  saveState();
-  renderDashboard();
-  switchTab('dashboard');
-  openAnalysis(biz.id);
-}
-
-// ============ FILE HANDLING ============
-function handleDragOver(e) { e.preventDefault(); document.getElementById('fileDrop').classList.add('drag-over'); }
-function handleDragLeave() { document.getElementById('fileDrop').classList.remove('drag-over'); }
-function handleDrop(e) { e.preventDefault(); document.getElementById('fileDrop').classList.remove('drag-over'); handleFiles(e.dataTransfer.files); }
-
-async function handleFiles(files) {
-  const list = document.getElementById('fileList');
-  for (const file of Array.from(files)) {
-    if (uploadedFiles.length >= 5) { alert('Maximum 5 files'); break; }
-    const item = document.createElement('div');
-    item.className = 'file-item';
-    item.id = 'fi-' + file.name.replace(/\W/g,'_');
-    item.innerHTML = `<span>📄</span><span class="fi-name">${file.name}</span><span class="fi-status">Reading...</span><button class="fi-remove" onclick="removeFile('${file.name}')">×</button>`;
-    list.appendChild(item);
-
-    try {
-      let text = '';
-      if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
-        text = await extractPdfText(file);
-      } else {
-        text = await file.text();
-      }
-      uploadedFiles.push({ name: file.name, text });
-      item.querySelector('.fi-status').textContent = `✓ ${Math.round(text.length/1000)}k chars extracted`;
-      item.querySelector('.fi-status').style.color = 'var(--green)';
-    } catch(e) {
-      item.querySelector('.fi-status').textContent = '⚠ Could not read';
-      item.querySelector('.fi-status').style.color = 'var(--yellow)';
-    }
-  }
-}
-
-async function extractPdfText(file) {
-  if (typeof pdfjsLib === 'undefined') return await file.text().catch(()=>'[PDF text extraction unavailable]');
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  let fullText = '';
-  for (let p = 1; p <= pdf.numPages; p++) {
-    const page = await pdf.getPage(p);
-    const content = await page.getTextContent();
-    fullText += content.items.map(i=>i.str).join(' ') + '\n';
-  }
-  return fullText;
-}
-
-function removeFile(name) {
-  uploadedFiles = uploadedFiles.filter(f=>f.name!==name);
-  const el = document.getElementById('fi-' + name.replace(/\W/g,'_'));
-  if (el) el.remove();
-}
-
-// ============ ANALYSIS ============
-async function runAnalysis() {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  const bizName = document.getElementById('bizName').value.trim() || 'Unnamed Business';
-  const bizType = document.getElementById('bizType').value.trim();
-  const bizLocation = document.getElementById('bizLocation').value.trim();
-  const askingPrice = document.getElementById('askingPrice').value;
-  const annualRevenue = document.getElementById('annualRevenue').value;
-  const netProfit = document.getElementById('netProfit').value;
-  const ebitda = document.getElementById('ebitda').value;
-  const revenueGrowth = document.getElementById('revenueGrowth').value;
-  const stockValue = document.getElementById('stockValue').value;
-  const plantValue = document.getElementById('plantValue').value;
-  const numEmployees = document.getElementById('numEmployees').value;
-  const ownerInvolvement = document.getElementById('ownerInvolvement').value;
-  const premises = document.getElementById('premises').value;
-  const reasonSale = document.getElementById('reasonSale').value.trim();
-  const bizYears = document.getElementById('bizYears').value;
-  const bizStructure = document.getElementById('bizStructure').value;
-  const brokerNotes = document.getElementById('brokerNotes').value.trim();
-  const yourNotes = document.getElementById('yourNotes').value.trim();
-  const errorBox = document.getElementById('errorBox');
-  errorBox.classList.remove('show');
-
-  if (!apiKey) {
-    errorBox.textContent = 'Please enter your Claude API key, or click "Load demo data" to try without one.';
-    errorBox.classList.add('show'); return;
-  }
-
-  // Show loading
-  document.getElementById('loadingOverlay').classList.add('show');
-  ['ls1','ls2','ls3','ls4','ls5'].forEach((s,i) => setTimeout(()=>document.getElementById(s).classList.add('show'), i*900));
-
-  const pdfContent = uploadedFiles.map(f=>`\n\n--- DOCUMENT: ${f.name} ---\n${f.text.substring(0,8000)}`).join('');
-
-  const fmt = (v, prefix='$') => v ? `${prefix}${Number(v).toLocaleString()}` : 'Not provided';
-  const multipleEbitda = (askingPrice && ebitda) ? (Number(askingPrice)/Number(ebitda)).toFixed(2) : 'Unknown';
-  const multipleProfit = (askingPrice && netProfit) ? (Number(askingPrice)/Number(netProfit)).toFixed(2) : 'Unknown';
-
-  const prompt = `You are a highly experienced Australian business acquisition advisor. A buyer has asked you to assess a business opportunity they've received from their broker. Analyse everything carefully and respond ONLY with a valid JSON object — no markdown, no explanation outside the JSON.
-
-BUSINESS DATA:
-Name: ${bizName}
-Type: ${bizType}
-Location: ${bizLocation}
-Years operating: ${bizYears || 'Unknown'}
-Structure: ${bizStructure || 'Unknown'}
-Asking price: ${fmt(askingPrice)}
-Annual revenue: ${fmt(annualRevenue)}
-Net profit/owner earnings: ${fmt(netProfit)}
-EBITDA: ${fmt(ebitda)}
-Revenue growth trend: ${revenueGrowth || 'Unknown'}
-Stock/inventory: ${fmt(stockValue)}
-Plant & equipment: ${fmt(plantValue)}
-Employees: ${numEmployees || 'Unknown'}
-Owner involvement: ${ownerInvolvement || 'Unknown'}
-Premises: ${premises || 'Unknown'}
-Reason for sale: ${reasonSale || 'Not stated'}
-Calculated EBITDA multiple: ${multipleEbitda}×
-Calculated profit multiple: ${multipleProfit}×
-
-BROKER INFORMATION:
-${brokerNotes || 'None provided'}
-${pdfContent}
-
-BUYER'S SPECIFIC CONCERNS:
-${yourNotes || 'None stated'}
-
-Respond with this exact JSON structure (no trailing commas, valid JSON only):
-{
-  "score": <integer 0-100 overall acquisition viability score>,
-  "recommendation": <"strong_buy" | "consider" | "caution" | "pass">,
-  "summary": "<2-3 sentence executive summary of this opportunity>",
-  "financialScore": <integer 0-100>,
-  "businessScore": <integer 0-100>,
-  "riskScore": <integer 0-100>,
-  "valuationScore": <integer 0-100>,
-  "flags": [
-    {"type": <"red"|"yellow"|"green">, "text": "<specific finding about this business>"}
-  ],
-  "questions": [
-    {"cat": <"Financial"|"Operational"|"Legal"|"Market"|"Staff">, "q": "<specific, sharp question to ask the broker>"}
-  ],
-  "valuation": {
-    "multipleEbitda": <number or null>,
-    "fairRange": "<e.g. $500k–$600k or Unknown>",
-    "negotiateTarget": "<e.g. $550k or Unknown>",
-    "note": "<2-3 sentences on valuation fairness and negotiation strategy>"
-  }
-}
-
-Rules:
-- flags array: 3-5 red flags, 2-4 yellow warnings, 2-4 green positives
-- questions array: exactly 18-22 questions, spread across all categories
-- All findings must be SPECIFIC to this business — no generic advice
-- Australian context (ATO, BAS, Fair Work, ASIC etc where relevant)
-- If financial data is sparse, note what's missing and why it matters
-- Score the riskScore LOWER for higher risk (lower = riskier)`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body: JSON.stringify({
-        model:'claude-opus-4-6',
-        max_tokens:4000,
-        messages:[{role:'user',content:prompt}]
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error?.message || 'API error');
-    }
-
-    const data = await res.json();
-    const raw = data.content?.[0]?.text || '{}';
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Could not parse Claude response');
-    const result = JSON.parse(jsonMatch[0]);
-
-    const biz = {
-      id: Date.now(),
-      name: bizName, type: bizType, location: bizLocation,
-      askingPrice: Number(askingPrice)||0,
-      annualRevenue: Number(annualRevenue)||0,
-      netProfit: Number(netProfit)||0,
-      score: result.score || 0,
-      recommendation: result.recommendation || 'consider',
-      summary: result.summary || '',
-      flags: result.flags || [],
-      questions: result.questions || [],
-      valuation: result.valuation || {},
-      financialScore: result.financialScore || 0,
-      businessScore: result.businessScore || 0,
-      riskScore: result.riskScore || 0,
-      valuationScore: result.valuationScore || 0,
-      date: new Date().toISOString()
-    };
-
-    businesses.unshift(biz);
-    saveState();
-    renderDashboard();
-
-    document.getElementById('loadingOverlay').classList.remove('show');
-    ['ls1','ls2','ls3','ls4','ls5'].forEach(s=>document.getElementById(s).classList.remove('show'));
-    clearForm();
-    switchTab('dashboard');
-    openAnalysis(biz.id);
-
-  } catch(e) {
-    document.getElementById('loadingOverlay').classList.remove('show');
-    ['ls1','ls2','ls3','ls4','ls5'].forEach(s=>document.getElementById(s).classList.remove('show'));
-    errorBox.textContent = 'Error: ' + e.message;
-    errorBox.classList.add('show');
-  }
-}
-
-function clearForm() {
-  ['bizName','bizType','bizLocation','bizYears','askingPrice','bizStructure',
-   'annualRevenue','netProfit','ebitda','stockValue','plantValue','numEmployees',
-   'reasonSale','brokerNotes','yourNotes'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.value='';
-  });
-  document.getElementById('revenueGrowth').value='';
-  document.getElementById('ownerInvolvement').value='';
-  document.getElementById('premises').value='';
-  uploadedFiles=[];
-  document.getElementById('fileList').innerHTML='';
-}
-
-// ============ DASHBOARD ============
-function renderDashboard() {
-  const grid = document.getElementById('bizGrid');
-  const empty = document.getElementById('emptyState');
-
-  if (businesses.length === 0) {
-    grid.innerHTML=''; empty.style.display='';
-    document.getElementById('dashStats').innerHTML='';
-    return;
-  }
-  empty.style.display='none';
-
-  const analysed = businesses.filter(b=>b.score>0);
-  const recMap = {strong_buy:0,consider:0,caution:0,pass:0};
-  analysed.forEach(b=>{ if(recMap[b.recommendation]!==undefined) recMap[b.recommendation]++; });
-
-  document.getElementById('dashStats').innerHTML = `
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;">
-      <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;">Total Assessed</div>
-      <div style="font-size:28px;font-weight:800;color:var(--accent)">${businesses.length}</div>
-    </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;">
-      <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;">Strong Buy</div>
-      <div style="font-size:28px;font-weight:800;color:var(--green)">${recMap.strong_buy}</div>
-    </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;">
-      <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;">Consider</div>
-      <div style="font-size:28px;font-weight:800;color:var(--yellow)">${recMap.consider}</div>
-    </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;">
-      <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;">Pass</div>
-      <div style="font-size:28px;font-weight:800;color:var(--red)">${recMap.pass + recMap.caution}</div>
-    </div>`;
-
-  const recLabel = {strong_buy:'Strong Buy',consider:'Consider',caution:'Proceed with Caution',pass:'Pass'};
-  const recClass = {strong_buy:'b-strong',consider:'b-consider',caution:'b-caution',pass:'b-pass'};
-
-  grid.innerHTML = businesses.map(b => {
-    const hasAnalysis = b.score > 0;
-    const scoreClass = b.score >= 70 ? 'score-high' : b.score >= 50 ? 'score-mid' : 'score-low';
-    return `<div class="biz-card ${hasAnalysis?'':'no-analysis'}" onclick="openAnalysis(${b.id})">
-      <div class="bc-actions">
-        <button class="bc-action-btn del" onclick="event.stopPropagation();deleteBusiness(${b.id})">🗑 Delete</button>
-      </div>
-      <div class="bc-type">${b.type || 'Business'}</div>
-      <div class="bc-name">${b.name}</div>
-      <div class="bc-price">${b.askingPrice ? '$' + Number(b.askingPrice).toLocaleString() + ' asking' : 'Price unknown'} · ${b.location || ''}</div>
-      <div class="bc-meta">
-        ${b.annualRevenue ? `<span class="bc-meta-item">Rev $${(b.annualRevenue/1000).toFixed(0)}k</span>` : ''}
-        ${b.netProfit ? `<span class="bc-meta-item">Profit $${(b.netProfit/1000).toFixed(0)}k</span>` : ''}
-        ${b.isDemo ? '<span class="bc-meta-item" style="color:var(--yellow)">Demo</span>' : ''}
-      </div>
-      <div class="bc-bottom">
-        ${hasAnalysis
-          ? `<div class="score-ring ${scoreClass}" style="width:46px;height:46px;font-size:15px;">${b.score}</div>
-             <span class="badge ${recClass[b.recommendation]||'b-pending'}">${recLabel[b.recommendation]||'Assessed'}</span>`
-          : `<span class="badge b-pending">Pending Analysis</span>`}
-        <span style="font-size:10px;color:var(--muted)">${new Date(b.date).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function deleteBusiness(id) {
-  if (!confirm('Remove this business from your pipeline?')) return;
-  businesses = businesses.filter(b=>b.id!==id);
-  saveState();
-  renderDashboard();
-}
-
-// ============ ANALYSIS MODAL ============
-function openAnalysis(id) {
-  const b = businesses.find(x=>x.id===id);
-  if (!b || !b.score) { alert('No analysis yet for this business. Go to "Assess a Business" to run one.'); return; }
-
-  document.getElementById('am-name').textContent = b.name;
-  document.getElementById('am-type').textContent = (b.type||'') + (b.location ? ' · ' + b.location : '');
-
-  const recLabel = {strong_buy:'⭐ Strong Buy',consider:'👀 Consider',caution:'⚠️ Caution',pass:'❌ Pass'};
-  const recClass = {strong_buy:'b-strong',consider:'b-consider',caution:'b-caution',pass:'b-pass'};
-  document.getElementById('am-badge').innerHTML = `<span class="badge ${recClass[b.recommendation]||'b-pending'}" style="font-size:12px;padding:4px 12px">${recLabel[b.recommendation]||'Assessed'}</span>`;
-
-  const scoreClass = b.score>=70?'score-high':b.score>=50?'score-mid':'score-low';
-
-  const redFlags = (b.flags||[]).filter(f=>f.type==='red');
-  const yellowFlags = (b.flags||[]).filter(f=>f.type==='yellow');
-  const greenFlags = (b.flags||[]).filter(f=>f.type==='green');
-
-  const qCats = ['Financial','Operational','Legal','Market','Staff'];
-  const qCatClass = {Financial:'qc-financial',Operational:'qc-operational',Legal:'qc-legal',Market:'qc-market',Staff:'qc-staff'};
-
-  let qNum = 0;
-
-  document.getElementById('am-body').innerHTML = `
-    <!-- SCORE OVERVIEW -->
-    <div class="analysis-section">
-      <h3>Overall Assessment</h3>
-      <div class="score-overview">
-        <div class="score-ring ${scoreClass}" style="width:80px;height:80px;font-size:26px;">${b.score}</div>
-        <div>
-          <div style="font-size:13px;line-height:1.7;color:var(--muted2)">${b.summary}</div>
-        </div>
-      </div>
-      <div class="score-details">
-        <div class="score-item">
-          <div class="si-val" style="color:${b.financialScore>=70?'var(--green)':b.financialScore>=50?'var(--yellow)':'var(--red)'}">${b.financialScore}</div>
-          <div class="si-label">Financial Health</div>
-        </div>
-        <div class="score-item">
-          <div class="si-val" style="color:${b.businessScore>=70?'var(--green)':b.businessScore>=50?'var(--yellow)':'var(--red)'}">${b.businessScore}</div>
-          <div class="si-label">Business Quality</div>
-        </div>
-        <div class="score-item">
-          <div class="si-val" style="color:${b.riskScore>=70?'var(--green)':b.riskScore>=50?'var(--yellow)':'var(--red)'}">${b.riskScore}</div>
-          <div class="si-label">Risk Level</div>
-        </div>
-        <div class="score-item">
-          <div class="si-val" style="color:${b.valuationScore>=70?'var(--green)':b.valuationScore>=50?'var(--yellow)':'var(--red)'}">${b.valuationScore}</div>
-          <div class="si-label">Valuation Fairness</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RED FLAGS -->
-    ${redFlags.length ? `<div class="analysis-section">
-      <h3>🔴 Red Flags — Must Investigate</h3>
-      ${redFlags.map(f=>`<div class="flag flag-red"><span class="flag-icon">🚨</span><span>${f.text}</span></div>`).join('')}
-    </div>` : ''}
-
-    <!-- YELLOW WARNINGS -->
-    ${yellowFlags.length ? `<div class="analysis-section">
-      <h3>🟡 Caution Points — Worth Clarifying</h3>
-      ${yellowFlags.map(f=>`<div class="flag flag-yellow"><span class="flag-icon">⚠️</span><span>${f.text}</span></div>`).join('')}
-    </div>` : ''}
-
-    <!-- GREEN POSITIVES -->
-    ${greenFlags.length ? `<div class="analysis-section">
-      <h3>🟢 Positives — What Works in Your Favour</h3>
-      ${greenFlags.map(f=>`<div class="flag flag-green"><span class="flag-icon">✅</span><span>${f.text}</span></div>`).join('')}
-    </div>` : ''}
-
-    <!-- VALUATION -->
-    ${b.valuation ? `<div class="analysis-section">
-      <h3>💰 Valuation Analysis</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;">
-        <div class="score-item">
-          <div class="si-val" style="color:var(--accent)">${b.valuation.multipleEbitda ? b.valuation.multipleEbitda + '×' : '—'}</div>
-          <div class="si-label">EBITDA Multiple</div>
-        </div>
-        <div class="score-item">
-          <div class="si-val" style="color:var(--green);font-size:13px">${b.valuation.fairRange || '—'}</div>
-          <div class="si-label">Fair Value Range</div>
-        </div>
-        <div class="score-item">
-          <div class="si-val" style="color:var(--yellow);font-size:13px">${b.valuation.negotiateTarget || '—'}</div>
-          <div class="si-label">Negotiate Toward</div>
-        </div>
-      </div>
-      <div class="flag flag-yellow"><span class="flag-icon">💡</span><span>${b.valuation.note || ''}</span></div>
-    </div>` : ''}
-
-    <!-- QUESTIONS -->
-    <div class="analysis-section">
-      <h3>❓ Questions to Ask Your Broker</h3>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">Print or screenshot this list before your next broker meeting.</div>
-      ${qCats.map(cat => {
-        const qs = (b.questions||[]).filter(q=>q.cat===cat);
-        if (!qs.length) return '';
-        return `<div style="margin-bottom:16px;">
-          <div style="font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;">${cat}</div>
-          ${qs.map(q => `<div class="question-item">
-            <span class="q-num">${++qNum}.</span>
-            <span class="q-cat ${qCatClass[cat]||''}">${cat}</span>
-            <span>${q.q}</span>
-          </div>`).join('')}
-        </div>`;
-      }).join('')}
-    </div>
-
-    <div style="display:flex;gap:10px;margin-top:8px;">
-      <button class="btn btn-outline" onclick="window.print()" style="flex:1">🖨️ Print / Export</button>
-      <button class="btn btn-outline" onclick="closeAnalysisModal()" style="flex:1">← Back to Pipeline</button>
-    </div>`;
-
-  document.getElementById('analysisModal').classList.add('show');
-  document.body.style.overflow='hidden';
-}
-
-function closeAnalysisModal(e) {
-  if (e && e.target !== document.getElementById('analysisModal')) return;
-  document.getElementById('analysisModal').classList.remove('show');
-  document.body.style.overflow='';
-}
-document.getElementById('analysisModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('analysisModal')) closeAnalysisModal(e);
-});
-document.addEventListener('keydown', e => { if(e.key==='Escape') { document.getElementById('analysisModal').classList.remove('show'); document.body.style.overflow=''; }});
-
-// ============ COMPARE ============
+// ---- COMPARE ----
 function renderCompare() {
-  const analysed = businesses.filter(b=>b.score>0);
-  const container = document.getElementById('compareContent');
+  var el = document.getElementById('compareContent');
+  var analysed = saved.filter(function(b) { return b.score > 0; });
   if (analysed.length < 2) {
-    container.innerHTML=`<div class="empty"><div class="empty-icon">⚖️</div><h3>Need at least 2 assessed businesses</h3><p>Assess more businesses to compare them side by side.</p></div>`;
+    el.innerHTML = '<div class="empty"><div class="icon">⚖️</div><h3>Need 2+ assessed businesses</h3><p>Assess more businesses to compare them side by side.</p></div>';
     return;
   }
-  const cols = analysed.slice(0,4);
-  const scoreClass = s => s>=70?'var(--green)':s>=50?'var(--yellow)':'var(--red)';
-  const recLabel = {strong_buy:'Strong Buy',consider:'Consider',caution:'Caution',pass:'Pass'};
-  const recClass = {strong_buy:'b-strong',consider:'b-consider',caution:'b-caution',pass:'b-pass'};
-
-  container.innerHTML = `
-    <div style="overflow-x:auto;">
-    <table style="width:100%;border-collapse:collapse;min-width:600px;">
-      <thead>
-        <tr>
-          <th style="text-align:left;padding:12px 14px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;background:var(--card2);border-bottom:1px solid var(--border);">Metric</th>
-          ${cols.map(b=>`<th style="text-align:center;padding:12px 14px;font-size:12px;font-weight:700;background:var(--card2);border-bottom:1px solid var(--border);">${b.name}</th>`).join('')}
-        </tr>
-      </thead>
-      <tbody>
-        ${[
-          ['Type', b=>b.type||'—'],
-          ['Asking Price', b=>b.askingPrice?'$'+Number(b.askingPrice).toLocaleString():'—'],
-          ['Annual Revenue', b=>b.annualRevenue?'$'+Number(b.annualRevenue).toLocaleString():'—'],
-          ['Net Profit', b=>b.netProfit?'$'+Number(b.netProfit).toLocaleString():'—'],
-          ['Overall Score', b=>`<span style="font-size:18px;font-weight:800;color:${scoreClass(b.score)}">${b.score}</span>`],
-          ['Recommendation', b=>`<span class="badge ${recClass[b.recommendation]||'b-pending'}">${recLabel[b.recommendation]||'—'}</span>`],
-          ['Financial Health', b=>`<span style="color:${scoreClass(b.financialScore)};font-weight:700">${b.financialScore}</span>`],
-          ['Business Quality', b=>`<span style="color:${scoreClass(b.businessScore)};font-weight:700">${b.businessScore}</span>`],
-          ['Risk Level', b=>`<span style="color:${scoreClass(b.riskScore)};font-weight:700">${b.riskScore}</span>`],
-          ['Valuation Fairness', b=>`<span style="color:${scoreClass(b.valuationScore)};font-weight:700">${b.valuationScore}</span>`],
-          ['Red Flags', b=>`<span style="color:var(--red);font-weight:700">${(b.flags||[]).filter(f=>f.type==='red').length}</span>`],
-          ['Fair Value Range', b=>b.valuation?.fairRange||'—'],
-        ].map(([label,fn],i)=>`<tr style="border-bottom:1px solid var(--border);background:${i%2===0?'transparent':'rgba(255,255,255,.015)'}">
-          <td style="padding:10px 14px;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px">${label}</td>
-          ${cols.map(b=>`<td style="padding:10px 14px;text-align:center;font-size:12px">${fn(b)}</td>`).join('')}
-        </tr>`).join('')}
-      </tbody>
-    </table>
-    </div>`;
-}
-
-// ============ TABS ============
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i)=>{
-    t.classList.toggle('active',['dashboard','assess','compare'][i]===name);
+  var cols = analysed.slice(0, 4);
+  var rows = [
+    ['Type', function(b) { return b.type || '—'; }],
+    ['Asking Price', function(b) { return b.askingPrice ? '$' + num(b.askingPrice) : '—'; }],
+    ['Annual Revenue', function(b) { return b.annualRevenue ? '$' + num(b.annualRevenue) : '—'; }],
+    ['Net Profit', function(b) { return b.netProfit ? '$' + num(b.netProfit) : '—'; }],
+    ['Overall Score', function(b) { return '<strong style="font-size:17px;color:' + scoreHex(b.score) + '">' + b.score + '</strong>'; }],
+    ['Recommendation', function(b) { return '<span class="badge ' + recBadgeClass(b.recommendation) + '">' + recLabel(b.recommendation) + '</span>'; }],
+    ['Financial Health', function(b) { return '<span style="font-weight:700;color:' + scoreHex(b.financialScore) + '">' + b.financialScore + '</span>'; }],
+    ['Business Quality', function(b) { return '<span style="font-weight:700;color:' + scoreHex(b.businessScore) + '">' + b.businessScore + '</span>'; }],
+    ['Risk Level', function(b) { return '<span style="font-weight:700;color:' + scoreHex(b.riskScore) + '">' + b.riskScore + '</span>'; }],
+    ['Valuation Fairness', function(b) { return '<span style="font-weight:700;color:' + scoreHex(b.valuationScore) + '">' + b.valuationScore + '</span>'; }],
+    ['Red Flags', function(b) { var n = (b.flags||[]).filter(function(f){return f.type==='red';}).length; return '<span style="color:var(--red);font-weight:700;">' + n + '</span>'; }],
+    ['Fair Value Range', function(b) { return (b.valuation && b.valuation.fairRange) ? b.valuation.fairRange : '—'; }]
+  ];
+  var html = '<div style="overflow-x:auto;"><table class="cmp-table"><thead><tr><th>Metric</th>';
+  cols.forEach(function(b) { html += '<th>' + esc(b.name) + '</th>'; });
+  html += '</tr></thead><tbody>';
+  rows.forEach(function(row, i) {
+    html += '<tr' + (i % 2 === 1 ? ' style="background:rgba(255,255,255,.02)"' : '') + '>';
+    html += '<td>' + row[0] + '</td>';
+    cols.forEach(function(b) { html += '<td>' + row[1](b) + '</td>'; });
+    html += '</tr>';
   });
-  document.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  if (name==='compare') renderCompare();
+  html += '</tbody></table></div>';
+  el.innerHTML = html;
 }
 
-// ============ INIT ============
+// ---- LOADING ----
+function showLoading() {
+  document.getElementById('loadingOverlay').className = 'overlay show';
+  var steps = ['lstep1','lstep2','lstep3','lstep4','lstep5'];
+  steps.forEach(function(s) { document.getElementById(s).className = 'lstep'; });
+  steps.forEach(function(s, i) {
+    setTimeout(function() { document.getElementById(s).className = 'lstep show'; }, i * 900);
+  });
+}
+function hideLoading() {
+  document.getElementById('loadingOverlay').className = 'overlay';
+}
+function showErr(msg) {
+  var e = document.getElementById('errBox');
+  e.textContent = msg;
+  e.className = 'error show';
+}
+
+// ---- HELPERS ----
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function num(n) { return Number(n).toLocaleString(); }
+function shortNum(n) { return n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(0)+'k' : n; }
+function fmtDate(d) { return new Date(d).toLocaleDateString('en-AU', {day:'numeric',month:'short'}); }
+function scoreColor(s) { return s >= 70 ? 'sc-green' : s >= 50 ? 'sc-yellow' : 'sc-red'; }
+function scoreHex(s) { return s >= 70 ? 'var(--green)' : s >= 50 ? 'var(--yellow)' : 'var(--red)'; }
+function var_accent() { return 'var(--accent)'; }
+function var_green() { return 'var(--green)'; }
+function var_yellow() { return 'var(--yellow)'; }
+function var_red() { return 'var(--red)'; }
+function recLabel(r) {
+  var m = {strong_buy:'⭐ Strong Buy', consider:'👀 Consider', caution:'⚠️ Caution', pass:'❌ Pass'};
+  return m[r] || 'Assessed';
+}
+function recBadgeClass(r) {
+  var m = {strong_buy:'bg-green', consider:'bg-yellow', caution:'bg-orange', pass:'bg-red'};
+  return m[r] || 'bg-muted';
+}
+
+// ---- INIT ----
 renderDashboard();
 </script>
 </body>
