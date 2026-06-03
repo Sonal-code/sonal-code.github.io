@@ -71,6 +71,18 @@ textarea:focus,input:focus{ outline:none; border-color:var(--blue); background:#
 .or-div{ display:flex; align-items:center; gap:10px; font-size:11px; color:#94a3b8; font-weight:500; margin:8px 0; text-transform:uppercase; letter-spacing:.06em; }
 .or-div::before,.or-div::after{ content:''; flex:1; height:1px; background:#e2e8f0; }
 
+/* URL fetch */
+.url-row{ display:flex; gap:8px; margin-bottom:8px; }
+.url-row input{ flex:1; border:1.5px solid #e2e8f0; border-radius:8px; padding:9px 13px; font-size:13px; font-family:inherit; background:#fafbfc; color:var(--ink); }
+.url-row input:focus{ outline:none; border-color:var(--blue); background:#fff; }
+.btn-fetch{ background:#0ea5e9; color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; font-family:inherit; flex-shrink:0; }
+.btn-fetch:hover{ background:#0284c7; }
+.btn-fetch:disabled{ opacity:.5; cursor:not-allowed; }
+.fetch-status{ font-size:12px; margin-bottom:6px; min-height:16px; }
+.fetch-status.ok{ color:#10b981; }
+.fetch-status.err{ color:#ef4444; }
+.fetch-status.loading{ color:#64748b; }
+
 /* tip */
 .tip{ background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; font-size:12px; color:#1d4ed8; margin-top:18px; line-height:1.6; }
 .tip strong{ display:block; margin-bottom:3px; }
@@ -201,7 +213,13 @@ textarea:focus,input:focus{ outline:none; border-color:var(--blue); background:#
           <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
           <div class="uz-sub">PDF, Word (.docx), or Text (.txt)</div>
         </div>
-        <div class="or-div">or paste text</div>
+        <div class="or-div">or paste a link to the listing</div>
+        <div class="url-row">
+          <input type="text" id="url-listing" placeholder="https://www.businessforsale.com.au/listing/...">
+          <button class="btn-fetch" onclick="fetchURL('url-listing','listing','status-listing')">Fetch →</button>
+        </div>
+        <div class="fetch-status" id="status-listing"></div>
+        <div class="or-div">or paste text below</div>
         <textarea id="listing" placeholder="e.g. 'For sale: cafe in Melbourne CBD. Asking $350,000. Turnover $800k/year. Owner retiring after 15 years...'"></textarea>
       </div>
 
@@ -214,7 +232,18 @@ textarea:focus,input:focus{ outline:none; border-color:var(--blue); background:#
           <div class="uz-text"><strong>Click to upload</strong> job ads</div>
           <div class="uz-sub">PDF, Word (.docx), or Text (.txt)</div>
         </div>
-        <div class="or-div">or paste text</div>
+        <div class="or-div">or paste a link (Seek, LinkedIn, Indeed…)</div>
+        <div class="url-row">
+          <input type="text" id="url-jobads-1" placeholder="https://www.seek.com.au/job/12345678">
+          <button class="btn-fetch" onclick="fetchURL('url-jobads-1','jobAds','status-jobads-1')">Fetch →</button>
+        </div>
+        <div class="fetch-status" id="status-jobads-1"></div>
+        <div class="url-row">
+          <input type="text" id="url-jobads-2" placeholder="Paste another job ad link (optional)">
+          <button class="btn-fetch" onclick="fetchURL('url-jobads-2','jobAds','status-jobads-2')">Fetch →</button>
+        </div>
+        <div class="fetch-status" id="status-jobads-2"></div>
+        <div class="or-div">or paste text below</div>
         <textarea id="jobAds" placeholder="Paste any job ad text here..."></textarea>
       </div>
 
@@ -1137,6 +1166,51 @@ Respond ONLY with a valid JSON object (no markdown, no code fences):
     banner.style.display='block';
     banner.querySelector('.ai-upgrade-text span').textContent =
       '⚠️ ' + err.message + ' — click to try again.';
+  }
+}
+
+// ── URL Fetch ──────────────────────────────────────
+async function fetchURL(inputId, taId, statusId) {
+  const url = document.getElementById(inputId).value.trim();
+  const status = document.getElementById(statusId);
+  if (!url) { status.textContent = 'Please enter a URL first.'; status.className = 'fetch-status err'; return; }
+  if (!url.startsWith('http')) { status.textContent = 'Please enter a full URL starting with https://'; status.className = 'fetch-status err'; return; }
+
+  const btn = document.querySelector(`button[onclick*="${inputId}"]`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Fetching…'; }
+  status.textContent = 'Fetching page content…'; status.className = 'fetch-status loading';
+
+  try {
+    // Use allorigins CORS proxy to fetch the page
+    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(url);
+    const res = await fetch(proxyUrl);
+    if (!res.ok) throw new Error('Could not fetch page');
+    const data = await res.json();
+    const html = data.contents || '';
+
+    // Strip HTML tags and clean up whitespace
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    // Remove script and style elements
+    tmp.querySelectorAll('script, style, nav, footer, header').forEach(el => el.remove());
+    let text = tmp.innerText || tmp.textContent || '';
+    text = text.replace(/\s{3,}/g, '\n\n').trim();
+
+    if (!text || text.length < 50) throw new Error('No readable content found on this page');
+
+    // Append to textarea
+    const ta = document.getElementById(taId);
+    if (ta) {
+      if (ta.value && !ta.value.endsWith('\n')) ta.value += '\n';
+      ta.value += '\n[From: ' + url + ']\n' + text.slice(0, 3000) + (text.length > 3000 ? '\n…(truncated)' : '');
+    }
+    status.textContent = '✅ Content fetched successfully — check the text box below.';
+    status.className = 'fetch-status ok';
+  } catch(err) {
+    status.textContent = '⚠️ Could not fetch this page (' + err.message + '). Try copying and pasting the text manually.';
+    status.className = 'fetch-status err';
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Fetch →'; }
   }
 }
 
