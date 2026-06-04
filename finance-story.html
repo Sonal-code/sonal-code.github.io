@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Financial Story — The Williams Family</title>
+<title>My Financial Health Calculator — Enter Your Numbers</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root {
@@ -223,13 +223,159 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   .guide-two-col, .two-col { grid-template-columns: 1fr; }
   .retire-grid, .savings-compare, .data-cards { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── ONBOARDING OVERLAY ── */
+.ob-overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(13,15,24,0.98);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.ob-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 36px 40px; max-width: 660px; width: 100%;
+  max-height: 92vh; overflow-y: auto;
+}
+.ob-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.ob-card h2 span { color: var(--accent); }
+.ob-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+.ob-privacy {
+  font-size: 11px; color: var(--muted); margin-bottom: 24px;
+  padding: 9px 14px; border: 1px solid rgba(124,107,255,0.2); border-radius: 8px;
+  background: rgba(124,107,255,0.05);
+}
+.ob-section { font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin: 22px 0 14px; padding-top: 18px; border-top: 1px solid var(--border); }
+.ob-row { margin-bottom: 14px; }
+.ob-row label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+.ob-row input, .ob-row select {
+  width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-size: 13px; padding: 10px 14px; outline: none;
+  transition: border-color 0.15s; font-family: var(--font);
+}
+.ob-row input:focus, .ob-row select:focus { border-color: var(--accent); }
+.ob-row select option { background: var(--card); }
+.ob-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ob-three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.ob-prop-block { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; }
+.ob-prop-block .ob-prop-title { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
+.ob-btn {
+  width: 100%; padding: 13px; border-radius: 10px;
+  background: var(--accent); color: white; font-size: 14px; font-weight: 600;
+  border: none; cursor: pointer; margin-top: 8px; font-family: var(--font);
+  transition: opacity 0.15s;
+}
+.ob-btn:hover { opacity: 0.88; }
 </style>
 </head>
 <body>
 
+<!-- ONBOARDING OVERLAY -->
+<div class="ob-overlay" id="obOverlay">
+  <div class="ob-card">
+    <h2>My <span>Financial Health</span> Calculator</h2>
+    <p class="ob-sub">Enter your numbers to get a personalised financial health score, spending breakdown, property overview, and retirement projection.</p>
+    <div class="ob-privacy">🔒 Your numbers stay in your browser only — nothing is stored or sent anywhere.</div>
+
+    <div class="ob-section">About You</div>
+    <div class="ob-two">
+      <div class="ob-row">
+        <label>Your Name / Family Name</label>
+        <input type="text" id="ob-name" placeholder="e.g. The Smith Family">
+      </div>
+      <div class="ob-row">
+        <label>Location</label>
+        <input type="text" id="ob-location" placeholder="e.g. Melbourne, Australia">
+      </div>
+    </div>
+    <div class="ob-two">
+      <div class="ob-row">
+        <label>Your Current Age</label>
+        <input type="number" id="ob-age" placeholder="35" min="18" max="80" value="35">
+      </div>
+      <div class="ob-row">
+        <label>Target Retirement Age</label>
+        <input type="number" id="ob-retire" placeholder="65" min="40" max="90" value="65">
+      </div>
+    </div>
+
+    <div class="ob-section">Monthly Income</div>
+    <div class="ob-two">
+      <div class="ob-row">
+        <label>Monthly Take-Home (Salary)</label>
+        <input type="number" id="ob-salary" placeholder="8000" min="0">
+      </div>
+      <div class="ob-row">
+        <label>Other Monthly Income (rental, interest etc)</label>
+        <input type="number" id="ob-otherincome" placeholder="2000" min="0" value="0">
+      </div>
+    </div>
+
+    <div class="ob-section">Monthly Spending (excluding mortgages)</div>
+    <div class="ob-three">
+      <div class="ob-row">
+        <label>Groceries</label>
+        <input type="number" id="ob-groceries" placeholder="600" min="0">
+      </div>
+      <div class="ob-row">
+        <label>Bills & Utilities</label>
+        <input type="number" id="ob-bills" placeholder="400" min="0">
+      </div>
+      <div class="ob-row">
+        <label>Takeaway / Dining</label>
+        <input type="number" id="ob-takeaway" placeholder="200" min="0">
+      </div>
+    </div>
+    <div class="ob-three">
+      <div class="ob-row">
+        <label>Shopping</label>
+        <input type="number" id="ob-shopping" placeholder="300" min="0">
+      </div>
+      <div class="ob-row">
+        <label>Kids / Family</label>
+        <input type="number" id="ob-kids" placeholder="500" min="0" value="0">
+      </div>
+      <div class="ob-row">
+        <label>Other Expenses</label>
+        <input type="number" id="ob-other" placeholder="300" min="0">
+      </div>
+    </div>
+
+    <div class="ob-section">Savings</div>
+    <div class="ob-three">
+      <div class="ob-row">
+        <label>Current Savings Balance ($)</label>
+        <input type="number" id="ob-savbal" placeholder="20000" min="0">
+      </div>
+      <div class="ob-row">
+        <label>Monthly Savings Deposit</label>
+        <input type="number" id="ob-savdep" placeholder="1000" min="0">
+      </div>
+      <div class="ob-row">
+        <label>Interest Rate (%)</label>
+        <input type="number" id="ob-savrate" placeholder="4.0" step="0.1" min="0" max="20" value="4.0">
+      </div>
+    </div>
+
+    <div class="ob-section">Properties</div>
+    <div class="ob-row">
+      <label>How many properties do you own?</label>
+      <select id="ob-numprops" onchange="renderPropInputs()">
+        <option value="0">0 — Renting / No property</option>
+        <option value="1">1 — Home only</option>
+        <option value="2" selected>2 — Home + 1 investment</option>
+        <option value="3">3 — Home + 2 investments</option>
+        <option value="4">4 — Home + 3 investments</option>
+      </select>
+    </div>
+    <div id="prop-inputs"></div>
+
+    <button class="ob-btn" onclick="submitFinanceOnboard()">Generate My Dashboard →</button>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-brand">💰 <span>Financial Story</span> &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">The Williams Family</span></div>
+  <div class="nav-brand">💰 <span>Financial Health Calculator</span> &nbsp;·&nbsp; <span id="navName" style="color:var(--muted);font-weight:400">Enter your details to start</span></div>
   <div class="nav-tabs">
     <button class="tab active" onclick="showPage('guide',this)">📋 Context</button>
     <button class="tab" onclick="showPage('summary',this)">📊 The Story</button>
@@ -246,88 +392,20 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 <div class="wrap">
 
   <div class="guide-hero">
-    <div class="guide-hero-label">Dashboard Context &amp; Scenario</div>
-    <h1>Meet the <span>Williams Family</span> 👨‍👩‍👧‍👦</h1>
-    <p>This dashboard is a real-world financial snapshot designed for a <strong style="color:var(--text)">high-income Australian family</strong> navigating property investment, a young family, and long-term wealth building. Use it as a conversation starter — for a client meeting, a broker review, or your own financial planning.</p>
+    <div class="guide-hero-label">Your Financial Dashboard</div>
+    <h1 id="guideH1">Welcome to Your <span>Financial Story</span> 💰</h1>
+    <p id="guideDesc">This dashboard gives you a personalised financial health score, a breakdown of your income and spending, your property portfolio overview, and a retirement projection — all based on the numbers you entered.</p>
   </div>
 
-  <!-- Family Profile Cards -->
-  <div class="profile-grid">
-    <div class="profile-card">
-      <div class="icon">👫</div>
-      <div class="label">Who</div>
-      <div class="val">Couple, both age 35</div>
-      <div class="sub">Melbourne, Victoria</div>
-    </div>
-    <div class="profile-card">
-      <div class="icon">👧👦👶</div>
-      <div class="label">Family</div>
-      <div class="val">3 Kids</div>
-      <div class="sub">Ages 6, 4 &amp; 2 — daycare + school</div>
-    </div>
-    <div class="profile-card">
-      <div class="icon">💼</div>
-      <div class="label">Combined Income</div>
-      <div class="val c-green">$250,000+ p.a.</div>
-      <div class="sub">~$20,833 / month net</div>
-    </div>
-    <div class="profile-card">
-      <div class="icon">🏠</div>
-      <div class="label">Properties</div>
-      <div class="val">4 Properties</div>
-      <div class="sub">1 PPOR + 3 Investment</div>
-    </div>
-    <div class="profile-card">
-      <div class="icon">📈</div>
-      <div class="label">Portfolio Value</div>
-      <div class="val c-purple">$3,650,000</div>
-      <div class="sub">Total equity: $1,710,000</div>
-    </div>
-    <div class="profile-card">
-      <div class="icon">🎯</div>
-      <div class="label">Retirement Goal</div>
-      <div class="val c-blue">Age 65</div>
-      <div class="sub">30 years away — debt free</div>
-    </div>
-  </div>
+  <!-- Profile Cards — populated by JS -->
+  <div class="profile-grid" id="profileGrid"></div>
 
   <!-- Data in this dashboard -->
-  <div class="story-card mb20">
-    <div class="section-tag c-accent">What data is in this dashboard</div>
-    <h2>3 Months of Real Financial Data</h2>
-    <p class="story-sub">Jan – Mar 2025. Everything the Williams family earns, spends, owes, and owns — in one place.</p>
-    <div class="data-cards">
-      <div class="data-card">
-        <div class="dk">📄 Bank Transactions</div>
-        <div class="dv">106 transactions</div>
-        <div class="dd">Everyday account + credit card</div>
-      </div>
-      <div class="data-card">
-        <div class="dk">🏠 Property Data</div>
-        <div class="dv">4 properties</div>
-        <div class="dd">Values, mortgages, rents, yields</div>
-      </div>
-      <div class="data-card">
-        <div class="dk">🏦 Savings Data</div>
-        <div class="dv">$51,445 balance</div>
-        <div class="dd">3.85% p.a. — growing $2k/mo</div>
-      </div>
-      <div class="data-card">
-        <div class="dk">💳 Spending Categories</div>
-        <div class="dv">16 categories</div>
-        <div class="dd">Groceries, takeaway, fuel, kids, bills...</div>
-      </div>
-      <div class="data-card">
-        <div class="dk">📅 Period Covered</div>
-        <div class="dv">Jan – Mar 2025</div>
-        <div class="dd">Q1 2025 — 3 full calendar months</div>
-      </div>
-      <div class="data-card">
-        <div class="dk">🔢 Income Sources</div>
-        <div class="dv">3 streams</div>
-        <div class="dd">Salary, rental income, interest</div>
-      </div>
-    </div>
+  <div class="story-card mb20" id="dataSummaryCard">
+    <div class="section-tag c-accent">What's in your dashboard</div>
+    <h2 id="dataSummaryH2">Your Financial Snapshot</h2>
+    <p class="story-sub" id="dataSummarySub">Based on the numbers you entered — your income, expenses, savings, and property.</p>
+    <div class="data-cards" id="dataSummaryCards"></div>
   </div>
 
   <!-- For client vs broker -->
@@ -357,7 +435,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   </div>
 
   <div class="disclaimer">
-    <strong>Note:</strong> This dashboard uses real transaction structure with illustrative names. All figures are representative of a typical high-income Melbourne property investor family. It is designed for educational and planning conversations, not formal financial advice. Always consult a licensed financial adviser for personal recommendations.
+    <strong>🔒 Privacy:</strong> Your numbers stay in your browser only — nothing is stored or sent anywhere. Refresh the page to clear all data. &nbsp;|&nbsp; <strong>Note:</strong> This dashboard is for financial awareness and planning conversations, not formal financial advice. Always consult a licensed financial adviser for personal recommendations. &nbsp;|&nbsp; <button onclick="resetFinance()" style="background:none;border:none;color:var(--accent);font-size:12px;cursor:pointer;text-decoration:underline;font-family:var(--font);">Enter new numbers</button>
   </div>
 
 </div>
@@ -402,294 +480,63 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
           <div class="score-den">/ 100</div>
         </div>
       </div>
-      <div class="health-verdict c-yellow">Solid Foundation</div>
-      <div class="health-verdict-sub">Good position — clear gaps to close</div>
+      <div class="health-verdict" id="healthVerdict">—</div>
+      <div class="health-verdict-sub" id="healthVerdictSub">Enter your numbers to see your score</div>
     </div>
 
-    <div class="score-breakdown">
+    <div class="score-breakdown" id="scoreBreakdown">
       <h3>Score Breakdown</h3>
-      <div class="score-row">
-        <span class="sr-label">💵 Cash Flow</span>
-        <div class="sr-bar-wrap"><div class="sr-bar" data-w="76" style="width:0%;background:#00c896"></div></div>
-        <span class="sr-val c-green">76</span>
-      </div>
-      <div class="score-row">
-        <span class="sr-label">🏠 Property Equity</span>
-        <div class="sr-bar-wrap"><div class="sr-bar" data-w="78" style="width:0%;background:#4db8ff"></div></div>
-        <span class="sr-val c-blue">78</span>
-      </div>
-      <div class="score-row">
-        <span class="sr-label">💰 Savings Rate</span>
-        <div class="sr-bar-wrap"><div class="sr-bar" data-w="42" style="width:0%;background:#ff5a5a"></div></div>
-        <span class="sr-val c-red">42</span>
-      </div>
-      <div class="score-row">
-        <span class="sr-label">🛡️ Emergency Buffer</span>
-        <div class="sr-bar-wrap"><div class="sr-bar" data-w="54" style="width:0%;background:#ffc542"></div></div>
-        <span class="sr-val c-yellow">54</span>
-      </div>
-      <div class="score-row">
-        <span class="sr-label">🎯 Retirement Track</span>
-        <div class="sr-bar-wrap"><div class="sr-bar" data-w="68" style="width:0%;background:#c084fc"></div></div>
-        <span class="sr-val c-accent" style="color:var(--purple)">68</span>
-      </div>
-      <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-size:12px; color:var(--muted); line-height:1.5;">
-        The biggest drag on the score is the <strong style="color:var(--text)">savings rate (42/100)</strong> and <strong style="color:var(--text)">emergency buffer (54/100)</strong>. These are fixable with small monthly shifts.
-      </div>
+      <div id="scoreBars"></div>
+      <div id="scoreInsight" style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-size:12px; color:var(--muted); line-height:1.5;"></div>
     </div>
   </div>
 
   <!-- SECTION 1: YOUR MONEY FLOW -->
-  <div class="story-card mb20 highlight">
-    <div class="section-tag c-accent">📥 Section 1 — Money In, Money Out</div>
-    <h2>Where Does $20,833 a Month Actually Go?</h2>
-    <p class="story-sub">The Williams family earns well above average — but after mortgages, kids, and lifestyle, the true surplus is tighter than you'd expect.</p>
-
-    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
-      <div class="flow-block" style="background:rgba(0,200,150,0.12); border:1px solid rgba(0,200,150,0.2); border-radius:10px; min-width:130px;">
-        <div class="flow-label">Monthly Income</div>
-        <div class="flow-amt c-green">$20,833</div>
-        <div class="flow-pct c-muted">Salary + Rent + Interest</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-block" style="background:rgba(124,107,255,0.1); border:1px solid rgba(124,107,255,0.2); border-radius:10px; min-width:130px;">
-        <div class="flow-label">4 Mortgages</div>
-        <div class="flow-amt c-accent">−$9,050</div>
-        <div class="flow-pct c-muted">43% of income</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-block" style="background:rgba(255,197,66,0.1); border:1px solid rgba(255,197,66,0.2); border-radius:10px; min-width:130px;">
-        <div class="flow-label">Living Expenses</div>
-        <div class="flow-amt c-yellow">−$3,056</div>
-        <div class="flow-pct c-muted">15% of income</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-block" style="background:rgba(0,200,150,0.08); border:1px solid rgba(0,200,150,0.15); border-radius:10px; min-width:130px;">
-        <div class="flow-label">Savings</div>
-        <div class="flow-amt c-green">$2,000</div>
-        <div class="flow-pct c-muted">9.6% of income</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-block" style="background:rgba(77,184,255,0.1); border:1px solid rgba(77,184,255,0.2); border-radius:10px; min-width:110px;">
-        <div class="flow-label">Remaining</div>
-        <div class="flow-amt c-blue">$6,727</div>
-        <div class="flow-pct c-muted">Unaccounted</div>
-      </div>
-    </div>
-    <div style="font-size:12px; color:var(--muted); padding:12px 14px; background:var(--card2); border-radius:8px; line-height:1.6;">
-      💡 <strong style="color:var(--text)">The $6,727 unaccounted monthly gap</strong> likely covers tax, super contributions, credit card repayments, and discretionary spending not captured in this account. Consolidating all accounts into this view would give a complete picture.
-    </div>
-  </div>
+  <div class="story-card mb20 highlight" id="moneyFlowCard"></div>
 
   <!-- SECTION 2: TOP SPENDING -->
   <div class="story-card mb20">
-    <div class="section-tag c-yellow">💳 Section 2 — Where They Spend Most</div>
-    <h2>The Top 8 Spending Categories</h2>
-    <p class="story-sub">Mortgages dominate — which is expected for a property investor. But the discretionary spend on takeaway and shopping has room to move.</p>
+    <div class="section-tag c-yellow">💳 Section 2 — Where Money Goes</div>
+    <h2 id="spendSummaryH2">Your Top Spending Categories</h2>
+    <p class="story-sub" id="spendSummarySub">Based on the monthly expenses you entered.</p>
     <div class="spend-bars" id="spend-bars-summary"></div>
   </div>
 
   <!-- SECTION 3: SAVINGS RATE -->
-  <div class="story-card mb20 warning">
-    <div class="section-tag c-red">⚠️ Section 3 — The Savings Gap</div>
-    <h2>They're Saving 9.6% — But Need 20%</h2>
-    <p class="story-sub">For a family planning to retire at 65, financial planners recommend saving at least 20% of gross income. Right now, the Williams family is less than halfway there.</p>
-
-    <div class="savings-compare">
-      <div class="sav-box" style="background:rgba(255,90,90,0.08);border:1px solid rgba(255,90,90,0.2)">
-        <div class="sv-label">Currently Saving</div>
-        <div class="sv-val c-red">9.6%</div>
-        <div class="sv-sub">$2,000/mo<br>$24,000/yr</div>
-      </div>
-      <div class="sav-box" style="background:rgba(255,197,66,0.08);border:1px solid rgba(255,197,66,0.2)">
-        <div class="sv-label">Recommended</div>
-        <div class="sv-val c-yellow">20%+</div>
-        <div class="sv-sub">$4,167/mo<br>$50,000/yr</div>
-      </div>
-      <div class="sav-box" style="background:rgba(0,200,150,0.08);border:1px solid rgba(0,200,150,0.2)">
-        <div class="sv-label">Monthly Gap</div>
-        <div class="sv-val c-green">$2,167</div>
-        <div class="sv-sub">to hit 20%<br>target</div>
-      </div>
-    </div>
-
-    <div style="background:var(--card2); border-radius:10px; padding:14px 18px;">
-      <div style="font-size:12px; color:var(--muted); margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">If they save $2,167 more per month from today:</div>
-      <div style="display:flex; gap:24px; flex-wrap:wrap;">
-        <div><span style="font-size:20px;font-weight:800;color:var(--green)">$1.56M</span><br><span style="font-size:11px;color:var(--muted)">savings at 65 (current rate)</span></div>
-        <div style="font-size:20px; color:var(--muted); display:flex; align-items:center;">→</div>
-        <div><span style="font-size:20px;font-weight:800;color:var(--green)">$3.14M</span><br><span style="font-size:11px;color:var(--muted)">savings at 65 (at 20% rate)</span></div>
-        <div style="font-size:20px; color:var(--muted); display:flex; align-items:center;">=</div>
-        <div><span style="font-size:20px;font-weight:800;color:var(--yellow)">+$1.58M</span><br><span style="font-size:11px;color:var(--muted)">extra from one habit change</span></div>
-      </div>
-    </div>
-  </div>
+  <div class="story-card mb20 warning" id="savingsRateCard"></div>
 
   <!-- SECTION 4: PROPERTY PAYOFF -->
-  <div class="story-card mb20 warning">
-    <div class="section-tag c-red">🏠 Section 4 — The Property Payoff Problem</div>
-    <h2>Will the Mortgages Be Gone by Age 65?</h2>
-    <p class="story-sub">To be completely debt-free at retirement (age 65), the Williams family needs to increase their total mortgage repayments by <strong style="color:var(--red)">$3,216/month</strong>. At current repayments, the loans won't clear until their mid-70s.</p>
-
-    <div style="overflow-x:auto; margin-bottom:18px;">
-      <table class="payoff-table">
-        <thead>
-          <tr>
-            <th>Property</th>
-            <th>Balance</th>
-            <th>Current Repayment</th>
-            <th>Required for Age 65</th>
-            <th>Monthly Gap</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>12 Banksia Ct</strong><br><span style="font-size:11px;color:var(--muted)">Owner Occupied</span></td>
-            <td>$620,000</td>
-            <td>$3,200</td>
-            <td style="color:var(--green);font-weight:600">$3,920</td>
-            <td><span class="gap-pill">+$720</span></td>
-            <td><span class="gap-pill">Underpaying</span></td>
-          </tr>
-          <tr>
-            <td><strong>8 Wattle St</strong><br><span style="font-size:11px;color:var(--muted)">Brunswick IP</span></td>
-            <td>$510,000</td>
-            <td>$2,100</td>
-            <td style="color:var(--green);font-weight:600">$3,224</td>
-            <td><span class="gap-pill">+$1,124</span></td>
-            <td><span class="gap-pill">Underpaying</span></td>
-          </tr>
-          <tr>
-            <td><strong>3 Eucalyptus Ave</strong><br><span style="font-size:11px;color:var(--muted)">Geelong IP</span></td>
-            <td>$430,000</td>
-            <td>$1,950</td>
-            <td style="color:var(--green);font-weight:600">$2,719</td>
-            <td><span class="gap-pill">+$769</span></td>
-            <td><span class="gap-pill">Underpaying</span></td>
-          </tr>
-          <tr>
-            <td><strong>15 Acacia Rd</strong><br><span style="font-size:11px;color:var(--muted)">Ballarat IP</span></td>
-            <td>$380,000</td>
-            <td>$1,800</td>
-            <td style="color:var(--green);font-weight:600">$2,403</td>
-            <td><span class="gap-pill">+$603</span></td>
-            <td><span class="gap-pill">Underpaying</span></td>
-          </tr>
-          <tr>
-            <td><strong>TOTAL</strong></td>
-            <td><strong>$1,940,000</strong></td>
-            <td><strong>$9,050/mo</strong></td>
-            <td><strong style="color:var(--green)">$12,266/mo</strong></td>
-            <td><strong style="color:var(--red)">+$3,216/mo</strong></td>
-            <td>—</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="font-size:12px; color:var(--muted); padding:12px 14px; background:rgba(255,90,90,0.07); border-radius:8px; border:1px solid rgba(255,90,90,0.15); line-height:1.6;">
-      ⚡ <strong style="color:var(--text)">The good news:</strong> The $3,216/mo gap is achievable. Rental income already covers $5,900/mo of mortgage costs. Redirecting even part of the monthly surplus toward extra repayments changes the retirement date significantly. A mortgage broker can model offset accounts and P&amp;I switching to close this gap efficiently.
-    </div>
-  </div>
+  <div class="story-card mb20 warning" id="propPayoffCard"></div>
 
   <!-- SECTION 5: RETIREMENT OUTLOOK -->
-  <div class="story-card mb20 positive">
-    <div class="section-tag c-green">🎯 Section 5 — Retirement at 65</div>
-    <h2>The Big Picture: What Does Age 65 Look Like?</h2>
-    <p class="story-sub">30 years of property growth, compounding savings, and consistent rental income is a powerful combination. Here's the projected picture if the Williams family stays the course — and improves their strategy.</p>
-
+  <div class="story-card mb20 positive" id="retirementCard">
+    <div class="section-tag c-green">🎯 Section 5 — Retirement Outlook</div>
+    <h2 id="retireH2">The Big Picture</h2>
+    <p class="story-sub" id="retireSub"></p>
     <div style="background:var(--card2); border-radius:10px; padding:14px 16px; margin-bottom:18px; display:flex; align-items:center; gap:12px;">
       <div style="font-size:12px; color:var(--muted); flex:1;">Time remaining to retirement</div>
-      <div style="font-size:13px; font-weight:700; color:var(--accent);">30 years</div>
+      <div style="font-size:13px; font-weight:700; color:var(--accent);" id="yearsLeft">—</div>
     </div>
     <div class="timeline-bar">
       <div class="timeline-fill" style="width:0%;transition:width 1.5s ease 0.3s" id="retireBar"></div>
     </div>
     <div class="timeline-labels mb20">
-      <span>Today — Age 35</span>
-      <span style="color:var(--accent)">▲ Now (0%)</span>
-      <span>Retire — Age 65</span>
+      <span id="timelineNow">Today</span>
+      <span style="color:var(--accent)">▲ Now</span>
+      <span id="timelineRetire">Retirement</span>
     </div>
-
-    <div class="retire-grid">
-      <div class="retire-box">
-        <div class="rb-label">Net Worth Today</div>
-        <div class="rb-val c-blue">$1.76M</div>
-        <div class="rb-sub">Equity $1.71M<br>+ Savings $51k</div>
-      </div>
-      <div class="retire-box">
-        <div class="rb-label">Projected at Age 65</div>
-        <div class="rb-val c-green">$17.3M</div>
-        <div class="rb-sub">Properties at 5% p.a. growth<br>+ savings compounding</div>
-      </div>
-      <div class="retire-box">
-        <div class="rb-label">Est. Annual Passive Income</div>
-        <div class="rb-val c-yellow">$240k+</div>
-        <div class="rb-sub">3 IPs rental income<br>at retirement values</div>
-      </div>
-      <div class="retire-box">
-        <div class="rb-label">Savings at 65 (current rate)</div>
-        <div class="rb-val c-accent">$1.56M</div>
-        <div class="rb-sub">$2k/mo at 4% p.a.<br>over 30 years</div>
-      </div>
-      <div class="retire-box">
-        <div class="rb-label">Savings at 65 (target rate)</div>
-        <div class="rb-val c-green">$3.14M</div>
-        <div class="rb-sub">$4k/mo at 4% p.a.<br>over 30 years</div>
-      </div>
-      <div class="retire-box">
-        <div class="rb-label">Superannuation</div>
-        <div class="rb-val c-muted">Not tracked</div>
-        <div class="rb-sub">Connect super data<br>for full picture</div>
-      </div>
-    </div>
-
+    <div class="retire-grid" id="retireGrid"></div>
     <div style="background:var(--card2); border-radius:10px; padding:16px 18px;">
-      <div class="chart-wrap" style="height:200px;">
-        <canvas id="retireChart"></canvas>
-      </div>
+      <div class="chart-wrap" style="height:200px;"><canvas id="retireChart"></canvas></div>
     </div>
   </div>
 
   <!-- SECTION 6: ACTION ITEMS -->
   <div class="story-card positive">
     <div class="section-tag c-green">✅ Section 6 — What to Do Next</div>
-    <h2>4 Actions That Move the Needle</h2>
-    <p class="story-sub">These are the highest-leverage moves for the Williams family right now, in order of impact.</p>
-    <div class="actions-list">
-      <div class="action-item urgent">
-        <div class="action-icon">🏠</div>
-        <div>
-          <div class="action-title">Switch Investment Properties to P&amp;I Repayments</div>
-          <div class="action-desc">IPs are likely on interest-only loans. Switching to principal &amp; interest adds ~$3,216/mo to repayments but builds equity fast and guarantees debt-free by 65. Talk to your broker about offset accounts to manage cashflow.</div>
-          <div class="action-impact c-red">Impact: Clears $1.94M debt by retirement ↑↑↑</div>
-        </div>
-      </div>
-      <div class="action-item urgent">
-        <div class="action-icon">💰</div>
-        <div>
-          <div class="action-title">Increase Monthly Savings to $4,167 (20% of income)</div>
-          <div class="action-desc">Currently saving $2,000/mo (9.6%). Hitting 20% means an extra $2,167/mo into savings or investments. Over 30 years, this doubles the savings pot from $1.56M to $3.14M.</div>
-          <div class="action-impact c-yellow">Impact: +$1.58M extra at retirement ↑↑</div>
-        </div>
-      </div>
-      <div class="action-item medium">
-        <div class="action-icon">🍔</div>
-        <div>
-          <div class="action-title">Reduce Takeaway Spend by 50%</div>
-          <div class="action-desc">$253/mo on takeaway is a small leak but symbolic of discretionary habits. Cutting to $127/mo saves $1,524/year — redirect to savings or extra mortgage repayments.</div>
-          <div class="action-impact c-yellow">Impact: $1,524/yr freed up ↑</div>
-        </div>
-      </div>
-      <div class="action-item good">
-        <div class="action-icon">🛡️</div>
-        <div>
-          <div class="action-title">Build Emergency Buffer to 6 Months of Expenses</div>
-          <div class="action-desc">Current savings of $51k = ~2.5 months of total expenses. Target is 6 months ($120k–$130k). This protects against rate rises, vacant IPs, or job changes without touching investments.</div>
-          <div class="action-impact c-green">Impact: Financial resilience ↑</div>
-        </div>
-      </div>
-    </div>
+    <h2>Your Top Actions</h2>
+    <p class="story-sub">The highest-leverage moves based on your numbers, in order of impact.</p>
+    <div class="actions-list" id="actionsList"></div>
   </div>
 
 </div>
@@ -702,9 +549,9 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 <div id="page-spending" class="page">
 <div class="wrap">
   <div class="story-card mb20">
-    <div class="section-tag c-yellow">💳 All Spending — Jan to Mar 2025</div>
-    <h2>3-Month Spending Breakdown</h2>
-    <p class="story-sub">Total living expenses (excluding mortgages): <strong style="color:var(--text)">$9,168</strong> across 3 months — averaging <strong style="color:var(--text)">$3,056/month</strong>.</p>
+    <div class="section-tag c-yellow">💳 Spending Breakdown</div>
+    <h2>Your Monthly Expenses</h2>
+    <p class="story-sub" id="spendPageSub">Based on the numbers you entered.</p>
     <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;" id="month-tabs">
       <button class="tab active" onclick="filterMonth('all',this)">All 3 Months</button>
       <button class="tab" onclick="filterMonth('jan',this)">January</button>
@@ -749,10 +596,10 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 <div id="page-properties" class="page">
 <div class="wrap">
 
-  <div class="story-card mb20 highlight">
-    <div class="section-tag c-accent">🏠 Property Portfolio — 4 Properties</div>
-    <h2>$3,650,000 Portfolio · $1,710,000 Equity · 46.8% LVR</h2>
-    <p class="story-sub">A strong, diversified Victorian property portfolio. The focus now shifts from accumulation to optimisation — getting these paid off on time.</p>
+  <div class="story-card mb20 highlight" id="propPageHeader">
+    <div class="section-tag c-accent">🏠 Property Portfolio</div>
+    <h2 id="propPageH2">Your Properties</h2>
+    <p class="story-sub" id="propPageSub">Your property portfolio overview — equity, LVR, and cashflow per property.</p>
   </div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-bottom:20px;" id="prop-cards"></div>
@@ -781,9 +628,9 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 <div class="wrap">
 
   <div class="story-card mb20 positive">
-    <div class="section-tag c-green">🏦 Savings — Jan to Mar 2025</div>
-    <h2>$45,000 → $51,445 in 3 Months</h2>
-    <p class="story-sub">Consistent $2,000/month deposits at 3.85% p.a. The balance is healthy but needs to grow faster. Target: 6 months of expenses ($120k) as an emergency buffer.</p>
+    <div class="section-tag c-green">🏦 Savings Overview</div>
+    <h2 id="savingsH2">Your Savings</h2>
+    <p class="story-sub" id="savingsSub">Your current savings position and emergency buffer progress.</p>
   </div>
 
   <div class="two-col mb20">
@@ -792,20 +639,9 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
       <div class="chart-wrap"><canvas id="savingsActual"></canvas></div>
     </div>
     <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;">
-      <h3 style="font-size:14px;font-weight:600;margin-bottom:18px;">3-Month Summary</h3>
-      <div style="display:flex;flex-direction:column;gap:0;">
-        <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">Opening Balance (Jan)</span><span style="font-weight:600">$45,000</span></div>
-        <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">Total Deposits</span><span style="font-weight:600;color:var(--green)">+$6,000</span></div>
-        <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">Interest Earned</span><span style="font-weight:600;color:var(--green)">+$445</span></div>
-        <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">Closing Balance (Mar)</span><span style="font-weight:700;color:var(--green)">$51,445</span></div>
-        <div style="display:flex;justify-content:space-between;padding:11px 0;font-size:13px;"><span style="color:var(--muted)">Emergency Buffer Target (6 mo)</span><span style="font-weight:600;color:var(--yellow)">$120,000</span></div>
-      </div>
-      <div style="margin-top:16px;">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;"><span>Buffer filled</span><span>$51k of $120k</span></div>
-        <div style="height:8px;background:var(--card2);border-radius:4px;overflow:hidden;">
-          <div style="height:100%;width:42.9%;background:linear-gradient(90deg,var(--yellow),var(--green));border-radius:4px;"></div>
-        </div>
-      </div>
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:18px;">Savings Summary</h3>
+      <div id="savingsSummaryRows" style="display:flex;flex-direction:column;gap:0;"></div>
+      <div style="margin-top:16px;" id="bufferProgress"></div>
     </div>
   </div>
 
@@ -1221,7 +1057,7 @@ function buildSimChart() {
   const rate = +document.getElementById('rRate').value / 100;
   const yrs = +document.getElementById('rYears').value;
   const labels = [], data = [];
-  let bal = 51445;
+  let bal = (UD && UD.savBal) ? UD.savBal : 0;
   for(let i=1;i<=yrs*12;i++) {
     bal = bal*(1+rate/12)+dep;
     if(i%12===0) { labels.push('Year '+(i/12)); data.push(Math.round(bal)); }
@@ -1243,7 +1079,7 @@ function updateSim() {
   document.getElementById('lRate').textContent = rate.toFixed(1)+'%';
   document.getElementById('lYears').textContent = yrs+(yrs===1?' year':' years');
   const r = rate/100/12, n=yrs*12;
-  let bal=51445, totalInt=0;
+  let bal=(UD && UD.savBal)?UD.savBal:0, totalInt=0;
   for(let i=0;i<n;i++){const int=bal*r;bal+=int+dep;totalInt+=int;}
   const totalDep = dep*n;
   document.getElementById('simBal').textContent = fmt(bal);
@@ -1254,9 +1090,592 @@ function updateSim() {
 
 // ═══════════════ BOOT ═══════════════
 document.addEventListener('DOMContentLoaded', () => {
-  // Guide page is default — no charts needed
-  // Summary inits on first visit
+  renderPropInputs();
 });
+
+// ═══════════════ USER DATA ═══════════════
+let UD = null;
+
+function resetFinance() {
+  document.getElementById('obOverlay').style.display = 'flex';
+}
+
+// ═══════════════ PROPERTY INPUT RENDERER ═══════════════
+function renderPropInputs() {
+  const n = parseInt(document.getElementById('ob-numprops').value);
+  const labels = ['Home (Owner Occupied)', 'Investment Property 1', 'Investment Property 2', 'Investment Property 3'];
+  let html = '';
+  for (let i = 0; i < n; i++) {
+    html += `<div class="ob-prop-block">
+      <div class="ob-prop-title">${labels[i] || 'Property ' + (i+1)}</div>
+      <div class="ob-two">
+        <div class="ob-row"><label>Property Name / Address</label><input type="text" id="pname${i}" placeholder="e.g. 12 Main St"></div>
+        <div class="ob-row"><label>Current Value ($)</label><input type="number" id="pval${i}" placeholder="600000" min="0"></div>
+      </div>
+      <div class="ob-three">
+        <div class="ob-row"><label>Mortgage Balance ($)</label><input type="number" id="pmort${i}" placeholder="400000" min="0" value="0"></div>
+        <div class="ob-row"><label>Monthly Repayment ($)</label><input type="number" id="prepay${i}" placeholder="2000" min="0" value="0"></div>
+        <div class="ob-row"><label>Monthly Rent ($) — 0 if you live here</label><input type="number" id="prent${i}" placeholder="0" min="0" value="0"></div>
+      </div>
+    </div>`;
+  }
+  document.getElementById('prop-inputs').innerHTML = html;
+}
+
+// ═══════════════ SCORING ENGINE ═══════════════
+function computeScores(d) {
+  const totalIncome = d.salary + d.otherIncome;
+  const totalExpenses = d.groceries + d.bills + d.takeaway + d.shopping + d.kids + d.other;
+  const totalMortgage = d.props.reduce((s, p) => s + p.repay, 0);
+  const totalOut = totalExpenses + totalMortgage + d.savDep;
+  const surplus = totalIncome - totalOut;
+  const savingsRate = totalIncome > 0 ? (d.savDep / totalIncome) * 100 : 0;
+
+  // 1. CASH FLOW SCORE (0-100)
+  // How much surplus is left after all expenses?
+  const surplusPct = totalIncome > 0 ? surplus / totalIncome : 0;
+  const cashFlowScore = Math.min(100, Math.max(0, Math.round(50 + surplusPct * 200)));
+
+  // 2. PROPERTY EQUITY SCORE (0-100)
+  // Based on average LVR across properties
+  const totalVal = d.props.reduce((s, p) => s + p.value, 0);
+  const totalMort = d.props.reduce((s, p) => s + p.mortgage, 0);
+  let propEquityScore = 50; // default if no properties
+  if (totalVal > 0) {
+    const lvr = totalMort / totalVal; // 0=great, 1=bad
+    propEquityScore = Math.min(100, Math.max(0, Math.round((1 - lvr) * 100)));
+  }
+
+  // 3. SAVINGS RATE SCORE (0-100)
+  // 20%+ = 100, 0% = 0
+  const savRateScore = Math.min(100, Math.max(0, Math.round((savingsRate / 20) * 100)));
+
+  // 4. EMERGENCY BUFFER SCORE (0-100)
+  // Target = 6 months of expenses. Current savings vs that target.
+  const monthlyExpTotal = totalExpenses + totalMortgage;
+  const emergencyTarget = monthlyExpTotal * 6;
+  const bufferScore = emergencyTarget > 0
+    ? Math.min(100, Math.max(0, Math.round((d.savBal / emergencyTarget) * 100)))
+    : 50;
+
+  // 5. RETIREMENT TRACK SCORE (0-100)
+  // Project net worth at retirement. Compare to a $1M target per 10 yrs to retire.
+  const years = d.retireAge - d.age;
+  const netWorthNow = totalVal - totalMort + d.savBal;
+  const projectedNW = projectNetWorth(netWorthNow, d.savDep, d.savRate / 100, years);
+  const retireTarget = Math.max(500000, totalIncome * 12 * 15); // 15x annual income
+  const retireScore = Math.min(100, Math.max(0, Math.round((projectedNW / retireTarget) * 60)));
+
+  const overall = Math.round((cashFlowScore + propEquityScore + savRateScore + bufferScore + retireScore) / 5);
+
+  return { overall, cashFlowScore, propEquityScore, savRateScore, bufferScore, retireScore, savingsRate, surplus, totalIncome, totalExpenses, totalMortgage, totalMort, totalVal, monthlyExpTotal, emergencyTarget };
+}
+
+function projectNetWorth(startNW, monthlySav, annualRate, years) {
+  // property at 5% growth + savings compounding
+  const propNW = startNW * Math.pow(1.05, years);
+  const r = annualRate / 12;
+  const n = years * 12;
+  const savFV = r > 0 ? monthlySav * ((Math.pow(1 + r, n) - 1) / r) : monthlySav * n;
+  return propNW + savFV;
+}
+
+function fmtM(n) {
+  if (Math.abs(n) >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+  if (Math.abs(n) >= 1000) return '$' + Math.round(n / 1000) + 'k';
+  return '$' + Math.round(n).toLocaleString();
+}
+
+// ═══════════════ ONBOARD SUBMIT ═══════════════
+function submitFinanceOnboard() {
+  const name     = document.getElementById('ob-name').value.trim() || 'Your Dashboard';
+  const location = document.getElementById('ob-location').value.trim() || '';
+  const age      = parseInt(document.getElementById('ob-age').value) || 35;
+  const retireAge= parseInt(document.getElementById('ob-retire').value) || 65;
+  const salary   = parseFloat(document.getElementById('ob-salary').value) || 0;
+  const otherIncome = parseFloat(document.getElementById('ob-otherincome').value) || 0;
+  const groceries= parseFloat(document.getElementById('ob-groceries').value) || 0;
+  const bills    = parseFloat(document.getElementById('ob-bills').value) || 0;
+  const takeaway = parseFloat(document.getElementById('ob-takeaway').value) || 0;
+  const shopping = parseFloat(document.getElementById('ob-shopping').value) || 0;
+  const kids     = parseFloat(document.getElementById('ob-kids').value) || 0;
+  const other    = parseFloat(document.getElementById('ob-other').value) || 0;
+  const savBal   = parseFloat(document.getElementById('ob-savbal').value) || 0;
+  const savDep   = parseFloat(document.getElementById('ob-savdep').value) || 0;
+  const savRate  = parseFloat(document.getElementById('ob-savrate').value) || 4.0;
+  const numProps = parseInt(document.getElementById('ob-numprops').value) || 0;
+
+  const props = [];
+  for (let i = 0; i < numProps; i++) {
+    props.push({
+      name:    document.getElementById('pname'+i)?.value.trim() || ('Property ' + (i+1)),
+      value:   parseFloat(document.getElementById('pval'+i)?.value) || 0,
+      mortgage:parseFloat(document.getElementById('pmort'+i)?.value) || 0,
+      repay:   parseFloat(document.getElementById('prepay'+i)?.value) || 0,
+      rent:    parseFloat(document.getElementById('prent'+i)?.value) || 0,
+    });
+  }
+
+  UD = { name, location, age, retireAge, salary, otherIncome, groceries, bills, takeaway, shopping, kids, other, savBal, savDep, savRate, numProps, props };
+
+  updateDashboard(UD);
+  document.getElementById('obOverlay').style.display = 'none';
+
+  // Reset chart init flags so charts re-draw with new data
+  Object.keys(inited).forEach(k => { inited[k] = false; });
+
+  showPage('guide', document.querySelector('.tab.active') || document.querySelector('.tab'));
+}
+
+// ═══════════════ UPDATE DASHBOARD ═══════════════
+function updateDashboard(d) {
+  const S = computeScores(d);
+  const years = d.retireAge - d.age;
+  const totalVal = d.props.reduce((s, p) => s + p.value, 0);
+  const totalMort = d.props.reduce((s, p) => s + p.mortgage, 0);
+  const totalEquity = totalVal - totalMort;
+  const netWorth = totalEquity + d.savBal;
+  const ips = d.props.filter(p => p.rent > 0);
+  const totalRent = ips.reduce((s, p) => s + p.rent, 0);
+
+  // ── Nav + title
+  document.getElementById('navName').textContent = d.name;
+  document.title = 'Financial Story — ' + d.name;
+
+  // ── Guide page
+  document.getElementById('guideH1').innerHTML = `<span>${d.name}</span> — Your Financial Story 💰`;
+  document.getElementById('guideDesc').innerHTML = `Your personalised financial health dashboard based on the numbers you entered. Use it to understand where your money goes, whether you're on track for retirement, and what to do next.`;
+
+  // Profile grid
+  const loc = d.location || 'Your location';
+  document.getElementById('profileGrid').innerHTML = `
+    <div class="profile-card"><div class="icon">💼</div><div class="label">Monthly Income</div><div class="val c-green">${fmt(S.totalIncome)}</div><div class="sub">Salary + other income</div></div>
+    <div class="profile-card"><div class="icon">🏠</div><div class="label">Properties</div><div class="val">${d.numProps} ${d.numProps===1?'Property':'Properties'}</div><div class="sub">${ips.length} investment${ips.length!==1?'s':''}</div></div>
+    <div class="profile-card"><div class="icon">📈</div><div class="label">Portfolio Value</div><div class="val c-purple">${fmtM(totalVal)}</div><div class="sub">Total equity: ${fmtM(totalEquity)}</div></div>
+    <div class="profile-card"><div class="icon">🏦</div><div class="label">Savings Balance</div><div class="val c-blue">${fmtM(d.savBal)}</div><div class="sub">At ${d.savRate}% p.a.</div></div>
+    <div class="profile-card"><div class="icon">💰</div><div class="label">Savings Rate</div><div class="val ${S.savingsRate>=20?'c-green':S.savingsRate>=10?'c-yellow':'c-red'}">${S.savingsRate.toFixed(1)}%</div><div class="sub">Target: 20%+</div></div>
+    <div class="profile-card"><div class="icon">🎯</div><div class="label">Retirement Goal</div><div class="val c-blue">Age ${d.retireAge}</div><div class="sub">${years} years away</div></div>
+  `;
+
+  // Data summary cards
+  const eMoTarget = S.monthlyExpTotal * 6;
+  document.getElementById('dataSummaryCards').innerHTML = `
+    <div class="data-card"><div class="dk">💵 Monthly Income</div><div class="dv">${fmt(S.totalIncome)}</div><div class="dd">Salary + other</div></div>
+    <div class="data-card"><div class="dk">💳 Monthly Expenses</div><div class="dv">${fmt(S.totalExpenses + S.totalMortgage)}</div><div class="dd">Living costs + mortgages</div></div>
+    <div class="data-card"><div class="dk">🏦 Savings Deposit</div><div class="dv">${fmt(d.savDep)}/mo</div><div class="dd">${S.savingsRate.toFixed(1)}% of income</div></div>
+    <div class="data-card"><div class="dk">🏠 Properties</div><div class="dv">${d.numProps} owned</div><div class="dd">${fmtM(totalEquity)} equity</div></div>
+    <div class="data-card"><div class="dk">📊 Health Score</div><div class="dv">${S.overall}/100</div><div class="dd">${scoreLabel(S.overall)}</div></div>
+    <div class="data-card"><div class="dk">🎯 Years to Retire</div><div class="dv">${years} yrs</div><div class="dd">Target age ${d.retireAge}</div></div>
+  `;
+
+  // ── Health score
+  const arc = document.getElementById('gaugeArc');
+  const numEl = document.getElementById('gaugeNum');
+  const arcLen = Math.PI * 85;
+  setTimeout(() => {
+    arc.style.strokeDashoffset = arcLen * (1 - S.overall / 100);
+    let n = 0;
+    const step = setInterval(() => {
+      n = Math.min(n + 2, S.overall);
+      numEl.textContent = n;
+      numEl.className = 'score-num ' + scoreColor(n);
+      if (n >= S.overall) clearInterval(step);
+    }, 25);
+  }, 200);
+
+  const vLabel = scoreLabel(S.overall);
+  const vSub = S.overall >= 75 ? 'Strong position — keep it up' : S.overall >= 55 ? 'Good foundation — clear gaps to close' : 'Room to improve — focus on the actions below';
+  document.getElementById('healthVerdict').textContent = vLabel;
+  document.getElementById('healthVerdict').className = 'health-verdict ' + scoreColor(S.overall);
+  document.getElementById('healthVerdictSub').textContent = vSub;
+
+  // Score bars
+  const dims = [
+    { label: '💵 Cash Flow',       score: S.cashFlowScore,   color: '#00c896' },
+    { label: '🏠 Property Equity', score: S.propEquityScore, color: '#4db8ff' },
+    { label: '💰 Savings Rate',    score: S.savRateScore,    color: S.savRateScore>=60?'#00c896':S.savRateScore>=30?'#ffc542':'#ff5a5a' },
+    { label: '🛡️ Emergency Buffer',score: S.bufferScore,     color: S.bufferScore>=60?'#00c896':S.bufferScore>=30?'#ffc542':'#ff5a5a' },
+    { label: '🎯 Retirement Track', score: S.retireScore,    color: '#c084fc' },
+  ];
+  document.getElementById('scoreBars').innerHTML = dims.map(dim => `
+    <div class="score-row">
+      <span class="sr-label">${dim.label}</span>
+      <div class="sr-bar-wrap"><div class="sr-bar" data-w="${dim.score}" style="width:0%;background:${dim.color}"></div></div>
+      <span class="sr-val" style="color:${dim.color}">${dim.score}</span>
+    </div>
+  `).join('');
+  setTimeout(() => {
+    document.querySelectorAll('#scoreBars .sr-bar').forEach(b => { b.style.transition='width 1s ease'; b.style.width = b.dataset.w + '%'; });
+  }, 400);
+
+  // Score insight
+  const weakest = dims.reduce((a, b) => a.score < b.score ? a : b);
+  document.getElementById('scoreInsight').innerHTML = `The biggest opportunity is your <strong style="color:var(--text)">${weakest.label.replace(/[^\w\s]/g,'').trim()} (${weakest.score}/100)</strong>. The actions below will help you move this needle.`;
+
+  // ── Section 1: Money Flow
+  const totalOut = S.totalExpenses + S.totalMortgage + d.savDep;
+  const surplus = S.totalIncome - totalOut;
+  document.getElementById('moneyFlowCard').innerHTML = `
+    <div class="section-tag c-accent">📥 Section 1 — Money In, Money Out</div>
+    <h2>Where Does ${fmt(S.totalIncome)} a Month Go?</h2>
+    <p class="story-sub">Here's the full picture of your monthly money flow — from income to mortgages, living costs, savings, and what's left over.</p>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+      <div class="flow-block" style="background:rgba(0,200,150,0.12); border:1px solid rgba(0,200,150,0.2); border-radius:10px; min-width:120px;">
+        <div class="flow-label">Monthly Income</div>
+        <div class="flow-amt c-green">${fmt(S.totalIncome)}</div>
+        <div class="flow-pct c-muted">Salary + other</div>
+      </div>
+      ${S.totalMortgage > 0 ? `<div class="flow-arrow">→</div>
+      <div class="flow-block" style="background:rgba(124,107,255,0.1); border:1px solid rgba(124,107,255,0.2); border-radius:10px; min-width:120px;">
+        <div class="flow-label">${d.numProps} Mortgage${d.numProps!==1?'s':''}</div>
+        <div class="flow-amt c-accent">−${fmt(S.totalMortgage)}</div>
+        <div class="flow-pct c-muted">${S.totalIncome>0?((S.totalMortgage/S.totalIncome)*100).toFixed(0):0}% of income</div>
+      </div>` : ''}
+      <div class="flow-arrow">→</div>
+      <div class="flow-block" style="background:rgba(255,197,66,0.1); border:1px solid rgba(255,197,66,0.2); border-radius:10px; min-width:120px;">
+        <div class="flow-label">Living Expenses</div>
+        <div class="flow-amt c-yellow">−${fmt(S.totalExpenses)}</div>
+        <div class="flow-pct c-muted">${S.totalIncome>0?((S.totalExpenses/S.totalIncome)*100).toFixed(0):0}% of income</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-block" style="background:rgba(0,200,150,0.08); border:1px solid rgba(0,200,150,0.15); border-radius:10px; min-width:120px;">
+        <div class="flow-label">Savings</div>
+        <div class="flow-amt c-green">${fmt(d.savDep)}</div>
+        <div class="flow-pct c-muted">${S.savingsRate.toFixed(1)}% of income</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-block" style="background:rgba(77,184,255,0.1); border:1px solid rgba(77,184,255,0.2); border-radius:10px; min-width:110px;">
+        <div class="flow-label">${surplus >= 0 ? 'Surplus' : 'Shortfall'}</div>
+        <div class="flow-amt ${surplus>=0?'c-blue':'c-red'}">${surplus>=0?'':'-'}${fmt(Math.abs(surplus))}</div>
+        <div class="flow-pct c-muted">unaccounted</div>
+      </div>
+    </div>
+    <div style="font-size:12px; color:var(--muted); padding:12px 14px; background:var(--card2); border-radius:8px; line-height:1.6;">
+      ${surplus >= 0
+        ? `💡 <strong style="color:var(--text)">You have ${fmt(surplus)} unaccounted each month</strong> — this likely covers tax, super, credit cards, and other discretionary spend not listed above. Tracking these will complete the picture.`
+        : `⚠️ <strong style="color:var(--text)">Your recorded outgoings exceed income by ${fmt(Math.abs(surplus))}/month.</strong> Check whether some expenses are paid from a separate account, or consider reducing discretionary spending.`}
+    </div>
+  `;
+
+  // ── Section 2: Spending bars (summary page)
+  const spendCats = [
+    { name: 'Groceries', val: d.groceries, color: '#00c896' },
+    { name: 'Bills & Utilities', val: d.bills, color: '#ffb74d' },
+    { name: 'Takeaway / Dining', val: d.takeaway, color: '#ff5a5a' },
+    { name: 'Shopping', val: d.shopping, color: '#c084fc' },
+    { name: 'Kids & Family', val: d.kids, color: '#ffc542' },
+    { name: 'Other', val: d.other, color: '#80cbc4' },
+  ].filter(c => c.val > 0).sort((a, b) => b.val - a.val);
+
+  if (S.totalMortgage > 0) spendCats.unshift({ name: `Mortgages (${d.numProps})`, val: S.totalMortgage, color: '#7c6bff' });
+  const maxSpend = spendCats[0]?.val || 1;
+  document.getElementById('spend-bars-summary').innerHTML = spendCats.map(c => `
+    <div class="spend-bar-row">
+      <div class="sbl">${c.name}</div>
+      <div class="sbw"><div class="sbf" style="width:${(c.val/maxSpend*100).toFixed(1)}%;background:${c.color}"></div></div>
+      <div class="sbv">${fmt(c.val)}<span style="font-size:10px;color:var(--muted);font-weight:400">/mo</span></div>
+    </div>
+  `).join('');
+
+  document.getElementById('spendSummarySub').textContent = `Your total monthly spend is ${fmt(S.totalExpenses + S.totalMortgage)} — ${S.totalIncome>0?((( S.totalExpenses + S.totalMortgage)/S.totalIncome)*100).toFixed(0):0}% of your income.`;
+
+  // ── Section 3: Savings Rate
+  const targetDep = S.totalIncome * 0.20;
+  const savGap = Math.max(0, targetDep - d.savDep);
+  const savFV_current = calcFV(d.savBal, d.savDep, d.savRate/100, years);
+  const savFV_target  = calcFV(d.savBal, targetDep, d.savRate/100, years);
+  const cardClass = S.savingsRate >= 20 ? 'positive' : 'warning';
+  document.getElementById('savingsRateCard').className = `story-card mb20 ${cardClass}`;
+  document.getElementById('savingsRateCard').innerHTML = `
+    <div class="section-tag ${S.savingsRate>=20?'c-green':'c-red'}">⚠️ Section 3 — The Savings Rate</div>
+    <h2>You're Saving ${S.savingsRate.toFixed(1)}% — ${S.savingsRate>=20?'On Track ✅':'Target is 20%'}</h2>
+    <p class="story-sub">Financial planners recommend saving at least 20% of income for retirement. ${S.savingsRate>=20?`You're hitting this — great discipline.`:`You're currently at ${S.savingsRate.toFixed(1)}% — ${(20-S.savingsRate).toFixed(1)}% short of the target.`}</p>
+    <div class="savings-compare">
+      <div class="sav-box" style="background:rgba(${S.savingsRate>=20?'0,200,150':'255,90,90'},0.08);border:1px solid rgba(${S.savingsRate>=20?'0,200,150':'255,90,90'},0.2)">
+        <div class="sv-label">Currently Saving</div>
+        <div class="sv-val ${S.savingsRate>=20?'c-green':'c-red'}">${S.savingsRate.toFixed(1)}%</div>
+        <div class="sv-sub">${fmt(d.savDep)}/mo<br>${fmt(d.savDep*12)}/yr</div>
+      </div>
+      <div class="sav-box" style="background:rgba(255,197,66,0.08);border:1px solid rgba(255,197,66,0.2)">
+        <div class="sv-label">Recommended</div>
+        <div class="sv-val c-yellow">20%+</div>
+        <div class="sv-sub">${fmt(targetDep)}/mo<br>${fmt(targetDep*12)}/yr</div>
+      </div>
+      <div class="sav-box" style="background:rgba(0,200,150,0.08);border:1px solid rgba(0,200,150,0.2)">
+        <div class="sv-label">${savGap>0?'Monthly Gap':'You\'re Ahead'}</div>
+        <div class="sv-val c-green">${savGap>0?fmt(savGap):'✅'}</div>
+        <div class="sv-sub">${savGap>0?`to hit 20%<br>target`:`${fmt(d.savDep-targetDep)}/mo<br>above target`}</div>
+      </div>
+    </div>
+    ${savGap > 0 ? `<div style="background:var(--card2); border-radius:10px; padding:14px 18px;">
+      <div style="font-size:12px; color:var(--muted); margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">If you save ${fmt(savGap)} more per month from today:</div>
+      <div style="display:flex; gap:24px; flex-wrap:wrap;">
+        <div><span style="font-size:20px;font-weight:800;color:var(--green)">${fmtM(savFV_current)}</span><br><span style="font-size:11px;color:var(--muted)">savings at ${d.retireAge} (current rate)</span></div>
+        <div style="font-size:20px; color:var(--muted); display:flex; align-items:center;">→</div>
+        <div><span style="font-size:20px;font-weight:800;color:var(--green)">${fmtM(savFV_target)}</span><br><span style="font-size:11px;color:var(--muted)">savings at ${d.retireAge} (at 20% rate)</span></div>
+        <div style="font-size:20px; color:var(--muted); display:flex; align-items:center;">=</div>
+        <div><span style="font-size:20px;font-weight:800;color:var(--yellow)">+${fmtM(savFV_target - savFV_current)}</span><br><span style="font-size:11px;color:var(--muted)">extra from one habit change</span></div>
+      </div>
+    </div>` : ''}
+  `;
+
+  // ── Section 4: Property Payoff
+  if (d.numProps > 0) {
+    const propRows = d.props.map(p => {
+      if (p.mortgage <= 0) return `<tr><td><strong>${p.name}</strong><br><span style="font-size:11px;color:var(--muted)">${p.rent>0?'Investment':'Owner Occupied'}</span></td><td>$0</td><td>${fmt(p.repay)}</td><td style="color:var(--green);font-weight:600">—</td><td><span class="ok-pill gap-pill">Paid off</span></td><td><span class="ok-pill gap-pill">✅ Clear</span></td></tr>`;
+      const required = calcRequiredRepayment(p.mortgage, years);
+      const gap = required - p.repay;
+      const isOk = gap <= 0;
+      return `<tr>
+        <td><strong>${p.name}</strong><br><span style="font-size:11px;color:var(--muted)">${p.rent>0?'Investment':'Owner Occupied'}</span></td>
+        <td>${fmt(p.mortgage)}</td>
+        <td>${fmt(p.repay)}</td>
+        <td style="color:var(--green);font-weight:600">${fmt(required)}</td>
+        <td>${isOk?`<span class="ok-pill gap-pill">On track</span>`:`<span class="gap-pill">+${fmt(gap)}</span>`}</td>
+        <td>${isOk?`<span class="ok-pill gap-pill">✅ On track</span>`:`<span class="gap-pill">Underpaying</span>`}</td>
+      </tr>`;
+    });
+    const totalRequired = d.props.reduce((s, p) => s + calcRequiredRepayment(p.mortgage, years), 0);
+    const totalGap = Math.max(0, totalRequired - S.totalMortgage);
+    document.getElementById('propPayoffCard').innerHTML = `
+      <div class="section-tag c-red">🏠 Section 4 — Property Payoff</div>
+      <h2>Will Mortgages Clear by Age ${d.retireAge}?</h2>
+      <p class="story-sub">${totalGap > 0 ? `To be debt-free at retirement, you need to increase total repayments by <strong style="color:var(--red)">${fmt(totalGap)}/month</strong>.` : `✅ Based on current repayments, you're on track to be mortgage-free by age ${d.retireAge}.`}</p>
+      <div style="overflow-x:auto; margin-bottom:18px;">
+        <table class="payoff-table">
+          <thead><tr><th>Property</th><th>Balance</th><th>Current</th><th>Required</th><th>Gap</th><th>Status</th></tr></thead>
+          <tbody>${propRows.join('')}<tr><td><strong>TOTAL</strong></td><td><strong>${fmt(S.totalMort)}</strong></td><td><strong>${fmt(S.totalMortgage)}/mo</strong></td><td><strong style="color:var(--green)">${fmt(totalRequired)}/mo</strong></td><td><strong style="${totalGap>0?'color:var(--red)':'color:var(--green)'}">${totalGap>0?'+'+fmt(totalGap):'✅'}</strong></td><td>—</td></tr></tbody>
+        </table>
+      </div>
+      <div style="font-size:12px; color:var(--muted); padding:12px 14px; background:rgba(255,90,90,0.07); border-radius:8px; border:1px solid rgba(255,90,90,0.15); line-height:1.6;">
+        ⚡ ${totalGap > 0 ? `Increasing repayments by ${fmt(totalGap)}/month closes the gap. Even partial increases make a significant difference to your retirement date. Consider talking to a mortgage broker about offset accounts and P&I switching.` : `Great position — your current repayments will clear the debt by retirement. Keep up the discipline.`}
+      </div>
+    `;
+  } else {
+    document.getElementById('propPayoffCard').innerHTML = `<div class="section-tag c-red">🏠 Section 4 — Property</div><h2>No Properties Entered</h2><p class="story-sub">If you own property in the future, this section will show whether your repayments are on track to clear by retirement.</p>`;
+  }
+
+  // ── Section 5: Retirement
+  const projNW = projectNetWorth(netWorth, d.savDep, d.savRate / 100, years);
+  const annualPassive = totalRent * 12 * Math.pow(1.05, years);
+  const pct = Math.min(100, Math.max(0, (1 / years) * 100));
+  document.getElementById('retireH2').textContent = `What Does Age ${d.retireAge} Look Like?`;
+  document.getElementById('retireSub').textContent = `${years} years of growth ahead. Here's the projected picture if you stay the course.`;
+  document.getElementById('yearsLeft').textContent = years + ' years';
+  document.getElementById('timelineNow').textContent = `Today — Age ${d.age}`;
+  document.getElementById('timelineRetire').textContent = `Retire — Age ${d.retireAge}`;
+  setTimeout(() => { document.getElementById('retireBar').style.width = pct.toFixed(1) + '%'; }, 500);
+  document.getElementById('retireGrid').innerHTML = `
+    <div class="retire-box"><div class="rb-label">Net Worth Today</div><div class="rb-val c-blue">${fmtM(netWorth)}</div><div class="rb-sub">Equity ${fmtM(totalEquity)}<br>+ Savings ${fmtM(d.savBal)}</div></div>
+    <div class="retire-box"><div class="rb-label">Projected at Age ${d.retireAge}</div><div class="rb-val c-green">${fmtM(projNW)}</div><div class="rb-sub">5% property growth p.a.<br>+ savings compounding</div></div>
+    <div class="retire-box"><div class="rb-label">Est. Annual Passive Income</div><div class="rb-val c-yellow">${ips.length>0?fmtM(annualPassive)+'+':'—'}</div><div class="rb-sub">${ips.length>0?ips.length+' IP rental income<br>at retirement values':'No IPs entered'}</div></div>
+    <div class="retire-box"><div class="rb-label">Savings at ${d.retireAge} (current)</div><div class="rb-val c-accent">${fmtM(savFV_current)}</div><div class="rb-sub">${fmt(d.savDep)}/mo at ${d.savRate}%<br>over ${years} years</div></div>
+    <div class="retire-box"><div class="rb-label">Savings at ${d.retireAge} (at 20%)</div><div class="rb-val c-green">${fmtM(savFV_target)}</div><div class="rb-sub">${fmt(targetDep)}/mo at ${d.savRate}%<br>over ${years} years</div></div>
+    <div class="retire-box"><div class="rb-label">Health Score</div><div class="rb-val ${scoreColor(S.overall)}">${S.overall}/100</div><div class="rb-sub">${scoreLabel(S.overall)}</div></div>
+  `;
+
+  // ── Section 6: Actions
+  const actions = [];
+  if (S.savingsRate < 20) {
+    actions.push({ cls:'urgent', icon:'💰', title:`Increase Savings to 20% of Income (${fmt(targetDep)}/mo)`, desc:`You're saving ${S.savingsRate.toFixed(1)}% — the target is 20%. An extra ${fmt(savGap)}/month adds ${fmtM(savFV_target - savFV_current)} to your retirement savings.`, impact:`Impact: +${fmtM(savFV_target - savFV_current)} at retirement ↑↑↑`, ic:'c-red' });
+  }
+  const totalGap2 = Math.max(0, d.props.reduce((s,p) => s + calcRequiredRepayment(p.mortgage, years), 0) - S.totalMortgage);
+  if (totalGap2 > 0) {
+    actions.push({ cls:'urgent', icon:'🏠', title:`Close the Mortgage Gap (${fmt(totalGap2)}/mo extra)`, desc:`At current repayments, not all mortgages will be paid off by age ${d.retireAge}. Increasing by ${fmt(totalGap2)}/month ensures you're debt-free at retirement.`, impact:`Impact: Debt-free at retirement ↑↑`, ic:'c-yellow' });
+  }
+  const eTarget6mo = S.monthlyExpTotal * 6;
+  if (d.savBal < eTarget6mo) {
+    const monthsBuffer = S.monthlyExpTotal > 0 ? (d.savBal / S.monthlyExpTotal).toFixed(1) : '—';
+    actions.push({ cls:'medium', icon:'🛡️', title:`Build Emergency Buffer to 6 Months (${fmtM(eTarget6mo)})`, desc:`Your savings cover ~${monthsBuffer} months of expenses. The target is 6 months (${fmtM(eTarget6mo)}). This protects you against job loss, rate rises, or unexpected costs.`, impact:`Impact: Financial resilience ↑`, ic:'c-green' });
+  }
+  if (d.takeaway > 200) {
+    actions.push({ cls:'good', icon:'🍔', title:`Cut Discretionary Spending — Takeaway is ${fmt(d.takeaway)}/mo`, desc:`Reducing takeaway by 50% saves ${fmt(d.takeaway*0.5)}/month — redirect this to savings or extra mortgage repayments.`, impact:`Impact: ${fmt(d.takeaway*6)}/yr freed up ↑`, ic:'c-yellow' });
+  }
+  if (actions.length === 0) {
+    actions.push({ cls:'good', icon:'✅', title:'Strong Financial Position', desc:`Your savings rate, mortgage repayments, and emergency buffer are all looking healthy. Keep the discipline and review annually.`, impact:'Keep it up ↑', ic:'c-green' });
+  }
+  document.getElementById('actionsList').innerHTML = actions.map(a => `
+    <div class="action-item ${a.cls}">
+      <div class="action-icon">${a.icon}</div>
+      <div><div class="action-title">${a.title}</div><div class="action-desc">${a.desc}</div><div class="action-impact ${a.ic}">${a.impact}</div></div>
+    </div>
+  `).join('');
+
+  // ── Properties page
+  document.getElementById('propPageH2').textContent = `${fmtM(totalVal)} Portfolio · ${fmtM(totalEquity)} Equity`;
+  document.getElementById('propPageSub').textContent = d.numProps > 0 ? `${d.numProps} ${d.numProps===1?'property':'properties'} · ${S.totalMort > 0 ? ((S.totalMort/totalVal)*100).toFixed(1)+'% LVR' : 'fully owned'}` : 'No properties entered.';
+
+  // ── Savings page
+  document.getElementById('savingsH2').textContent = `${fmtM(d.savBal)} Current Balance`;
+  document.getElementById('savingsSub').textContent = `Saving ${fmt(d.savDep)}/month at ${d.savRate}% p.a. Emergency buffer target: ${fmtM(eTarget6mo)} (6 months of expenses).`;
+
+  const bufferFill = Math.min(100, eTarget6mo > 0 ? (d.savBal / eTarget6mo * 100) : 100);
+  document.getElementById('savingsSummaryRows').innerHTML = `
+    <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">Current Balance</span><span style="font-weight:600">${fmtM(d.savBal)}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">Monthly Deposit</span><span style="font-weight:600;color:var(--green)">+${fmt(d.savDep)}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">Interest Rate</span><span style="font-weight:600;color:var(--green)">${d.savRate}% p.a.</span></div>
+    <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">Projected in 1 Year</span><span style="font-weight:700;color:var(--green)">${fmtM(calcFV(d.savBal, d.savDep, d.savRate/100, 1))}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:11px 0;font-size:13px;"><span style="color:var(--muted)">Emergency Buffer Target (6 mo)</span><span style="font-weight:600;color:var(--yellow)">${fmtM(eTarget6mo)}</span></div>
+  `;
+  document.getElementById('bufferProgress').innerHTML = `
+    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;"><span>Buffer filled</span><span>${fmtM(d.savBal)} of ${fmtM(eTarget6mo)}</span></div>
+    <div style="height:8px;background:var(--card2);border-radius:4px;overflow:hidden;"><div style="height:100%;width:${bufferFill.toFixed(1)}%;background:linear-gradient(90deg,var(--yellow),var(--green));border-radius:4px;"></div></div>
+  `;
+
+  // Spending page sub
+  document.getElementById('spendPageSub').innerHTML = `Total monthly expenses (excl. mortgages): <strong style="color:var(--text)">${fmt(S.totalExpenses)}</strong> — averaging <strong style="color:var(--text)">${fmt(S.totalExpenses)}/month</strong>.`;
+
+  // Build TX array from user inputs for spending charts
+  buildUserTX(d);
+}
+
+// ═══════════════ HELPERS ═══════════════
+function calcFV(balance, monthly, annualRate, years) {
+  const r = annualRate / 12, n = years * 12;
+  const balFV = balance * Math.pow(1 + r, n);
+  const savFV = r > 0 ? monthly * ((Math.pow(1 + r, n) - 1) / r) : monthly * n;
+  return balFV + savFV;
+}
+
+function calcRequiredRepayment(balance, years) {
+  if (balance <= 0 || years <= 0) return 0;
+  const r = 0.06 / 12; // assume 6% rate
+  const n = years * 12;
+  return (balance * r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
+}
+
+function scoreLabel(s) {
+  if (s >= 80) return '🟢 Excellent';
+  if (s >= 65) return '🟡 Solid Foundation';
+  if (s >= 50) return '🟠 Needs Attention';
+  return '🔴 Action Required';
+}
+
+function scoreColor(s) {
+  if (s >= 80) return 'c-green';
+  if (s >= 65) return 'c-yellow';
+  if (s >= 50) return 'c-yellow';
+  return 'c-red';
+}
+
+// ═══════════════ BUILD TX FROM USER DATA ═══════════════
+function buildUserTX(d) {
+  // Replace TX with user-derived monthly transactions
+  TX.length = 0;
+  const cats = [
+    ['Groceries', d.groceries], ['Bills', d.bills], ['Takeaway', d.takeaway],
+    ['Shopping', d.shopping], ['Kids & Family', d.kids], ['Other', d.other],
+  ];
+  cats.forEach(([cat, amt]) => {
+    if (amt > 0) TX.push({ d: '01/01', desc: cat, cat, amt: -amt, mo: 'jan' });
+  });
+  d.props.forEach(p => {
+    if (p.repay > 0) TX.push({ d: '01/01', desc: 'Mortgage — ' + p.name, cat: 'Mortgage', amt: -p.repay, mo: 'jan' });
+    if (p.rent > 0) TX.push({ d: '12/01', desc: 'Rent — ' + p.name, cat: 'Rental Income', amt: p.rent, mo: 'jan' });
+  });
+  TX.push({ d: '05/01', desc: 'Salary', cat: 'Income', amt: d.salary, mo: 'jan' });
+  if (d.otherIncome > 0) TX.push({ d: '06/01', desc: 'Other Income', cat: 'Income', amt: d.otherIncome, mo: 'jan' });
+  COLORS['Kids & Family'] = '#ffc542';
+  COLORS['Other'] = '#80cbc4';
+  COLORS['Bills'] = '#ffb74d';
+}
+
+// Override initSummary to use userData
+const _origInitSummary = initSummary;
+function initSummary() {
+  if (!UD) return;
+  const S = computeScores(UD);
+  const years = UD.retireAge - UD.age;
+  const totalVal = UD.props.reduce((s, p) => s + p.value, 0);
+  const totalMort = UD.props.reduce((s, p) => s + p.mortgage, 0);
+  const netWorth = (totalVal - totalMort) + UD.savBal;
+
+  // Retirement projection chart
+  const labels = [], data = [];
+  let wealth = netWorth;
+  for (let age = UD.age; age <= UD.retireAge; age++) {
+    labels.push('Age ' + age);
+    data.push(Math.round(wealth));
+    wealth = wealth * 1.055 + UD.savDep * 12;
+  }
+  if (document.getElementById('retireChart')) {
+    new Chart(document.getElementById('retireChart'), {
+      type: 'line',
+      data: { labels, datasets: [{ label: 'Projected Net Worth', data, borderColor: '#00c896', backgroundColor: 'rgba(0,200,150,0.08)', fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 5, borderWidth: 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + fmt(c.raw) } } }, scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 7 } }, y: { ticks: { callback: v => '$' + (v / 1000000).toFixed(1) + 'M' }, grid: { color: '#1c2030' } } } }
+    });
+  }
+}
+
+// Override initProperties to use userData
+const _origInitProperties = initProperties;
+function initProperties() {
+  if (!UD || UD.numProps === 0) {
+    document.getElementById('prop-cards').innerHTML = '<p style="color:var(--muted);font-size:13px;">No properties entered.</p>';
+    return;
+  }
+  const colors = ['var(--accent)', 'var(--green)', 'var(--yellow)', 'var(--purple)'];
+  const props = UD.props.map((p, i) => ({
+    name: p.name, loc: p.rent > 0 ? 'Investment Property' : 'Owner Occupied',
+    badge: p.rent > 0 ? 'Investment' : 'Owner Occupied', bc: colors[i],
+    value: p.value, mortgage: p.mortgage, equity: p.value - p.mortgage,
+    repay: p.repay, rent: p.rent,
+    lvr: p.value > 0 ? +((p.mortgage / p.value) * 100).toFixed(1) : 0,
+    type: p.rent > 0 ? 'ip' : 'ppor',
+  }));
+
+  document.getElementById('prop-cards').innerHTML = props.map(p => `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;border-top:3px solid ${p.bc};">
+      <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:${p.bc}22;color:${p.bc};text-transform:uppercase;letter-spacing:0.5px">${p.badge}</span>
+      <div style="font-size:14px;font-weight:700;margin:10px 0 3px">${p.name}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px">${p.loc}</div>
+      ${[
+        ['Value', fmt(p.value), 'var(--green)'],
+        ['Mortgage', fmt(p.mortgage), 'var(--red)'],
+        ['Equity', fmt(p.equity), 'var(--blue)'],
+        ['Repayment', fmt(p.repay)+'/mo', 'var(--text)'],
+        p.rent ? ['Rent', fmt(p.rent)+'/mo', 'var(--green)'] : ['Use', 'Owner occupied', 'var(--muted)'],
+        ['LVR', p.lvr+'%', p.lvr<50?'var(--green)':p.lvr<65?'var(--yellow)':'var(--red)'],
+      ].map(([k,v,c]) => `<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;"><span style="color:var(--muted)">${k}</span><span style="font-weight:600;color:${c}">${v}</span></div>`).join('')}
+      <div style="margin-top:12px">
+        <div style="font-size:10px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:5px"><span>Debt ${p.lvr}%</span><span>Equity ${(100-p.lvr).toFixed(1)}%</span></div>
+        <div style="height:6px;background:var(--card2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${p.lvr}%;background:linear-gradient(90deg,${p.bc},${p.bc}99);border-radius:3px"></div></div>
+      </div>
+    </div>
+  `).join('');
+
+  new Chart(document.getElementById('equityChart'), {
+    type: 'bar',
+    data: { labels: props.map(p=>p.name.split(' ').slice(0,2).join(' ')), datasets: [{ label:'Equity', data:props.map(p=>p.equity), backgroundColor:'rgba(0,200,150,0.8)', borderRadius:4 }, { label:'Mortgage', data:props.map(p=>p.mortgage), backgroundColor:'rgba(255,90,90,0.8)', borderRadius:4 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10}}}, scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>'$'+(v/1000)+'k'},grid:{color:'#1c2030'}}} }
+  });
+
+  const ips = props.filter(p=>p.type==='ip');
+  if (ips.length > 0) {
+    new Chart(document.getElementById('rentMortChart'), {
+      type: 'bar',
+      data: { labels: ips.map(p=>p.name.split(' ').slice(0,2).join(' ')), datasets: [{ label:'Monthly Rent', data:ips.map(p=>p.rent), backgroundColor:'rgba(0,200,150,0.8)', borderRadius:4 }, { label:'Monthly Repayment', data:ips.map(p=>p.repay), backgroundColor:'rgba(124,107,255,0.8)', borderRadius:4 }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10}}}, scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'#1c2030'}}} }
+    });
+  }
+}
+
+// Override initSavings to use userData
+const _origInitSavings = initSavings;
+function initSavings() {
+  if (!UD) return;
+  const projYr1 = calcFV(UD.savBal, UD.savDep, UD.savRate/100, 1);
+  const projYr2 = calcFV(UD.savBal, UD.savDep, UD.savRate/100, 2);
+  new Chart(document.getElementById('savingsActual'), {
+    type: 'line',
+    data: { labels: ['Now', 'Year 1', 'Year 2'], datasets: [{ label:'Balance', data:[UD.savBal, projYr1, projYr2], borderColor:'#00c896', backgroundColor:'rgba(0,200,150,0.1)', fill:true, tension:0.4, pointRadius:5, pointBackgroundColor:'#00c896' }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)}}}, scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k'},grid:{color:'#1c2030'}}} }
+  });
+  document.getElementById('rDep').value = UD.savDep;
+  document.getElementById('rRate').value = UD.savRate;
+  buildSimChart();
+  updateSim();
+}
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The $15K Artist Roadmap — Abstract by Sonal</title>
+<title>Artist Career Roadmap — Build Your Art Career</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
 
@@ -186,26 +186,140 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
   .wrap { padding: 0 16px 60px; }
   .ladder-step .ls-note { display: none; }
 }
+
+/* ── ONBOARDING OVERLAY ── */
+.onboard-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: #0f0f0f;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.onboard-card {
+  background: #1a1a1a; border: 1px solid #2e2e2e;
+  border-radius: 16px; padding: 40px 44px; max-width: 560px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+}
+.onboard-card h2 {
+  font-family: 'DM Serif Display', serif; font-size: 1.8rem;
+  color: #faf9f6; margin-bottom: 6px; line-height: 1.2;
+}
+.onboard-card h2 em { font-style: italic; color: var(--accent); }
+.onboard-sub { font-size: 13px; color: #888; margin-bottom: 28px; line-height: 1.6; }
+.onboard-privacy {
+  font-size: 11px; color: #666; margin-bottom: 28px;
+  padding: 10px 14px; border: 1px solid #2a2a2a; border-radius: 8px;
+  background: rgba(200,75,47,0.05);
+}
+.onboard-privacy::before { content: '🔒 '; }
+.form-row { margin-bottom: 18px; }
+.form-row label { display: block; font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 7px; }
+.form-row input, .form-row select, .form-row textarea {
+  width: 100%; background: #111; border: 1px solid #2e2e2e; border-radius: 8px;
+  color: #faf9f6; font-size: 13px; padding: 10px 14px; outline: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.15s;
+}
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--accent); }
+.form-row select option { background: #1a1a1a; }
+.form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.onboard-btn {
+  width: 100%; padding: 14px; border-radius: 10px;
+  background: var(--accent); color: white; font-size: 14px; font-weight: 600;
+  border: none; cursor: pointer; margin-top: 8px;
+  font-family: 'DM Sans', sans-serif; letter-spacing: 0.3px;
+  transition: opacity 0.15s;
+}
+.onboard-btn:hover { opacity: 0.88; }
+.onboard-section-label {
+  font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase;
+  letter-spacing: 1px; margin: 24px 0 14px; padding-top: 20px;
+  border-top: 1px solid #2e2e2e;
+}
 </style>
 </head>
 <body>
 
+<!-- ONBOARDING OVERLAY -->
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-card">
+    <h2>Your <em>Artist</em> Career Roadmap</h2>
+    <p class="onboard-sub">Answer a few questions and get a personalised strategy to grow your art career — from where you are now to where you want to be.</p>
+    <div class="onboard-privacy">Your answers stay in your browser only — nothing is stored or sent anywhere.</div>
+
+    <div class="form-row">
+      <label>Your Name / Art Name</label>
+      <input type="text" id="ob-name" placeholder="e.g. Sarah Mitchell or Mitchell Studio" value="">
+    </div>
+
+    <div class="onboard-section-label">Your Art Practice</div>
+
+    <div class="form-row">
+      <label>Medium & Style</label>
+      <input type="text" id="ob-medium" placeholder="e.g. Oil painting — seascapes & portraits" value="">
+    </div>
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Your Country / Market</label>
+        <input type="text" id="ob-market" placeholder="e.g. Australia" value="">
+      </div>
+      <div class="form-row">
+        <label>Where You Sell Now</label>
+        <input type="text" id="ob-where" placeholder="e.g. Etsy, Instagram, markets" value="">
+      </div>
+    </div>
+
+    <div class="onboard-section-label">Pricing & Goals</div>
+
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Current Price Range</label>
+        <input type="text" id="ob-nowprice" placeholder="e.g. $200–$800" value="">
+      </div>
+      <div class="form-row">
+        <label>Your Target Price Goal</label>
+        <input type="text" id="ob-goalprice" placeholder="e.g. $10,000" value="">
+      </div>
+    </div>
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Roadmap Horizon</label>
+        <select id="ob-horizon">
+          <option value="3">3 Years</option>
+          <option value="5" selected>5 Years</option>
+          <option value="7">7 Years</option>
+          <option value="10">10 Years</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Career Stage</label>
+        <select id="ob-stage">
+          <option value="emerging">Emerging (0–2 yrs selling)</option>
+          <option value="developing" selected>Developing (2–5 yrs)</option>
+          <option value="established">Established (5+ yrs)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="onboard-btn" onclick="submitOnboard()">Generate My Roadmap →</button>
+  </div>
+</div>
+
 <div class="topbar">
-  <div class="topbar-logo"><strong>Abstract by Sonal</strong> — Artist Growth Roadmap</div>
+  <div class="topbar-logo"><strong id="topbar-name">Artist Roadmap</strong> — Career Growth Strategy</div>
   <a href="index.html" class="back-link">← Portfolio</a>
 </div>
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
-    <div class="hero-tag">Confidential Strategic Roadmap · 2025–2030</div>
-    <h1>From $500 Paintings<br>to <em>$15,000</em> Originals</h1>
-    <p class="hero-sub">A real strategy for an emerging Australian abstract artist — coastal scenes and city streets — to build a serious art career with gallery representation, collector relationships, and prices that reflect the true value of the work.</p>
+    <div class="hero-tag" id="hero-tag">Your Strategic Roadmap · 2025 Onward</div>
+    <h1 id="hero-h1">From <span id="hero-nowprice">Your Current Price</span><br>to <em id="hero-goalprice">Your Goal Price</em></h1>
+    <p class="hero-sub" id="hero-sub">A personalised strategy to build a serious art career with gallery representation, collector relationships, and prices that reflect the true value of your work.</p>
     <div class="hero-meta">
-      <div class="hero-meta-item"><strong>Artist</strong>Sonal Agarwal</div>
-      <div class="hero-meta-item"><strong>Medium</strong>Acrylic — Coastal Abstracts & City Street Scenes</div>
-      <div class="hero-meta-item"><strong>Market</strong>Australia</div>
-      <div class="hero-meta-item"><strong>Horizon</strong>5-Year Roadmap</div>
+      <div class="hero-meta-item"><strong>Artist</strong><span id="meta-name">—</span></div>
+      <div class="hero-meta-item"><strong>Medium</strong><span id="meta-medium">—</span></div>
+      <div class="hero-meta-item"><strong>Market</strong><span id="meta-market">—</span></div>
+      <div class="hero-meta-item"><strong>Horizon</strong><span id="meta-horizon">5-Year Roadmap</span></div>
     </div>
   </div>
 </div>
@@ -223,10 +337,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
   <div class="reality-grid">
     <div class="reality-box now">
       <div class="rb-tag">Today</div>
-      <div class="rb-price">$200–$500</div>
+      <div class="rb-price" id="reality-nowprice">—</div>
       <ul>
-        <li>📍 Selling on Bluethumb marketplace</li>
-        <li>🎨 Original acrylics — coastal & city scenes</li>
+        <li>📍 Selling via <span id="reality-where">online & direct channels</span></li>
+        <li>🎨 <span id="reality-medium2">Original works</span></li>
         <li>👥 Small collector base, no waitlist</li>
         <li>📱 Building social presence</li>
         <li>🏛️ No gallery representation yet</li>
@@ -234,11 +348,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
       </ul>
     </div>
     <div class="reality-box goal">
-      <div class="rb-tag">Target: Year 5</div>
-      <div class="rb-price">$15,000+</div>
+      <div class="rb-tag">Target: <span id="reality-horizon">Year 5</span></div>
+      <div class="rb-price" id="reality-goalprice">—</div>
       <ul>
-        <li>🏛️ Represented by a respected Australian gallery</li>
-        <li>🌊 Known for distinctive coastal & urban style</li>
+        <li>🏛️ Represented by a respected gallery</li>
+        <li>🌊 Known for a distinctive, recognisable style</li>
         <li>📋 Collector waitlist for new works</li>
         <li>🏆 Art prize wins on record</li>
         <li>📰 Press features — editorial coverage</li>
@@ -705,10 +819,60 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
   </div>
 
   <div style="text-align:center;padding:32px 0 0;font-size:11px;color:var(--ink-muted);">
-    Created by Sonal Agarwal — <a href="index.html" style="color:var(--accent);text-decoration:none">AI Portfolio</a> · Built with Claude AI · 2025
+    Roadmap for <span id="footer-name">your art career</span> — <a href="index.html" style="color:var(--accent);text-decoration:none">AI Portfolio Tools</a> · Built with Claude AI · <button onclick="resetRoadmap()" style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;text-decoration:underline;font-family:inherit;">Start Over</button>
   </div>
 </div>
 
 </div>
+
+<script>
+function submitOnboard() {
+  const name = document.getElementById('ob-name').value.trim() || 'Your Art Career';
+  const medium = document.getElementById('ob-medium').value.trim() || 'Visual Art';
+  const market = document.getElementById('ob-market').value.trim() || 'Your Market';
+  const where = document.getElementById('ob-where').value.trim() || 'online & direct channels';
+  const nowprice = document.getElementById('ob-nowprice').value.trim() || 'Entry-level prices';
+  const goalprice = document.getElementById('ob-goalprice').value.trim() || 'Premium prices';
+  const horizon = document.getElementById('ob-horizon').value;
+
+  // Update hero
+  document.getElementById('hero-tag').textContent = `Your Strategic Roadmap · ${new Date().getFullYear()}–${new Date().getFullYear() + parseInt(horizon)}`;
+  document.getElementById('hero-nowprice').textContent = nowprice;
+  document.getElementById('hero-goalprice').textContent = goalprice;
+  document.getElementById('hero-sub').textContent = `A personalised strategy for ${name} — ${medium} — to build a serious art career with gallery representation, collector relationships, and prices that reflect the true value of the work.`;
+  document.getElementById('meta-name').textContent = name;
+  document.getElementById('meta-medium').textContent = medium;
+  document.getElementById('meta-market').textContent = market;
+  document.getElementById('meta-horizon').textContent = horizon + '-Year Roadmap';
+
+  // Update topbar
+  document.getElementById('topbar-name').textContent = name;
+
+  // Update reality check
+  document.getElementById('reality-nowprice').textContent = nowprice;
+  document.getElementById('reality-goalprice').textContent = goalprice;
+  document.getElementById('reality-where').textContent = where;
+  document.getElementById('reality-medium2').textContent = medium;
+  document.getElementById('reality-horizon').textContent = 'Year ' + horizon;
+
+  // Update footer
+  document.getElementById('footer-name').textContent = name;
+
+  // Update page title
+  document.title = `Artist Roadmap — ${name}`;
+
+  // Hide overlay
+  document.getElementById('onboardOverlay').style.display = 'none';
+}
+
+function resetRoadmap() {
+  document.getElementById('onboardOverlay').style.display = 'flex';
+}
+
+// Show overlay on load (don't auto-hide)
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('onboardOverlay').style.display = 'flex';
+});
+</script>
 </body>
 </html>
