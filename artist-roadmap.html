@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artist Career Roadmap — Build Your Art Career</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #faf9f6;
+  --ink: #0f0f0f;
+  --ink-soft: #4a4a4a;
+  --ink-muted: #888;
+  --card: #ffffff;
+  --border: #e8e3dc;
+  --accent: #c84b2f;
+  --accent-light: #fdf0ec;
+  --teal: #1a6b6b;
+  --teal-light: #e8f4f4;
+  --gold: #b8860b;
+  --gold-light: #fef9ec;
+  --sand: #f5f0e8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; }
+
+/* ── HERO ── */
+.hero {
+  background: var(--ink);
+  padding: 60px 40px 56px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,75,47,0.2) 0%, transparent 70%);
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -80px; left: 30%;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,107,107,0.15) 0%, transparent 70%);
+}
+.hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-tag { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 18px; }
+.hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.1; color: #faf9f6; margin-bottom: 16px; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub { font-size: 15px; color: #aaa; font-weight: 300; max-width: 560px; line-height: 1.75; margin-bottom: 28px; }
+.hero-meta { display: flex; gap: 28px; flex-wrap: wrap; }
+.hero-meta-item { font-size: 12px; color: #666; }
+.hero-meta-item strong { color: #ccc; display: block; font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+
+/* ── LAYOUT ── */
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ── SECTIONS ── */
+.section { padding: 52px 0 0; }
+.section-tag { font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.section-tag::before { content: ''; display: block; width: 20px; height: 1.5px; background: var(--accent); }
+.section h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 3.5vw, 2.4rem); line-height: 1.2; margin-bottom: 12px; }
+.section-intro { font-size: 14px; color: var(--ink-soft); max-width: 620px; line-height: 1.8; margin-bottom: 28px; }
+
+/* ── CARDS ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 14px; }
+.card-accent { border-left: 3px solid var(--accent); }
+.card-teal { border-left: 3px solid var(--teal); }
+.card-gold { border-left: 3px solid var(--gold); }
+
+/* ── REALITY CHECK ── */
+.reality-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.reality-box { border-radius: 8px; padding: 20px 22px; }
+.reality-box.now { background: var(--accent-light); border: 1px solid rgba(200,75,47,0.2); }
+.reality-box.goal { background: var(--teal-light); border: 1px solid rgba(26,107,107,0.2); }
+.reality-box .rb-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+.reality-box.now .rb-tag { color: var(--accent); }
+.reality-box.goal .rb-tag { color: var(--teal); }
+.reality-box .rb-price { font-family: 'DM Serif Display', serif; font-size: 2.4rem; line-height: 1; margin-bottom: 6px; }
+.reality-box.now .rb-price { color: var(--accent); }
+.reality-box.goal .rb-price { color: var(--teal); }
+.reality-box ul { list-style: none; margin-top: 10px; }
+.reality-box ul li { font-size: 12px; color: var(--ink-soft); padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; gap: 8px; }
+.reality-box ul li:last-child { border-bottom: none; }
+
+/* ── PHASES ── */
+.phase { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+.phase-header { padding: 20px 24px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.phase-1 .phase-header { background: linear-gradient(135deg, #fff5f3, #fff); }
+.phase-2 .phase-header { background: linear-gradient(135deg, #f0f8f8, #fff); }
+.phase-3 .phase-header { background: linear-gradient(135deg, #fef9ec, #fff); }
+.phase-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+.phase-1 .phase-label { color: var(--accent); }
+.phase-2 .phase-label { color: var(--teal); }
+.phase-3 .phase-label { color: var(--gold); }
+.phase-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 4px; }
+.phase-sub { font-size: 12px; color: var(--ink-muted); }
+.phase-price-range { text-align: right; flex-shrink: 0; }
+.phase-price-range .pr-label { font-size: 10px; color: var(--ink-muted); margin-bottom: 2px; }
+.phase-price-range .pr-val { font-family: 'DM Serif Display', serif; font-size: 1.4rem; font-weight: 400; }
+.phase-1 .pr-val { color: var(--accent); }
+.phase-2 .pr-val { color: var(--teal); }
+.phase-3 .pr-val { color: var(--gold); }
+
+.phase-body { padding: 20px 24px; }
+.phase-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.action-item { background: var(--sand); border-radius: 6px; padding: 12px 14px; }
+.action-item .ai-title { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+.action-item .ai-desc { font-size: 11px; color: var(--ink-soft); line-height: 1.5; }
+.action-item .ai-impact { font-size: 10px; font-weight: 600; margin-top: 6px; }
+.phase-1 .ai-impact { color: var(--accent); }
+.phase-2 .ai-impact { color: var(--teal); }
+.phase-3 .ai-impact { color: var(--gold); }
+
+/* ── PRICING LADDER ── */
+.price-ladder { display: flex; flex-direction: column; gap: 0; }
+.ladder-step { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.ladder-step:last-child { border-bottom: none; }
+.ladder-step .ls-year { font-size: 11px; color: var(--ink-muted); width: 70px; flex-shrink: 0; font-weight: 600; }
+.ladder-step .ls-bar-wrap { flex: 1; height: 10px; background: #f0ece6; border-radius: 5px; overflow: hidden; }
+.ladder-step .ls-bar { height: 100%; border-radius: 5px; }
+.ladder-step .ls-price { font-family: 'DM Serif Display', serif; font-size: 1.1rem; width: 110px; text-align: right; flex-shrink: 0; }
+.ladder-step .ls-note { font-size: 11px; color: var(--ink-muted); width: 160px; flex-shrink: 0; }
+
+/* ── INCOME STREAMS ── */
+.streams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.stream-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
+.stream-card .sc-icon { font-size: 22px; margin-bottom: 8px; }
+.stream-card .sc-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.stream-card .sc-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 8px; }
+.stream-card .sc-earn { font-size: 12px; font-weight: 600; color: var(--teal); }
+.stream-card .sc-when { font-size: 10px; color: var(--ink-muted); margin-top: 2px; }
+
+/* ── GALLERY PATHWAY ── */
+.gallery-steps { display: flex; flex-direction: column; gap: 0; }
+.gallery-step { display: grid; grid-template-columns: 120px 1fr; gap: 0; }
+.gs-left { display: flex; flex-direction: column; align-items: center; padding: 0 20px 0 0; }
+.gs-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.gs-line { width: 1.5px; flex: 1; margin: 6px 0; min-height: 40px; }
+.gs-right { padding-bottom: 28px; }
+.gs-right:last-child { padding-bottom: 0; }
+.gs-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+.gs-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.gs-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.6; }
+.gs-examples { font-size: 11px; color: var(--ink-muted); margin-top: 5px; font-style: italic; }
+
+/* ── WHAT GALLERIES WANT ── */
+.checklist { display: flex; flex-direction: column; gap: 8px; }
+.check-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; background: var(--sand); border-radius: 6px; }
+.check-item .ci-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.check-item .ci-text { font-size: 12px; line-height: 1.5; }
+.check-item .ci-text strong { display: block; font-size: 13px; margin-bottom: 2px; }
+
+/* ── SOCIAL / BRAND ── */
+.brand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.brand-card { border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.brand-card .bc-icon { font-size: 24px; margin-bottom: 8px; }
+.brand-card .bc-title { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+.brand-card .bc-desc { font-size: 11px; color: var(--ink-muted); line-height: 1.5; }
+
+/* ── HIGHLIGHT BOX ── */
+.highlight { background: var(--ink); color: #faf9f6; border-radius: 10px; padding: 28px 32px; margin: 28px 0; }
+.highlight h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 10px; }
+.highlight p { font-size: 13px; color: #aaa; line-height: 1.75; }
+.highlight p strong { color: #faf9f6; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+/* ── NAV BAR ── */
+.topbar { background: var(--ink); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; }
+.topbar-logo { font-size: 13px; color: #ccc; }
+.topbar-logo strong { color: #faf9f6; }
+.back-link { font-size: 12px; color: #888; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+.back-link:hover { color: var(--accent); }
+
+/* ── PRINT ── */
+@media print {
+  .topbar { display: none; }
+  .hero { -webkit-print-color-adjust: exact; }
+}
+
+@media (max-width: 640px) {
+  .reality-grid, .phase-actions, .streams-grid, .brand-grid { grid-template-columns: 1fr; }
+  .hero { padding: 40px 20px; }
+  .wrap { padding: 0 16px 60px; }
+  .ladder-step .ls-note { display: none; }
+}
+
+/* ── ONBOARDING OVERLAY ── */
+.onboard-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: #0f0f0f;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.onboard-card {
+  background: #1a1a1a; border: 1px solid #2e2e2e;
+  border-radius: 16px; padding: 40px 44px; max-width: 560px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+}
+.onboard-card h2 {
+  font-family: 'DM Serif Display', serif; font-size: 1.8rem;
+  color: #faf9f6; margin-bottom: 6px; line-height: 1.2;
+}
+.onboard-card h2 em { font-style: italic; color: var(--accent); }
+.onboard-sub { font-size: 13px; color: #888; margin-bottom: 28px; line-height: 1.6; }
+.onboard-privacy {
+  font-size: 11px; color: #666; margin-bottom: 28px;
+  padding: 10px 14px; border: 1px solid #2a2a2a; border-radius: 8px;
+  background: rgba(200,75,47,0.05);
+}
+.onboard-privacy::before { content: '🔒 '; }
+.form-row { margin-bottom: 18px; }
+.form-row label { display: block; font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 7px; }
+.form-row input, .form-row select, .form-row textarea {
+  width: 100%; background: #111; border: 1px solid #2e2e2e; border-radius: 8px;
+  color: #faf9f6; font-size: 13px; padding: 10px 14px; outline: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.15s;
+}
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--accent); }
+.form-row select option { background: #1a1a1a; }
+.form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.onboard-btn {
+  width: 100%; padding: 14px; border-radius: 10px;
+  background: var(--accent); color: white; font-size: 14px; font-weight: 600;
+  border: none; cursor: pointer; margin-top: 8px;
+  font-family: 'DM Sans', sans-serif; letter-spacing: 0.3px;
+  transition: opacity 0.15s;
+}
+.onboard-btn:hover { opacity: 0.88; }
+.onboard-section-label {
+  font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase;
+  letter-spacing: 1px; margin: 24px 0 14px; padding-top: 20px;
+  border-top: 1px solid #2e2e2e;
+}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING OVERLAY -->
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-card">
+    <h2>Your <em>Artist</em> Career Roadmap</h2>
+    <p class="onboard-sub">Answer a few questions and get a personalised strategy to grow your art career — from where you are now to where you want to be.</p>
+    <div class="onboard-privacy">Your answers stay in your browser only — nothing is stored or sent anywhere.</div>
+
+    <div class="form-row">
+      <label>Your Name / Art Name</label>
+      <input type="text" id="ob-name" placeholder="e.g. Sarah Mitchell or Mitchell Studio" value="">
+    </div>
+
+    <div class="onboard-section-label">Your Art Practice</div>
+
+    <div class="form-row">
+      <label>Medium & Style</label>
+      <input type="text" id="ob-medium" placeholder="e.g. Oil painting — seascapes & portraits" value="">
+    </div>
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Your Country / Market</label>
+        <input type="text" id="ob-market" placeholder="e.g. Australia" value="">
+      </div>
+      <div class="form-row">
+        <label>Where You Sell Now</label>
+        <input type="text" id="ob-where" placeholder="e.g. Etsy, Instagram, markets" value="">
+      </div>
+    </div>
+
+    <div class="onboard-section-label">Pricing & Goals</div>
+
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Current Price Range</label>
+        <input type="text" id="ob-nowprice" placeholder="e.g. $200–$800" value="">
+      </div>
+      <div class="form-row">
+        <label>Your Target Price Goal</label>
+        <input type="text" id="ob-goalprice" placeholder="e.g. $10,000" value="">
+      </div>
+    </div>
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Roadmap Horizon</label>
+        <select id="ob-horizon">
+          <option value="3">3 Years</option>
+          <option value="5" selected>5 Years</option>
+          <option value="7">7 Years</option>
+          <option value="10">10 Years</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Career Stage</label>
+        <select id="ob-stage">
+          <option value="emerging">Emerging (0–2 yrs selling)</option>
+          <option value="developing" selected>Developing (2–5 yrs)</option>
+          <option value="established">Established (5+ yrs)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="onboard-btn" onclick="submitOnboard()">Generate My Roadmap →</button>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-logo"><strong id="topbar-name">Artist Roadmap</strong> — Career Growth Strategy</div>
+  <a href="index.html" class="back-link">← Portfolio</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag" id="hero-tag">Your Strategic Roadmap · 2025 Onward</div>
+    <h1 id="hero-h1">From <span id="hero-nowprice">Your Current Price</span><br>to <em id="hero-goalprice">Your Goal Price</em></h1>
+    <p class="hero-sub" id="hero-sub">A personalised strategy to build a serious art career with gallery representation, collector relationships, and prices that reflect the true value of your work.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><strong>Artist</strong><span id="meta-name">—</span></div>
+      <div class="hero-meta-item"><strong>Medium</strong><span id="meta-medium">—</span></div>
+      <div class="hero-meta-item"><strong>Market</strong><span id="meta-market">—</span></div>
+      <div class="hero-meta-item"><strong>Horizon</strong><span id="meta-horizon">5-Year Roadmap</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════
+     SECTION 1: HONEST STARTING POINT
+══════════════════════════════ -->
+<div class="section">
+  <div class="section-tag">Where You Are Now</div>
+  <h2>The Honest Starting Point</h2>
+  <p class="section-intro">Most artists who reach $15,000+ started exactly here. The gap isn't about talent — it's about positioning, market access, and building the right career infrastructure. Here's the reality of where you are versus where you're going.</p>
+
+  <div class="reality-grid">
+    <div class="reality-box now">
+      <div class="rb-tag">Today</div>
+      <div class="rb-price" id="reality-nowprice">—</div>
+      <ul>
+        <li>📍 Selling via <span id="reality-where">online & direct channels</span></li>
+        <li>🎨 <span id="reality-medium2">Original works</span></li>
+        <li>👥 Small collector base, no waitlist</li>
+        <li>📱 Building social presence</li>
+        <li>🏛️ No gallery representation yet</li>
+        <li>💰 Inconsistent, low revenue per sale</li>
+      </ul>
+    </div>
+    <div class="reality-box goal">
+      <div class="rb-tag">Target: <span id="reality-horizon">Year 5</span></div>
+      <div class="rb-price" id="reality-goalprice">—</div>
+      <ul>
+        <li>🏛️ Represented by a respected gallery</li>
+        <li>🌊 Known for a distinctive, recognisable style</li>
+        <li>📋 Collector waitlist for new works</li>
+        <li>🏆 Art prize wins on record</li>
+        <li>📰 Press features — editorial coverage</li>
+        <li>💼 Corporate & hotel commissions</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card card-accent">
+    <p style="font-size:13px; line-height:1.7; color:var(--ink-soft)">
+      <strong style="color:var(--ink)">The real reason paintings sell for $15,000</strong> is not because they're 30× better than a $500 painting. It's because the artist has built a <strong style="color:var(--ink)">track record, a narrative, gallery credibility, and collector demand</strong>. Your job over the next 5 years is to build those four things systematically — while making the best work of your life.
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SECTION 2: PRICING LADDER
+══════════════════════════════ -->
+<div class="section">
+  <div class="section-tag">The Pricing Journey</div>
+  <h2>Your Price Ladder to $15K</h2>
+  <p class="section-intro">You don't jump from $500 to $15,000. You climb. Each step requires specific achievements — exhibitions, press, prizes, gallery relationships. Here's the realistic progression.</p>
+
+  <div class="card">
+    <div class="price-ladder">
+      <div class="ladder-step">
+        <div class="ls-year">Now</div>
+        <div class="ls-bar-wrap"><div class="ls-bar" style="width:3%;background:#c84b2f"></div></div>
+        <div class="ls-price" style="color:var(--accent)">$200–$500</div>
+        <div class="ls-note">Bluethumb, direct sales</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ls-year">Year 1</div>
+        <div class="ls-bar-wrap"><div class="ls-bar" style="width:12%;background:#c84b2f"></div></div>
+        <div class="ls-price" style="color:var(--accent)">$800–$1,500</div>
+        <div class="ls-note">Larger works, first shows</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ls-year">Year 2</div>
+        <div class="ls-bar-wrap"><div class="ls-bar" style="width:25%;background:#1a6b6b"></div></div>
+        <div class="ls-price" style="color:var(--teal)">$2,000–$4,000</div>
+        <div class="ls-note">Gallery rep, art prizes</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ls-year">Year 3</div>
+        <div class="ls-bar-wrap"><div class="ls-bar" style="width:45%;background:#1a6b6b"></div></div>
+        <div class="ls-price" style="color:var(--teal)">$4,000–$8,000</div>
+        <div class="ls-note">Solo shows, press coverage</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ls-year">Year 4</div>
+        <div class="ls-bar-wrap"><div class="ls-bar" style="width:68%;background:#b8860b"></div></div>
+        <div class="ls-price" style="color:var(--gold)">$8,000–$12,000</div>
+        <div class="ls-note">Corporate commissions, collector base</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ls-year">Year 5</div>
+        <div class="ls-bar-wrap"><div class="ls-bar" style="width:100%;background:linear-gradient(90deg,#b8860b,#c84b2f)"></div></div>
+        <div class="ls-price" style="color:var(--gold)">$15,000+</div>
+        <div class="ls-note">Established, waitlist, auctions</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-accent" style="margin-top:14px;">
+    <p style="font-size:13px;color:var(--ink-soft);line-height:1.7">
+      <strong style="color:var(--ink)">The most important rule:</strong> Never discount. If a painting isn't selling at your current price, the answer is almost never to lower the price — it's to find a different audience, improve the presentation, or create a series narrative. <strong style="color:var(--ink)">Discounting destroys collector confidence in your future prices.</strong>
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SECTION 3: 3-PHASE ROADMAP
+══════════════════════════════ -->
+<div class="section">
+  <div class="section-tag">The Strategy</div>
+  <h2>Three Phases to $15K</h2>
+  <p class="section-intro">Each phase has a clear focus. Don't try to do everything at once. Phase 1 is about building foundations. Phase 2 is about gaining credibility. Phase 3 is about leveraging it.</p>
+
+  <!-- PHASE 1 -->
+  <div class="phase phase-1">
+    <div class="phase-header">
+      <div>
+        <div class="phase-label">Phase 1 — Years 1 to 2</div>
+        <div class="phase-title">Build Your Foundation & Identity</div>
+        <div class="phase-sub">Develop a signature style, create a body of work, start exhibiting</div>
+      </div>
+      <div class="phase-price-range">
+        <div class="pr-label">Target price</div>
+        <div class="pr-val">$800–$2,500</div>
+      </div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-actions">
+        <div class="action-item">
+          <div class="ai-title">🌊 Define Your Two Series</div>
+          <div class="ai-desc">Commit to two distinct bodies of work: <em>Coastal Abstracts</em> (beaches, water, light) and <em>City Street Scenes</em> (Melbourne laneways, Sydney streets). Name each series. A collector buying "Part 3 of the Coast Series" feels they own something significant.</div>
+          <div class="ai-impact">→ Commands 2× price of a standalone painting</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">📐 Go Larger</div>
+          <div class="ai-desc">Move from small/medium to large format — 90×120cm minimum for key pieces. Large works command higher prices, photograph better, and look more impressive in galleries and homes. One large work beats three small ones for career building.</div>
+          <div class="ai-impact">→ Immediately justifies $1,500–$2,500 per piece</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">✍️ Write Your Artist Statement</div>
+          <div class="ai-desc">One page. Who you are, what drives you, what your work is about. Be specific — not "I am inspired by nature" but "I paint the moment light hits Bondi water at 6am — that tension between stillness and energy." This story is what galleries and collectors buy.</div>
+          <div class="ai-impact">→ Required for every gallery application</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">📸 Professional Photography</div>
+          <div class="ai-desc">Every painting must be photographed properly — white wall, natural light, no reflections, high resolution. This is non-negotiable. A $1,500 painting photographed badly looks like a $200 painting. Spend $300–500 on a shoot covering 20+ works.</div>
+          <div class="ai-impact">→ Transforms online and gallery presence</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">🏆 Enter Art Prizes</div>
+          <div class="ai-desc">Research and enter every relevant Australian prize: Paddington Art Prize, Fisher's Ghost Art Award, Waverley Art Prize, Blake Prize, Royal Easter Show Art competition. You won't win immediately — but being <em>entered</em> builds your CV and being <em>selected</em> is a major credit.</div>
+          <div class="ai-impact">→ Each selection = legitimate CV entry</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">🖼️ First Group Exhibitions</div>
+          <div class="ai-desc">Apply to local gallery open calls, art society exhibitions, and pop-up group shows. Start with boutique galleries in your city. The goal isn't to sell — it's to have exhibition credits on your CV and to meet gallerists. Introduce yourself after the show.</div>
+          <div class="ai-impact">→ First gallery credits open doors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase phase-2">
+    <div class="phase-header">
+      <div>
+        <div class="phase-label">Phase 2 — Years 2 to 4</div>
+        <div class="phase-title">Build Credibility & Gallery Access</div>
+        <div class="phase-sub">Gallery representation, media coverage, collector relationships</div>
+      </div>
+      <div class="phase-price-range">
+        <div class="pr-label">Target price</div>
+        <div class="pr-val">$4,000–$10,000</div>
+      </div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-actions">
+        <div class="action-item">
+          <div class="ai-title">🏛️ Pursue Gallery Representation</div>
+          <div class="ai-desc">Target boutique galleries in Melbourne and Sydney that represent emerging abstract artists. Send a professional approach package: CV, artist statement, 10 high-res images, and a cover letter specific to that gallery. Follow up once. Don't mass-email.</div>
+          <div class="ai-impact">→ Gallery = instant price credibility</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">🎪 Solo Exhibition</div>
+          <div class="ai-desc">Your first solo show is a turning point. Even a small gallery or café gallery space counts. Create 15–20 new works specifically for the show, write an exhibition statement, host an opening night. Every solo show is a permanent CV entry.</div>
+          <div class="ai-impact">→ Solo show = artist, not hobbyist</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">📰 Pitch for Press</div>
+          <div class="ai-desc">Contact local newspapers, lifestyle magazines, and arts blogs. The angle: "local artist capturing [your city's] soul through abstract painting." Journalists need content — give them a story hook. A single editorial feature can bring 10× more collectors than months of social media.</div>
+          <div class="ai-impact">→ Press builds collector trust</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">🏨 Target Interior Designers & Hotels</div>
+          <div class="ai-desc">Corporate and hospitality art is where $3,000–$15,000 sales happen regularly. Build a portfolio specifically targeting interior designers — coastal works for coastal properties, urban works for city hotels. Make an outreach list of 20 designers and approach them personally.</div>
+          <div class="ai-impact">→ One hotel can buy 6–10 works at once</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">🎨 Limited Edition Prints</div>
+          <div class="ai-desc">Release limited edition archival prints of your best originals — editions of 20–50, signed and numbered, at $300–$800 each. This funds your practice, introduces new collectors at lower price points, and drives demand for the originals. Use a high-quality print-on-demand service.</div>
+          <div class="ai-impact">→ Passive income while originals grow in value</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">📋 Build Your Collector List</div>
+          <div class="ai-desc">Every person who buys, inquires, or attends your opening goes on a personal list. Email them personally when you have new work before anyone else sees it. Collectors who buy twice become long-term patrons. Give them early access, behind-the-scenes updates, studio visits.</div>
+          <div class="ai-impact">→ Repeat collectors = career stability</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase phase-3">
+    <div class="phase-header">
+      <div>
+        <div class="phase-label">Phase 3 — Years 4 to 5</div>
+        <div class="phase-title">Leverage & Scale</div>
+        <div class="phase-sub">Waitlist, auctions, national recognition, $15K+ prices</div>
+      </div>
+      <div class="phase-price-range">
+        <div class="pr-label">Target price</div>
+        <div class="pr-val">$12,000–$20,000</div>
+      </div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-actions">
+        <div class="action-item">
+          <div class="ai-title">🔒 Create Scarcity</div>
+          <div class="ai-desc">Announce that you're producing only 12–15 original large works per year. Have your gallery manage a waitlist. Scarcity is the engine of high prices. When collectors know availability is limited and prices are rising, they buy earlier and pay more.</div>
+          <div class="ai-impact">→ Waitlist = $15K becomes expected</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">🏺 Enter the Auction Market</div>
+          <div class="ai-desc">Work with your gallery to have a painting entered into a reputable auction — Mossgreen, Deutscher & Hackett, or Bonhams. Even a $4,000–$8,000 auction result establishes a public price record, which supports your gallery prices significantly.</div>
+          <div class="ai-impact">→ Auction record = price benchmark</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">🌏 Art Fairs</div>
+          <div class="ai-desc">Sydney Contemporary and Melbourne Art Fair are where serious collectors shop. Exhibit through your gallery — this is exposure to hundreds of collectors, curators, and press in a single weekend. International art fairs come next.</div>
+          <div class="ai-impact">→ One fair can cover a year of sales</div>
+        </div>
+        <div class="action-item">
+          <div class="ai-title">🏛️ Museum / Public Collection</div>
+          <div class="ai-desc">Actively seek to have a work acquired by a regional gallery, university collection, or corporate art collection. Even a small institution counts. "In the collection of..." on your CV is worth more than almost anything else for justifying high prices.</div>
+          <div class="ai-impact">→ Institutional recognition = career legitimacy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SECTION 4: INCOME STREAMS
+══════════════════════════════ -->
+<div class="section">
+  <div class="section-tag">Revenue Strategy</div>
+  <h2>Multiple Income Streams While You Build</h2>
+  <p class="section-intro">You can't live on three $500 paintings a year. While you build toward $15K originals, these income streams fund your practice and your life — without compromising your fine art positioning.</p>
+
+  <div class="streams-grid">
+    <div class="stream-card">
+      <div class="sc-icon">🖼️</div>
+      <div class="sc-title">Original Paintings (Core)</div>
+      <div class="sc-desc">Your primary product. Increase prices methodically as you accumulate CV credits. Every 6 months, review and raise by 20–30%.</div>
+      <div class="sc-earn">Year 1: $800–$2,500 · Year 3: $4,000–$8,000</div>
+      <div class="sc-when">Now — always</div>
+    </div>
+    <div class="stream-card">
+      <div class="sc-icon">📄</div>
+      <div class="sc-title">Limited Edition Art Prints</div>
+      <div class="sc-desc">Archival giclée prints of your originals. Editions of 20–50, signed and numbered. $200–$800 depending on size. Introduces collectors who can't yet afford originals — they'll upgrade later.</div>
+      <div class="sc-earn">$2,000–$8,000/year passive</div>
+      <div class="sc-when">Start Year 1 via Bluethumb / Fine Art America</div>
+    </div>
+    <div class="stream-card">
+      <div class="sc-icon">🏨</div>
+      <div class="sc-title">Corporate & Hotel Commissions</div>
+      <div class="sc-desc">Hotels, restaurants, offices, and developers commission large-scale artwork regularly. Coastal works for coastal properties. Typically $3,000–$20,000+ per commission. Your highest-value work.</div>
+      <div class="sc-earn">$3,000–$20,000 per commission</div>
+      <div class="sc-when">Pursue from Year 2 onward</div>
+    </div>
+    <div class="stream-card">
+      <div class="sc-icon">🎨</div>
+      <div class="sc-title">Private Commissions</div>
+      <div class="sc-desc">Collectors who want a specific scene, colour palette, or size. Charge 20–30% above your standard price for commissions — they require extra consultation time. Take 50% deposit upfront, always.</div>
+      <div class="sc-earn">Current price + 25% premium</div>
+      <div class="sc-when">Offer this now</div>
+    </div>
+    <div class="stream-card">
+      <div class="sc-icon">🛋️</div>
+      <div class="sc-title">Licensed Products (Later)</div>
+      <div class="sc-desc">Once your profile is established (Year 3+), license your artwork to homewares brands — cushions, throws, ceramics. Passive royalty income without compromising your fine art brand. Only do this after gallery representation.</div>
+      <div class="sc-earn">5–15% royalty on product revenue</div>
+      <div class="sc-when">Year 3+ only</div>
+    </div>
+    <div class="stream-card">
+      <div class="sc-icon">🎓</div>
+      <div class="sc-title">Workshops (Careful Positioning)</div>
+      <div class="sc-desc">Running abstract painting workshops ($150–$300/person) can generate income — but be careful about over-commercialising it early. Frame as "studio experience" not "cheap art class." Keep numbers small and exclusive.</div>
+      <div class="sc-earn">$1,500–$3,000 per workshop</div>
+      <div class="sc-when">Year 2 onward — carefully</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SECTION 5: GALLERY PATHWAY
+══════════════════════════════ -->
+<div class="section">
+  <div class="section-tag">Gallery Strategy</div>
+  <h2>The Gallery Pathway</h2>
+  <p class="section-intro">Gallery representation is the single biggest lever for reaching $15,000 prices. Galleries bring collectors, credibility, and price authority. Here's how to get there in the Australian market.</p>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="gallery-steps">
+
+      <div class="gallery-step">
+        <div class="gs-left">
+          <div class="gs-dot" style="background:var(--accent)"></div>
+          <div class="gs-line" style="background:linear-gradient(var(--accent),var(--teal))"></div>
+        </div>
+        <div class="gs-right">
+          <div class="gs-label" style="color:var(--accent)">Now — Year 1</div>
+          <div class="gs-title">Open Calls & Group Shows</div>
+          <div class="gs-desc">Enter every gallery open call, art society exhibition, and community group show you can find. These build your exhibition CV and get your work in front of gallerists. Don't wait to be "ready."</div>
+          <div class="gs-examples">Look for: Bluethumb exhibitions, local arts council shows, café galleries, open studio events</div>
+        </div>
+      </div>
+
+      <div class="gallery-step">
+        <div class="gs-left">
+          <div class="gs-dot" style="background:var(--teal)"></div>
+          <div class="gs-line" style="background:linear-gradient(var(--teal),var(--gold))"></div>
+        </div>
+        <div class="gs-right">
+          <div class="gs-label" style="color:var(--teal)">Year 1–2</div>
+          <div class="gs-title">Boutique & Regional Galleries</div>
+          <div class="gs-desc">Approach smaller commercial galleries — they're more open to emerging artists than major galleries. Research which galleries show abstract work in your style. Send a professional approach package. Be patient — it may take 6–12 months to get a response.</div>
+          <div class="gs-examples">Targets: regional NSW/VIC galleries, boutique Melbourne & Sydney spaces, coastal tourist galleries (who sell coastal art every day)</div>
+        </div>
+      </div>
+
+      <div class="gallery-step">
+        <div class="gs-left">
+          <div class="gs-dot" style="background:var(--gold)"></div>
+          <div class="gs-line" style="background:linear-gradient(var(--gold),#888)"></div>
+        </div>
+        <div class="gs-right">
+          <div class="gs-label" style="color:var(--gold)">Year 2–3</div>
+          <div class="gs-title">First Gallery Representation</div>
+          <div class="gs-desc">Your goal is to be represented by at least one commercial gallery — meaning they hold your work, promote it to their clients, and take 40–50% commission on sales. That commission is worth it: they bring the collectors to you, handle the selling, and legitimise your prices.</div>
+          <div class="gs-examples">What galleries want to see: 10+ exhibition credits, consistent body of work, professional CV, reliable output, collector interest already demonstrated</div>
+        </div>
+      </div>
+
+      <div class="gallery-step">
+        <div class="gs-left">
+          <div class="gs-dot" style="background:#888"></div>
+          <div class="gs-line" style="background:#e0dbd4"></div>
+        </div>
+        <div class="gs-right">
+          <div class="gs-label" style="color:#888">Year 4–5</div>
+          <div class="gs-title">Established Gallery Relationship</div>
+          <div class="gs-desc">By now you have 1–2 galleries representing you, regular solo shows, and a collector base that follows your work across exhibitions. Your gallery sets your prices — and they'll confidently put $12,000–$20,000 on works when they know collectors will buy.</div>
+          <div class="gs-examples">Aspire to: Nanda\Hobbs, THIS IS NO FANTASY, Heiser Gallery, Niagara Galleries, Art Collective WA</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card card-teal">
+    <p style="font-size:13px;color:var(--ink-soft);line-height:1.75">
+      <strong style="color:var(--ink)">Coastal art is a powerful niche in Australia.</strong> Gallery owners in coastal regions — Noosa, Mornington Peninsula, Byron Bay, Port Douglas — sell coastal abstract art to holiday homeowners and sea-change buyers constantly. These galleries are often more accessible than city galleries and their clientele spend freely. Target these first.
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SECTION 6: WHAT GALLERIES LOOK FOR
+══════════════════════════════ -->
+<div class="section">
+  <div class="section-tag">Gallery Application</div>
+  <h2>What Galleries Actually Look For</h2>
+  <p class="section-intro">Most galleries receive hundreds of applications. Here's exactly what separates the artists they take on from the ones they politely decline.</p>
+
+  <div class="checklist">
+    <div class="check-item">
+      <div class="ci-icon">✅</div>
+      <div class="ci-text"><strong>A Consistent, Recognisable Body of Work</strong>Not a mix of everything you've ever tried. A clear series of 15–20 works that hang together and tell a story. Gallery owners need to picture your work on their walls and know it fits their collectors.</div>
+    </div>
+    <div class="check-item">
+      <div class="ci-icon">✅</div>
+      <div class="ci-text"><strong>Professional CV with Exhibition History</strong>At least 5–10 exhibition credits, any prizes entered or won, any press mentions, any public or corporate collections. The CV tells them you're serious and not going to disappear.</div>
+    </div>
+    <div class="check-item">
+      <div class="ci-icon">✅</div>
+      <div class="ci-text"><strong>A Strong Artist Statement</strong>One page. Specific about your influences, process, and what your work is about. Not vague. A gallerist needs to be able to explain your work to a collector in 30 seconds.</div>
+    </div>
+    <div class="check-item">
+      <div class="ci-icon">✅</div>
+      <div class="ci-text"><strong>Professional Images of Your Work</strong>High resolution, properly lit, on clean white or neutral wall. This is often the first thing they see. If it looks amateurish, everything else is moot.</div>
+    </div>
+    <div class="check-item">
+      <div class="ci-icon">✅</div>
+      <div class="ci-text"><strong>Evidence of Market Interest</strong>If you've already sold work — even at $200–$500 — that shows your work connects with buyers. Mention it. "I have sold work through Bluethumb and private commissions and have a small but growing collector base" is a positive signal.</div>
+    </div>
+    <div class="check-item">
+      <div class="ci-icon">✅</div>
+      <div class="ci-text"><strong>You've Done Your Research</strong>Your cover letter references specific artists they represent and explains why your work is a natural fit for their gallery. Generic applications go straight to the bottom. Show you know their programme.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SECTION 7: BRAND & SOCIAL
+══════════════════════════════ -->
+<div class="section">
+  <div class="section-tag">Brand & Audience</div>
+  <h2>Building Your Artist Profile Online</h2>
+  <p class="section-intro">Your online presence isn't separate from your art career — it's part of it. Collectors research artists before they buy. Galleries look at your following. Press checks your Instagram. Here's what to build and how.</p>
+
+  <div class="brand-grid">
+    <div class="brand-card">
+      <div class="bc-icon">📸</div>
+      <div class="bc-title">Instagram — Your Primary Platform</div>
+      <div class="bc-desc">Post process videos (time-lapses of you painting), finished works, studio life, and exhibition openings. Coastal art performs exceptionally well. Target: 3 posts/week, focus on reels. Use location tags for your coastal subjects.</div>
+    </div>
+    <div class="brand-card">
+      <div class="bc-icon">🌐</div>
+      <div class="bc-title">Artist Website</div>
+      <div class="bc-desc">A clean, professional portfolio site with your CV, artist statement, and gallery of available works. This is where galleries and press go. Simple is better — let the paintings be the hero. Include a "collector enquiry" contact form.</div>
+    </div>
+    <div class="brand-card">
+      <div class="bc-icon">📧</div>
+      <div class="bc-title">Collector Email List</div>
+      <div class="bc-desc">More valuable than any social platform. Every buyer, inquirer, and opening-night visitor goes on this list. Monthly email: new work, upcoming exhibitions, behind-the-scenes. Collectors buy from artists they feel connected to.</div>
+    </div>
+    <div class="brand-card">
+      <div class="bc-icon">🎬</div>
+      <div class="bc-title">Process Videos</div>
+      <div class="bc-desc">Short videos of your painting process are irresistible content — especially abstract work where the transformation is dramatic. These consistently go viral in art communities and attract both collectors and press attention.</div>
+    </div>
+    <div class="brand-card">
+      <div class="bc-icon">🖼️</div>
+      <div class="bc-title">Bluethumb — Evolving Role</div>
+      <div class="bc-desc">Keep your Bluethumb presence but evolve it. Use it for prints and lower-priced original works while your gallery represents your flagship pieces. Don't abandon it — it introduces new collectors who may graduate to gallery prices.</div>
+    </div>
+    <div class="brand-card">
+      <div class="bc-icon">📰</div>
+      <div class="bc-title">PR & Press Strategy</div>
+      <div class="bc-desc">Write a media release for each exhibition and send to local lifestyle editors. The hook: an Australian woman building a serious art career from scratch — that's genuinely interesting. Local stories lead to national ones.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     FINAL HIGHLIGHT
+══════════════════════════════ -->
+<div class="section">
+  <div class="highlight">
+    <h3>The One Thing That Changes Everything</h3>
+    <p>
+      Every artist who reaches $15,000 prices has one thing in common: they <strong>committed to being an artist</strong>, not a hobbyist who sells paintings. That means treating it like a business — tracking your CV, applying consistently to prizes and galleries, investing in professional photography, building collector relationships, and <strong>never stopping</strong> when a gallery says no.<br><br>
+      Your subject matter is genuinely commercial in the Australian market. <strong>Coastal abstracts and city street scenes</strong> are two of the most consistently bought categories — by interior designers, by homeowners in sea-change suburbs, by hotels and restaurants, by corporate collectors. The market is there. The question is whether you're positioned to access it.<br><br>
+      <strong>Start now. Apply to something this week.</strong>
+    </p>
+  </div>
+</div>
+
+<!-- RESOURCES -->
+<div class="section">
+  <div class="section-tag">Australian Art Market Resources</div>
+  <h2>Where to Apply, Enter & Connect</h2>
+
+  <div class="card" style="margin-bottom:14px;">
+    <p style="font-size:13px;font-weight:600;margin-bottom:10px;">Art Prizes to Enter (Research Deadlines Annually)</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">Paddington Art Prize (NSW)</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">Waverley Art Prize (NSW)</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">Fisher's Ghost Art Award (NSW)</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">Royal Easter Show Art Exhibition</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">Tattersall's Landscape Art Prize (QLD)</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">Blake Prize (spiritual/abstract)</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0">Ravenswood Australian Women's Art Prize</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0">Local council art prizes (search your LGA)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-size:13px;font-weight:600;margin-bottom:10px;">Art Fairs to Target</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">Sydney Contemporary (Sept, biennial)</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">Melbourne Art Fair (Aug, biennial)</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)">COLLECT (emerging artists focus)</div>
+      <div style="font-size:12px;color:var(--ink-soft);padding:6px 0">Affordable Art Fair Sydney</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:32px 0 0;font-size:11px;color:var(--ink-muted);">
+    Roadmap for <span id="footer-name">your art career</span> — <a href="index.html" style="color:var(--accent);text-decoration:none">AI Portfolio Tools</a> · Built with Claude AI · <button onclick="resetRoadmap()" style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;text-decoration:underline;font-family:inherit;">Start Over</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+function submitOnboard() {
+  const name = document.getElementById('ob-name').value.trim() || 'Your Art Career';
+  const medium = document.getElementById('ob-medium').value.trim() || 'Visual Art';
+  const market = document.getElementById('ob-market').value.trim() || 'Your Market';
+  const where = document.getElementById('ob-where').value.trim() || 'online & direct channels';
+  const nowprice = document.getElementById('ob-nowprice').value.trim() || 'Entry-level prices';
+  const goalprice = document.getElementById('ob-goalprice').value.trim() || 'Premium prices';
+  const horizon = document.getElementById('ob-horizon').value;
+
+  // Update hero
+  document.getElementById('hero-tag').textContent = `Your Strategic Roadmap · ${new Date().getFullYear()}–${new Date().getFullYear() + parseInt(horizon)}`;
+  document.getElementById('hero-nowprice').textContent = nowprice;
+  document.getElementById('hero-goalprice').textContent = goalprice;
+  document.getElementById('hero-sub').textContent = `A personalised strategy for ${name} — ${medium} — to build a serious art career with gallery representation, collector relationships, and prices that reflect the true value of the work.`;
+  document.getElementById('meta-name').textContent = name;
+  document.getElementById('meta-medium').textContent = medium;
+  document.getElementById('meta-market').textContent = market;
+  document.getElementById('meta-horizon').textContent = horizon + '-Year Roadmap';
+
+  // Update topbar
+  document.getElementById('topbar-name').textContent = name;
+
+  // Update reality check
+  document.getElementById('reality-nowprice').textContent = nowprice;
+  document.getElementById('reality-goalprice').textContent = goalprice;
+  document.getElementById('reality-where').textContent = where;
+  document.getElementById('reality-medium2').textContent = medium;
+  document.getElementById('reality-horizon').textContent = 'Year ' + horizon;
+
+  // Update footer
+  document.getElementById('footer-name').textContent = name;
+
+  // Update page title
+  document.title = `Artist Roadmap — ${name}`;
+
+  // Hide overlay
+  document.getElementById('onboardOverlay').style.display = 'none';
+}
+
+function resetRoadmap() {
+  document.getElementById('onboardOverlay').style.display = 'flex';
+}
+
+// Show overlay on load (don't auto-hide)
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('onboardOverlay').style.display = 'flex';
+});
+</script>
+</body>
+</html>

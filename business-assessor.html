@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Acquisition Assessor — Sonal Agarwal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<style>
+:root { color-scheme: light; --ink:#0f0f0f; --soft:#555; --bg:#f5f7fa; --accent:#c84b2f; --blue:#3b82f6; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'DM Sans',-apple-system,sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; }
+
+.topbar{ background:rgba(250,249,247,.95); backdrop-filter:blur(12px); border-bottom:1px solid #e8e4df; padding:14px 28px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; }
+.topbar a{ font-size:13px; color:var(--soft); text-decoration:none; font-weight:500; }
+.topbar a:hover{ color:var(--accent); }
+.topbar-sep{ color:#ccc; }
+.topbar-cur{ font-size:13px; font-weight:500; }
+
+.header{ background:linear-gradient(135deg,#1a1a2e,#16213e); color:#fff; padding:28px 32px; display:flex; align-items:center; gap:14px; }
+.header-icon{ font-size:30px; }
+.header h1{ font-size:21px; font-weight:700; font-family:'DM Serif Display',serif; }
+.header p{ font-size:13px; opacity:.65; margin-top:3px; }
+
+.container{ max-width:820px; margin:0 auto; padding:28px 20px 60px; }
+
+/* progress */
+.progress-bar{ display:flex; margin-bottom:22px; background:#e2e8f0; border-radius:8px; overflow:hidden; }
+.ps{ flex:1; padding:9px 6px; font-size:11px; font-weight:600; color:#64748b; text-align:center; cursor:pointer; transition:all .2s; border-right:1px solid #cbd5e1; }
+.ps:last-child{ border-right:none; }
+.ps.active{ background:var(--blue); color:#fff; }
+.ps.done{ background:#10b981; color:#fff; }
+.ps .sn{ display:block; font-size:15px; margin-bottom:1px; }
+
+/* card */
+.card{ background:#fff; border-radius:12px; padding:26px; box-shadow:0 1px 3px rgba(0,0,0,.08); margin-bottom:20px; }
+.card h2{ font-size:17px; font-weight:700; margin-bottom:6px; }
+.card .sub{ font-size:13px; color:#64748b; margin-bottom:18px; line-height:1.5; }
+.intro-box{ background:linear-gradient(135deg,#f0f4ff,#e8f0ff); border:1px solid #c7d7ff; border-radius:10px; padding:13px 15px; margin-bottom:18px; font-size:13px; color:#3730a3; line-height:1.6; }
+
+/* form */
+.fg{ margin-top:18px; }
+.lbl{ display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; }
+.lbl-hint{ font-weight:400; color:#94a3b8; font-size:12px; }
+textarea,input[type=text]{ width:100%; border:1.5px solid #e2e8f0; border-radius:8px; padding:10px 14px; font-size:13px; font-family:inherit; color:var(--ink); background:#fafbfc; transition:border-color .2s; }
+textarea{ resize:vertical; min-height:80px; }
+textarea:focus,input:focus{ outline:none; border-color:var(--blue); background:#fff; }
+
+/* radio */
+.rg{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+.rb{ display:flex; align-items:center; gap:6px; padding:8px 13px; border:1.5px solid #e2e8f0; border-radius:8px; cursor:pointer; font-size:13px; color:#374151; transition:all .15s; background:#fafbfc; user-select:none; }
+.rb:hover{ border-color:var(--blue); }
+.rb.sel{ border-color:var(--blue); background:#eff6ff; color:#1d4ed8; font-weight:600; }
+.rb input{ display:none; }
+
+/* upload */
+.upload-zone{ border:2px dashed #cbd5e1; border-radius:10px; padding:16px; text-align:center; cursor:pointer; transition:all .2s; background:#fafbfc; margin-bottom:8px; }
+.upload-zone:hover,.upload-zone.drag-over{ border-color:var(--blue); background:#eff6ff; }
+.upload-zone input[type=file]{ display:none; }
+.uz-icon{ font-size:20px; margin-bottom:5px; }
+.uz-text{ font-size:13px; color:#64748b; }
+.uz-text strong{ color:var(--blue); }
+.uz-sub{ font-size:11px; color:#94a3b8; margin-top:3px; }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+.chip{ display:inline-flex; align-items:center; gap:5px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:4px 10px; font-size:12px; color:#1d4ed8; font-weight:500; }
+.chip.loading{ background:#f8fafc; border-color:#e2e8f0; color:#64748b; }
+.chip.err{ background:#fef2f2; border-color:#fca5a5; color:#991b1b; }
+.chip-x{ cursor:pointer; font-size:14px; line-height:1; color:#93c5fd; border:none; background:none; padding:0; font-family:inherit; }
+.chip-x:hover{ color:#1d4ed8; }
+.or-div{ display:flex; align-items:center; gap:10px; font-size:11px; color:#94a3b8; font-weight:500; margin:8px 0; text-transform:uppercase; letter-spacing:.06em; }
+.or-div::before,.or-div::after{ content:''; flex:1; height:1px; background:#e2e8f0; }
+
+/* URL fetch */
+.url-row{ display:flex; gap:8px; margin-bottom:8px; }
+.url-row input{ flex:1; border:1.5px solid #e2e8f0; border-radius:8px; padding:9px 13px; font-size:13px; font-family:inherit; background:#fafbfc; color:var(--ink); }
+.url-row input:focus{ outline:none; border-color:var(--blue); background:#fff; }
+.btn-fetch{ background:#0ea5e9; color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; font-family:inherit; flex-shrink:0; }
+.btn-fetch:hover{ background:#0284c7; }
+.btn-fetch:disabled{ opacity:.5; cursor:not-allowed; }
+.fetch-status{ font-size:12px; margin-bottom:6px; min-height:16px; }
+.fetch-status.ok{ color:#10b981; }
+.fetch-status.err{ color:#ef4444; }
+.fetch-status.loading{ color:#64748b; }
+
+/* tip */
+.tip{ background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; font-size:12px; color:#1d4ed8; margin-top:18px; line-height:1.6; }
+.tip strong{ display:block; margin-bottom:3px; }
+
+/* buttons */
+.btn-row{ display:flex; gap:10px; margin-top:22px; justify-content:flex-end; }
+.btn{ padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; border:none; transition:all .15s; font-family:inherit; }
+.btn-pri{ background:var(--blue); color:#fff; }
+.btn-pri:hover{ background:#2563eb; }
+.btn-sec{ background:#f1f5f9; color:#374151; }
+.btn-sec:hover{ background:#e2e8f0; }
+.btn-go{ background:linear-gradient(135deg,#6366f1,#3b82f6); color:#fff; padding:12px 28px; font-size:15px; }
+.btn-go:hover{ opacity:.9; transform:translateY(-1px); }
+
+.step-panel{ display:none; }
+.step-panel.active{ display:block; }
+
+/* loading */
+.loading-panel{ display:none; text-align:center; padding:56px 20px; }
+.loading-panel.active{ display:block; }
+.spinner{ width:48px; height:48px; border:4px solid #e2e8f0; border-top-color:var(--blue); border-radius:50%; animation:spin .9s linear infinite; margin:0 auto 20px; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.loading-panel h3{ font-size:18px; margin-bottom:8px; }
+.loading-panel p{ color:#64748b; font-size:14px; }
+
+/* results */
+#results{ display:none; }
+.verdict{ border-radius:12px; padding:22px 26px; margin-bottom:18px; display:flex; align-items:flex-start; gap:16px; }
+.verdict.proceed{ background:linear-gradient(135deg,#d1fae5,#a7f3d0); border:1.5px solid #6ee7b7; }
+.verdict.caution{ background:linear-gradient(135deg,#fef3c7,#fde68a); border:1.5px solid #fcd34d; }
+.verdict.avoid{ background:linear-gradient(135deg,#fee2e2,#fecaca); border:1.5px solid #fca5a5; }
+.v-icon{ font-size:38px; flex-shrink:0; }
+.v-text h2{ font-size:19px; font-weight:800; margin-bottom:5px; }
+.v-text p{ font-size:14px; line-height:1.6; color:#374151; }
+
+.scores-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+@media(max-width:580px){ .scores-grid{ grid-template-columns:1fr; } }
+.sc{ background:#fff; border-radius:10px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,.07); }
+.sc-label{ font-size:11px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+.sc-row{ display:flex; align-items:center; gap:10px; }
+.sc-num{ font-size:22px; font-weight:800; min-width:42px; }
+.bar-bg{ flex:1; height:8px; background:#e2e8f0; border-radius:4px; overflow:hidden; }
+.bar-fill{ height:100%; border-radius:4px; transition:width .8s ease; }
+.sc-note{ font-size:12px; color:#64748b; margin-top:5px; }
+
+.res-card{ background:#fff; border-radius:12px; padding:20px 22px; box-shadow:0 1px 3px rgba(0,0,0,.07); margin-bottom:14px; }
+.res-card h3{ font-size:15px; font-weight:700; margin-bottom:12px; }
+.res-card p{ font-size:13.5px; line-height:1.75; color:#374151; }
+.res-card ul{ padding-left:0; list-style:none; }
+
+.gf li{ padding:9px 13px; border-left:3px solid #10b981; background:#f0fdf4; border-radius:0 6px 6px 0; font-size:13.5px; margin-bottom:7px; }
+.rf li{ padding:9px 13px; border-left:3px solid #ef4444; background:#fef2f2; border-radius:0 6px 6px 0; font-size:13.5px; margin-bottom:7px; }
+.ql li{ padding:9px 13px; border-left:3px solid #fbbf24; background:#fffbeb; border-radius:0 6px 6px 0; font-size:13.5px; margin-bottom:7px; }
+
+/* AI upgrade banner */
+.ai-upgrade-banner{ background:linear-gradient(135deg,#f5f3ff,#ede9fe); border:1.5px solid #c4b5fd; border-radius:12px; padding:20px 22px; margin-bottom:14px; }
+.ai-upgrade-inner{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.ai-upgrade-icon{ font-size:28px; flex-shrink:0; }
+.ai-upgrade-text{ flex:1; min-width:200px; }
+.ai-upgrade-text strong{ display:block; font-size:14px; color:#4c1d95; margin-bottom:4px; }
+.ai-upgrade-text span{ font-size:13px; color:#6d28d9; line-height:1.5; }
+.btn-ai-upgrade{ background:#7c3aed; color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; font-family:inherit; flex-shrink:0; }
+.btn-ai-upgrade:hover{ background:#6d28d9; }
+
+/* Modal */
+.modal-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:999; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.open{ display:flex; }
+.modal-box{ background:#fff; border-radius:16px; padding:32px 28px; max-width:460px; width:100%; position:relative; box-shadow:0 20px 60px rgba(0,0,0,.2); }
+.modal-close{ position:absolute; top:14px; right:16px; background:none; border:none; font-size:22px; cursor:pointer; color:#94a3b8; line-height:1; }
+.modal-close:hover{ color:#374151; }
+.modal-box h3{ font-size:17px; font-weight:700; margin-bottom:8px; }
+.modal-box p{ font-size:13px; color:#64748b; line-height:1.6; margin-bottom:14px; }
+.modal-box input{ width:100%; border:1.5px solid #e2e8f0; border-radius:8px; padding:11px 14px; font-size:13px; font-family:inherit; background:#fafbfc; margin-bottom:8px; }
+.modal-box input:focus{ outline:none; border-color:#7c3aed; background:#fff; }
+.modal-note{ font-size:12px!important; color:#94a3b8!important; margin-bottom:14px!important; }
+.modal-note a{ color:#7c3aed; }
+.modal-error{ font-size:13px; color:#ef4444; min-height:18px; margin-bottom:10px; }
+.modal-btns{ display:flex; gap:10px; justify-content:flex-end; }
+.btn-ai-go{ background:#7c3aed; color:#fff; border:none; border-radius:8px; padding:10px 20px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+.btn-ai-go:hover{ background:#6d28d9; }
+.btn-ai-go:disabled{ opacity:.5; cursor:not-allowed; }
+
+/* AI results header */
+.ai-results-header{ background:linear-gradient(135deg,#4c1d95,#6d28d9); color:#fff; border-radius:12px; padding:16px 20px; margin-bottom:16px; font-size:13px; display:none; }
+.ai-results-header strong{ display:block; font-size:15px; margin-bottom:3px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">← Sonal Agarwal</a>
+  <span class="topbar-sep">/</span>
+  <span class="topbar-cur">Business Acquisition Assessor</span>
+</div>
+
+<div class="header">
+  <div class="header-icon">🏢</div>
+  <div>
+    <h1>Business Acquisition Assessor</h1>
+    <p>For first-time buyers — understand if a business is worth buying before you commit</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Progress -->
+  <div class="progress-bar">
+    <div class="ps active" id="ps-0" onclick="goToStep(0)"><span class="sn">1</span>Business</div>
+    <div class="ps" id="ps-1" onclick="goToStep(1)"><span class="sn">2</span>Financials</div>
+    <div class="ps" id="ps-2" onclick="goToStep(2)"><span class="sn">3</span>Staff & Ops</div>
+    <div class="ps" id="ps-3" onclick="goToStep(3)"><span class="sn">4</span>About You</div>
+    <div class="ps" id="ps-4" onclick="goToStep(4)"><span class="sn">5</span>Assessment</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-panel active" id="step-0">
+    <div class="card">
+      <h2>Tell me about the business</h2>
+      <p class="sub">Upload files or paste text — or both. The more you share, the better the assessment.</p>
+      <div class="intro-box">💡 <strong>Don't worry if you don't have everything.</strong> Even a basic description helps. We'll flag what's missing.</div>
+
+      <div class="fg">
+        <label class="lbl">Business listing / agent description</label>
+        <div class="chips" id="chips-listing"></div>
+        <input type="file" id="file-listing" accept=".pdf,.docx,.doc,.txt" multiple onchange="handleFiles(this.files,'listing','listing')">
+        <div class="upload-zone" id="zone-listing" onclick="document.getElementById('file-listing').click()" ondragover="dOver(event,'zone-listing')" ondragleave="dLeave('zone-listing')" ondrop="dDrop(event,'listing')">
+          <div class="uz-icon">📄</div>
+          <div class="uz-text"><strong>Click to upload</strong> or drag & drop</div>
+          <div class="uz-sub">PDF, Word (.docx), or Text (.txt)</div>
+        </div>
+        <div class="or-div">or paste a link to the listing</div>
+        <div class="url-row">
+          <input type="text" id="url-listing" placeholder="https://www.businessforsale.com.au/listing/...">
+          <button class="btn-fetch" onclick="fetchURL('url-listing','listing','status-listing')">Fetch →</button>
+        </div>
+        <div class="fetch-status" id="status-listing"></div>
+        <div class="or-div">or paste text below</div>
+        <textarea id="listing" placeholder="e.g. 'For sale: cafe in Melbourne CBD. Asking $350,000. Turnover $800k/year. Owner retiring after 15 years...'"></textarea>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Job advertisements <span class="lbl-hint">(job ads reveal a lot about staffing & the business)</span></label>
+        <div class="chips" id="chips-jobads"></div>
+        <input type="file" id="file-jobads" accept=".pdf,.docx,.doc,.txt" multiple onchange="handleFiles(this.files,'jobads','jobAds')">
+        <div class="upload-zone" id="zone-jobads" onclick="document.getElementById('file-jobads').click()" ondragover="dOver(event,'zone-jobads')" ondragleave="dLeave('zone-jobads')" ondrop="dDrop(event,'jobads')">
+          <div class="uz-icon">💼</div>
+          <div class="uz-text"><strong>Click to upload</strong> job ads</div>
+          <div class="uz-sub">PDF, Word (.docx), or Text (.txt)</div>
+        </div>
+        <div class="or-div">or paste a link (Seek, LinkedIn, Indeed…)</div>
+        <div class="url-row">
+          <input type="text" id="url-jobads-1" placeholder="https://www.seek.com.au/job/12345678">
+          <button class="btn-fetch" onclick="fetchURL('url-jobads-1','jobAds','status-jobads-1')">Fetch →</button>
+        </div>
+        <div class="fetch-status" id="status-jobads-1"></div>
+        <div class="url-row">
+          <input type="text" id="url-jobads-2" placeholder="Paste another job ad link (optional)">
+          <button class="btn-fetch" onclick="fetchURL('url-jobads-2','jobAds','status-jobads-2')">Fetch →</button>
+        </div>
+        <div class="fetch-status" id="status-jobads-2"></div>
+        <div class="or-div">or paste text below</div>
+        <textarea id="jobAds" placeholder="Paste any job ad text here..."></textarea>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Other documents <span class="lbl-hint">(emails, brochures, inspection notes)</span></label>
+        <div class="chips" id="chips-other"></div>
+        <input type="file" id="file-other" accept=".pdf,.docx,.doc,.txt" multiple onchange="handleFiles(this.files,'other','otherDocs')">
+        <div class="upload-zone" id="zone-other" onclick="document.getElementById('file-other').click()" ondragover="dOver(event,'zone-other')" ondragleave="dLeave('zone-other')" ondrop="dDrop(event,'other')">
+          <div class="uz-icon">📎</div>
+          <div class="uz-text"><strong>Click to upload</strong> any other files</div>
+          <div class="uz-sub">PDF, Word (.docx), or Text (.txt)</div>
+        </div>
+        <div class="or-div">or paste text</div>
+        <textarea id="otherDocs" placeholder="Anything else — emails, notes, inspection feedback..."></textarea>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Type of business</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="bizType" value="cafe"> ☕ Cafe / Restaurant</label>
+          <label class="rb"><input type="radio" name="bizType" value="retail"> 🛍️ Retail Shop</label>
+          <label class="rb"><input type="radio" name="bizType" value="service"> 🔧 Service Business</label>
+          <label class="rb"><input type="radio" name="bizType" value="online"> 💻 Online Business</label>
+          <label class="rb"><input type="radio" name="bizType" value="trade"> 🏗️ Trade / Construction</label>
+          <label class="rb"><input type="radio" name="bizType" value="healthcare"> 🏥 Healthcare</label>
+          <label class="rb"><input type="radio" name="bizType" value="other"> 📦 Other</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Asking price (if known)</label>
+        <input type="text" id="askingPrice" placeholder="e.g. $350,000 or 'not listed'">
+      </div>
+
+      <div class="btn-row"><button class="btn btn-pri" onclick="nextStep()">Next: Financials →</button></div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-panel" id="step-1">
+    <div class="card">
+      <h2>💰 Financial information</h2>
+      <p class="sub">Upload financial documents or fill in what you know. Skip anything you don't have yet.</p>
+      <div class="intro-box">💡 <strong>Turnover vs profit?</strong> Turnover = total sales coming IN. Profit = what's left after all bills. Both matter a lot.</div>
+
+      <div class="fg">
+        <label class="lbl">Financial documents <span class="lbl-hint">(P&L, tax returns, balance sheet)</span></label>
+        <div class="chips" id="chips-fin"></div>
+        <input type="file" id="file-fin" accept=".pdf,.docx,.doc,.txt" multiple onchange="handleFiles(this.files,'fin','financialDetails')">
+        <div class="upload-zone" id="zone-fin" onclick="document.getElementById('file-fin').click()" ondragover="dOver(event,'zone-fin')" ondragleave="dLeave('zone-fin')" ondrop="dDrop(event,'fin')">
+          <div class="uz-icon">📊</div>
+          <div class="uz-text"><strong>Upload financial statements</strong></div>
+          <div class="uz-sub">P&L, tax returns, balance sheets — PDF, Word, or Text</div>
+        </div>
+        <div class="or-div">or paste / type numbers below</div>
+        <textarea id="financialDetails" placeholder="e.g. 'FY2023 revenue $820k, FY2024 $750k, net profit $95k. Rent $4,500/month. 3 staff...'"></textarea>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Annual turnover / revenue</label>
+        <input type="text" id="turnover" placeholder="e.g. $800,000 or 'not provided'">
+      </div>
+      <div class="fg">
+        <label class="lbl">Annual profit / net income</label>
+        <input type="text" id="profit" placeholder="e.g. $120,000 or 'not provided'">
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Have you seen financial statements?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="financials" value="yes_verified"> ✅ Yes, accountant verified</label>
+          <label class="rb"><input type="radio" name="financials" value="yes_not_verified"> 📄 Yes, not verified</label>
+          <label class="rb"><input type="radio" name="financials" value="no"> ❌ Not yet</label>
+          <label class="rb"><input type="radio" name="financials" value="refused"> 🚫 Owner refused to share</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">How long has the business been operating?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="yearsOp" value="under1"> Under 1 year</label>
+          <label class="rb"><input type="radio" name="yearsOp" value="1to3"> 1–3 years</label>
+          <label class="rb"><input type="radio" name="yearsOp" value="3to10"> 3–10 years</label>
+          <label class="rb"><input type="radio" name="yearsOp" value="over10"> Over 10 years</label>
+          <label class="rb"><input type="radio" name="yearsOp" value="unknown"> Don't know</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Why is the owner selling?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="whySelling" value="retiring"> 👴 Retiring</label>
+          <label class="rb"><input type="radio" name="whySelling" value="moving"> 🌏 Relocating</label>
+          <label class="rb"><input type="radio" name="whySelling" value="other_biz"> 💼 Other opportunity</label>
+          <label class="rb"><input type="radio" name="whySelling" value="health"> 🏥 Health reasons</label>
+          <label class="rb"><input type="radio" name="whySelling" value="not_profitable"> 📉 Business not performing</label>
+          <label class="rb"><input type="radio" name="whySelling" value="not_stated"> ❓ Not stated</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Known debts or liabilities?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="debts" value="none"> None mentioned</label>
+          <label class="rb"><input type="radio" name="debts" value="some"> Some mentioned</label>
+          <label class="rb"><input type="radio" name="debts" value="significant"> Significant debts</label>
+          <label class="rb"><input type="radio" name="debts" value="unknown"> Don't know</label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-sec" onclick="prevStep()">← Back</button>
+        <button class="btn btn-pri" onclick="nextStep()">Next: Staff & Ops →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-panel" id="step-2">
+    <div class="card">
+      <h2>👥 Staff & how it runs</h2>
+      <p class="sub">Understanding day-to-day operations is crucial before buying.</p>
+      <div class="intro-box">💡 <strong>Key person risk:</strong> If the business only works because of one person (usually the owner), that's a major red flag. You need it to run without them.</div>
+
+      <div class="fg">
+        <label class="lbl">How many staff does it have?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="staffCount" value="just_owner"> Just the owner</label>
+          <label class="rb"><input type="radio" name="staffCount" value="1to3"> 1–3 staff</label>
+          <label class="rb"><input type="radio" name="staffCount" value="4to10"> 4–10 staff</label>
+          <label class="rb"><input type="radio" name="staffCount" value="over10"> More than 10</label>
+          <label class="rb"><input type="radio" name="staffCount" value="unknown"> Don't know</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Can it run without the current owner?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="ownerDep" value="yes"> ✅ Yes, managers in place</label>
+          <label class="rb"><input type="radio" name="ownerDep" value="partially"> ⚠️ Partially</label>
+          <label class="rb"><input type="radio" name="ownerDep" value="no"> ❌ No — owner is central</label>
+          <label class="rb"><input type="radio" name="ownerDep" value="unknown"> Don't know</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Lease situation?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="lease" value="long"> ✅ Long lease (3+ years)</label>
+          <label class="rb"><input type="radio" name="lease" value="short"> ⚠️ Short lease (under 2 years)</label>
+          <label class="rb"><input type="radio" name="lease" value="owns"> 🏠 Owner owns property</label>
+          <label class="rb"><input type="radio" name="lease" value="none_needed"> 💻 No premises needed</label>
+          <label class="rb"><input type="radio" name="lease" value="unknown"> Don't know</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Customer base?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="customers" value="repeat"> 🔄 Loyal repeat customers</label>
+          <label class="rb"><input type="radio" name="customers" value="mixed"> 🔀 Mix of regulars and new</label>
+          <label class="rb"><input type="radio" name="customers" value="few_big"> ⚠️ A few big clients</label>
+          <label class="rb"><input type="radio" name="customers" value="foot"> 🚶 Walk-in / foot traffic</label>
+          <label class="rb"><input type="radio" name="customers" value="unknown"> Don't know</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Major contracts or supplier agreements?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="contracts" value="transfer"> ✅ Yes, transfer to new owner</label>
+          <label class="rb"><input type="radio" name="contracts" value="unclear"> ⚠️ Yes, transfer unclear</label>
+          <label class="rb"><input type="radio" name="contracts" value="no"> No major contracts</label>
+          <label class="rb"><input type="radio" name="contracts" value="unknown"> Don't know</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Other staff or operations details?</label>
+        <textarea id="opsDetails" placeholder="e.g. 'Long-term manager staying. Equipment aging. Seasonal — busiest Oct–March...'"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-sec" onclick="prevStep()">← Back</button>
+        <button class="btn btn-pri" onclick="nextStep()">Next: About You →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-panel" id="step-3">
+    <div class="card">
+      <h2>🙋 About you</h2>
+      <p class="sub">Helps tailor the assessment to your situation as the buyer.</p>
+
+      <div class="fg">
+        <label class="lbl">Have you run a business before?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="experience" value="never"> First time</label>
+          <label class="rb"><input type="radio" name="experience" value="some"> Some experience</label>
+          <label class="rb"><input type="radio" name="experience" value="yes"> Yes, experienced</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Industry experience in this type of business?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="industryExp" value="yes"> ✅ Yes, I know it</label>
+          <label class="rb"><input type="radio" name="industryExp" value="some"> Somewhat familiar</label>
+          <label class="rb"><input type="radio" name="industryExp" value="no"> ❌ Brand new to me</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">How are you funding this?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="funding" value="cash"> 💵 Cash / savings</label>
+          <label class="rb"><input type="radio" name="funding" value="loan"> 🏦 Bank loan</label>
+          <label class="rb"><input type="radio" name="funding" value="mixed"> 🔀 Mix of both</label>
+          <label class="rb"><input type="radio" name="funding" value="unsure"> Not sure yet</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Have you consulted a professional yet?</label>
+        <div class="rg">
+          <label class="rb"><input type="radio" name="professionals" value="accountant"> 🧮 Accountant</label>
+          <label class="rb"><input type="radio" name="professionals" value="lawyer"> ⚖️ Lawyer</label>
+          <label class="rb"><input type="radio" name="professionals" value="both"> Both</label>
+          <label class="rb"><input type="radio" name="professionals" value="none"> Not yet</label>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">What's your biggest concern?</label>
+        <textarea id="concerns" placeholder="What's worrying you or what are you most unsure about?"></textarea>
+      </div>
+
+      <div class="tip">
+        <strong>⚠️ Important reminder</strong>
+        This tool gives you a structured starting point — not legal or financial advice. Always get an accountant to verify the financials and a lawyer to review contracts before signing anything.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-sec" onclick="prevStep()">← Back</button>
+        <button class="btn btn-go" onclick="runAssessment()">🔍 Generate My Assessment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: Results -->
+  <div class="step-panel" id="step-4">
+    <div class="loading-panel active" id="loadingPanel">
+      <div class="spinner"></div>
+      <h3>Analysing the business...</h3>
+      <p>Scoring all the key areas and preparing your report...</p>
+    </div>
+
+    <div id="results">
+      <div id="verdictBanner" class="verdict">
+        <div class="v-icon" id="vIcon"></div>
+        <div class="v-text"><h2 id="vTitle"></h2><p id="vSummary"></p></div>
+      </div>
+
+      <div class="scores-grid" id="scoresGrid"></div>
+
+      <div class="res-card" id="greenCard" style="display:none">
+        <h3>✅ Positive signs</h3>
+        <ul class="gf" id="greenList"></ul>
+      </div>
+      <div class="res-card" id="redCard" style="display:none">
+        <h3>🚩 Red flags & concerns</h3>
+        <ul class="rf" id="redList"></ul>
+      </div>
+      <div class="res-card" id="qCard" style="display:none">
+        <h3>❓ Questions to ask the agent / seller</h3>
+        <p style="font-size:13px;color:#64748b;margin-bottom:10px;">Get answers to all of these before making any decision:</p>
+        <ul class="ql" id="qList"></ul>
+      </div>
+      <div class="res-card" id="nsCard" style="display:none">
+        <h3>📋 Your next steps</h3>
+        <ul id="nsList"></ul>
+      </div>
+      <div class="res-card" id="analysisCard" style="display:none">
+        <h3>📝 Full assessment</h3>
+        <p id="analysisText" style="white-space:pre-line;"></p>
+      </div>
+
+      <!-- AI Upgrade banner -->
+      <div class="ai-upgrade-banner" id="aiUpgradeBanner">
+        <div class="ai-upgrade-inner">
+          <div class="ai-upgrade-icon">✨</div>
+          <div class="ai-upgrade-text">
+            <strong>Want a deeper AI-powered assessment?</strong>
+            <span>Claude will actually read your uploaded documents and listing text to find things the logic engine can't — like subtle wording, inconsistencies in numbers, or staffing red flags buried in job ads.</span>
+          </div>
+          <button class="btn-ai-upgrade" onclick="openAIModal()">Run AI Assessment →</button>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn btn-sec" onclick="restart()">↩ Start new assessment</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- AI Key Modal -->
+<div class="modal-overlay" id="aiModal" onclick="if(event.target===this) closeAIModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAIModal()">×</button>
+    <div style="font-size:28px;margin-bottom:12px">✨</div>
+    <h3>Enter your Anthropic API key</h3>
+    <p>Your key is used once for this assessment and kept only in your browser's memory. It disappears when you close the tab — never saved anywhere.</p>
+    <input type="password" id="aiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" onkeydown="if(event.key==='Enter') runAIAssessment()">
+    <p class="modal-note">Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> · Pay only for what you use</p>
+    <div class="modal-error" id="modalError"></div>
+    <div class="modal-btns">
+      <button class="btn btn-sec" onclick="closeAIModal()">Cancel</button>
+      <button class="btn-ai-go" onclick="runAIAssessment()" id="aiGoBtn">Run AI Assessment →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PDF.js worker ──────────────────────────────────
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ── Navigation ─────────────────────────────────────
+let step = 0;
+function nextStep(){ if(step<4) goToStep(step+1); }
+function prevStep(){ if(step>0) goToStep(step-1); }
+function goToStep(n){
+  document.getElementById('step-'+step).classList.remove('active');
+  document.getElementById('ps-'+step).classList.remove('active');
+  if(n>step) document.getElementById('ps-'+step).classList.add('done');
+  step=n;
+  document.getElementById('step-'+step).classList.add('active');
+  for(let i=0;i<=4;i++){
+    const p=document.getElementById('ps-'+i);
+    p.classList.remove('active','done');
+    if(i<step) p.classList.add('done');
+    else if(i===step) p.classList.add('active');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Radio buttons ──────────────────────────────────
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.rb');
+  if(!b) return;
+  b.parentElement.querySelectorAll('.rb').forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel');
+  const i=b.querySelector('input');
+  if(i) i.checked=true;
+});
+
+function rv(name){
+  const el=document.querySelector('input[name="'+name+'"]:checked');
+  return el?el.value:'';
+}
+
+// ── File upload ────────────────────────────────────
+function dOver(e,id){ e.preventDefault(); document.getElementById(id).classList.add('drag-over'); }
+function dLeave(id){ document.getElementById(id).classList.remove('drag-over'); }
+const taMap={ listing:'listing', jobads:'jobAds', other:'otherDocs', fin:'financialDetails' };
+
+function dDrop(e,sec){ e.preventDefault(); dLeave('zone-'+sec); handleFiles(e.dataTransfer.files,sec,taMap[sec]); }
+
+async function handleFiles(files,sec,taId){
+  for(const f of files){
+    const id='c'+Math.random().toString(36).slice(2);
+    addChip(sec,f.name,id,'loading');
+    try{
+      const txt=await extractText(f);
+      updateChip(id,f.name,'ok');
+      const ta=document.getElementById(taId);
+      if(ta){ if(ta.value&&!ta.value.endsWith('\n')) ta.value+='\n'; ta.value+='\n['+f.name+']\n'+txt.slice(0,2000)+(txt.length>2000?'\n...(continues)':''); }
+    }catch(err){ updateChip(id,f.name,'err'); }
+  }
+}
+
+async function extractText(f){
+  const ext=f.name.split('.').pop().toLowerCase();
+  if(ext==='txt'||ext==='md') return new Promise((r,j)=>{ const fr=new FileReader(); fr.onload=e=>r(e.target.result); fr.onerror=()=>j(); fr.readAsText(f); });
+  if(ext==='pdf'){
+    if(!window.pdfjsLib) throw new Error();
+    const buf=await f.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    let t='';
+    for(let i=1;i<=pdf.numPages;i++){ const pg=await pdf.getPage(i); const c=await pg.getTextContent(); t+=c.items.map(x=>x.str).join(' ')+'\n'; }
+    return t.trim();
+  }
+  if(ext==='docx'||ext==='doc'){
+    if(!window.mammoth) throw new Error();
+    const buf=await f.arrayBuffer();
+    const r=await mammoth.extractRawText({arrayBuffer:buf});
+    return r.value.trim();
+  }
+  throw new Error('unsupported');
+}
+
+function addChip(sec,name,id,state){
+  const c=document.getElementById('chips-'+sec);
+  const el=document.createElement('span');
+  el.id=id; el.className='chip '+(state==='loading'?'loading':'');
+  el.innerHTML=(state==='loading'?'⏳ ':'')+(name.length>30?name.slice(0,30)+'…':name)
+    +' <button class="chip-x" onclick="document.getElementById(\''+id+'\').remove()">×</button>';
+  c.appendChild(el);
+}
+function updateChip(id,name,state){
+  const el=document.getElementById(id); if(!el) return;
+  el.className='chip'+(state==='err'?' err':'');
+  el.innerHTML=(state==='err'?'❌ ':'📄 ')+(name.length>30?name.slice(0,30)+'…':name)
+    +' <button class="chip-x" onclick="document.getElementById(\''+id+'\').remove()">×</button>';
+}
+
+// ── SCORING ENGINE ─────────────────────────────────
+function runAssessment(){
+  goToStep(4);
+  document.getElementById('loadingPanel').classList.add('active');
+  document.getElementById('results').style.display='none';
+
+  // small delay so spinner shows
+  setTimeout(()=>{ doScore(); }, 400);
+}
+
+function doScore(){
+  const d={
+    bizType:   rv('bizType'),
+    financials:rv('financials'),
+    yearsOp:   rv('yearsOp'),
+    whySelling:rv('whySelling'),
+    debts:     rv('debts'),
+    staffCount:rv('staffCount'),
+    ownerDep:  rv('ownerDep'),
+    lease:     rv('lease'),
+    customers: rv('customers'),
+    contracts: rv('contracts'),
+    experience:rv('experience'),
+    industryExp:rv('industryExp'),
+    funding:   rv('funding'),
+    professionals:rv('professionals'),
+    askingPrice:(document.getElementById('askingPrice')||{}).value||'',
+    turnover:  (document.getElementById('turnover')||{}).value||'',
+    profit:    (document.getElementById('profit')||{}).value||'',
+    listing:   (document.getElementById('listing')||{}).value||'',
+    jobAds:    (document.getElementById('jobAds')||{}).value||'',
+    concerns:  (document.getElementById('concerns')||{}).value||'',
+    finDetails:(document.getElementById('financialDetails')||{}).value||'',
+  };
+
+  // ── Financial score ──
+  let finScore=5;
+  if(d.financials==='yes_verified')   finScore+=3;
+  else if(d.financials==='yes_not_verified') finScore+=1;
+  else if(d.financials==='refused')   finScore-=3;
+  else if(d.financials==='no')        finScore-=1;
+
+  if(d.yearsOp==='over10')  finScore+=2;
+  else if(d.yearsOp==='3to10') finScore+=1;
+  else if(d.yearsOp==='under1') finScore-=2;
+
+  if(d.whySelling==='not_profitable') finScore-=2;
+  if(d.whySelling==='not_stated')     finScore-=1;
+  if(d.whySelling==='retiring'||d.whySelling==='moving'||d.whySelling==='health') finScore+=1;
+
+  if(d.debts==='significant') finScore-=2;
+  else if(d.debts==='some')   finScore-=1;
+  else if(d.debts==='none')   finScore+=1;
+  finScore=clamp(finScore);
+
+  // ── Operations score ──
+  let opsScore=5;
+  if(d.ownerDep==='yes')         opsScore+=3;
+  else if(d.ownerDep==='partially') opsScore+=0;
+  else if(d.ownerDep==='no')     opsScore-=3;
+
+  if(d.staffCount==='4to10'||d.staffCount==='over10') opsScore+=1;
+  else if(d.staffCount==='just_owner') opsScore-=1;
+
+  if(d.lease==='long'||d.lease==='owns') opsScore+=1;
+  else if(d.lease==='short')             opsScore-=2;
+
+  if(d.contracts==='transfer') opsScore+=1;
+  else if(d.contracts==='unclear') opsScore-=1;
+  opsScore=clamp(opsScore);
+
+  // ── Market / customer score ──
+  let mktScore=5;
+  if(d.customers==='repeat')     mktScore+=2;
+  else if(d.customers==='mixed') mktScore+=1;
+  else if(d.customers==='few_big') mktScore-=2;
+
+  if(d.yearsOp==='over10')  mktScore+=1;
+  else if(d.yearsOp==='under1') mktScore-=1;
+
+  if(d.bizType==='online') mktScore+=1;
+  mktScore=clamp(mktScore);
+
+  // ── Risk score (higher = lower risk) ──
+  let riskScore=5;
+  if(d.financials==='yes_verified')  riskScore+=2;
+  else if(d.financials==='refused')  riskScore-=3;
+  if(d.ownerDep==='no')              riskScore-=2;
+  if(d.lease==='short')              riskScore-=2;
+  if(d.debts==='significant')        riskScore-=2;
+  if(d.whySelling==='not_profitable') riskScore-=2;
+  if(d.professionals==='both')        riskScore+=2;
+  else if(d.professionals==='none')   riskScore-=1;
+  if(d.experience==='yes')            riskScore+=1;
+  if(d.industryExp==='yes')           riskScore+=1;
+  riskScore=clamp(riskScore);
+
+  const overall=(finScore+opsScore+mktScore+riskScore)/4;
+  const verdict= overall>=6.5?'PROCEED': overall>=4?'CAUTION':'AVOID';
+
+  // ── Green flags ──
+  const green=[];
+  if(d.financials==='yes_verified')   green.push('Financial statements have been verified by an accountant — this is a very positive sign.');
+  if(d.yearsOp==='over10')            green.push('The business has been running for over 10 years, showing long-term viability.');
+  else if(d.yearsOp==='3to10')        green.push('The business has an established track record of 3–10 years.');
+  if(d.ownerDep==='yes')              green.push('The business has managers in place and can run without the current owner.');
+  if(d.customers==='repeat')          green.push('A loyal repeat customer base means revenue is more predictable and stable.');
+  if(d.lease==='long')                green.push('A long lease gives you security over where the business operates.');
+  if(d.lease==='owns')                green.push('The owner owns the property — this significantly reduces location risk.');
+  if(d.contracts==='transfer')        green.push('Key contracts and supplier agreements transfer to the new owner.');
+  if(d.whySelling==='retiring'||d.whySelling==='health'||d.whySelling==='moving')
+    green.push('The reason for sale ('+(d.whySelling==='retiring'?'retirement':d.whySelling)+') is a common and legitimate reason — not a red flag.');
+  if(d.professionals==='both')        green.push('You\'ve already consulted both an accountant and a lawyer — excellent preparation.');
+  if(d.industryExp==='yes')           green.push('Your industry experience is a major advantage as a buyer in this sector.');
+  if(d.debts==='none')                green.push('No known debts or liabilities mentioned — a positive financial indicator.');
+
+  // ── Red flags ──
+  const red=[];
+  if(d.financials==='refused')        red.push('The owner refused to share financial statements. This is a serious red flag — do not proceed without seeing them.');
+  if(d.financials==='no')             red.push('You haven\'t seen any financial statements yet. This is essential before making any decision.');
+  if(d.ownerDep==='no')              red.push('The business depends entirely on the current owner. Revenue may drop significantly after they leave.');
+  if(d.whySelling==='not_profitable') red.push('The business is reportedly not performing well. Find out exactly why and whether it\'s fixable.');
+  if(d.whySelling==='not_stated')     red.push('The reason for selling has not been disclosed. Always ask — an unclear reason can hide serious problems.');
+  if(d.lease==='short')               red.push('The lease has less than 2 years remaining. You could be forced to relocate or renegotiate at a disadvantage.');
+  if(d.lease==='unknown')             red.push('Lease situation is unclear. You need to know the terms before committing.');
+  if(d.debts==='significant')         red.push('Significant debts or liabilities have been mentioned. These may transfer to you — get a lawyer to clarify.');
+  if(d.customers==='few_big')         red.push('A few large clients generate most of the revenue. Losing even one could be devastating.');
+  if(d.contracts==='unclear')         red.push('It\'s unclear whether key contracts transfer to the new owner. Get this confirmed in writing.');
+  if(d.staffCount==='just_owner')     red.push('There are no staff — you would be doing everything yourself from day one.');
+  if(d.funding==='loan'&&overall<5)   red.push('Taking on a loan to buy a business that scores poorly increases your personal financial risk considerably.');
+  if(d.professionals==='none')        red.push('You haven\'t consulted a professional yet. An accountant and lawyer are essential before signing anything.');
+
+  // ── Questions to ask ──
+  const questions=[];
+  if(d.financials!=='yes_verified') questions.push('Can you provide the last 3 years of tax returns, P&L statements, and balance sheets — verified by an accountant?');
+  if(d.whySelling==='not_stated'||d.whySelling==='')
+    questions.push('What is the specific reason you\'re selling the business at this time?');
+  questions.push('What does a typical week look like for the owner — what would I need to take over?');
+  if(d.customers==='few_big'||d.customers==='unknown')
+    questions.push('Who are your top 5 customers and how much of revenue do they each represent?');
+  if(d.ownerDep==='no'||d.ownerDep==='partially')
+    questions.push('Are there staff or systems in place that will continue to run the business after the handover?');
+  if(d.lease==='unknown'||d.lease==='short')
+    questions.push('What are the full lease terms? How much time is left, and can it be renewed?');
+  if(d.debts!=='none')
+    questions.push('What are all the debts, liabilities, and outstanding obligations that come with this business?');
+  questions.push('Will you provide a training/handover period after the sale, and for how long?');
+  if(d.contracts==='unclear'||d.contracts==='unknown')
+    questions.push('Do your supplier agreements and client contracts transfer to the new owner automatically?');
+  questions.push('Has the business ever been listed for sale before? If so, why didn\'t it sell?');
+  if(d.staffCount!=='just_owner')
+    questions.push('Are the current staff planning to stay on after the ownership change?');
+
+  // ── Next steps ──
+  const ns=[];
+  if(d.professionals==='none') ns.push('Book a meeting with an accountant to review the business financials before going any further.');
+  if(d.financials!=='yes_verified') ns.push('Request 3 years of financial statements (tax returns + P&L) and have them independently verified.');
+  ns.push('Visit the business in person at different times of day to observe how it actually runs.');
+  if(d.lease!=='owns') ns.push('Review the lease agreement with a lawyer — understand what you\'re taking on.');
+  if(d.professionals!=='lawyer'&&d.professionals!=='both') ns.push('Engage a lawyer to review all contracts, leases, and the sale agreement before signing.');
+  ns.push('Talk to the staff (if the seller allows it) to understand their plans after the sale.');
+  if(d.customers==='few_big') ns.push('Try to speak with key clients to gauge their loyalty to the business vs. the current owner.');
+  ns.push('Get a formal business valuation from an independent expert to verify the asking price is fair.');
+
+  // ── Full analysis ──
+  const bizLabel= d.bizType? d.bizType.charAt(0).toUpperCase()+d.bizType.slice(1)+' business' : 'This business';
+  const priceStr = d.askingPrice? 'with an asking price of '+d.askingPrice : '';
+  const yrStr    = {under1:'been operating for less than a year',  '1to3':'been operating for 1–3 years', '3to10':'a track record of 3–10 years', over10:'been running for over 10 years', unknown:'an unknown operating history'}[d.yearsOp]||'';
+
+  const para1= `${bizLabel} ${priceStr} is being assessed here based on the information you've provided. ${yrStr?'The business has '+yrStr+', ':''}`
+    +(d.whySelling&&d.whySelling!=='not_stated'?'and the stated reason for sale is '+d.whySelling+'. ':'and the reason for selling has not been clearly stated. ')
+    +'Based on all the answers you provided, the overall picture is: '
+    +(verdict==='PROCEED'?'positive with some areas to clarify before committing.':verdict==='CAUTION'?'mixed — there are promising elements but also some significant concerns that need to be addressed.':'concerning — there are too many unresolved risks to recommend proceeding at this stage.');
+
+  const para2= 'From a financial perspective, '
+    +(d.financials==='yes_verified'?'the financials have been verified by an accountant, which is the best possible situation. '
+    :d.financials==='refused'?'the owner has refused to share financial documents — this is a major red flag and a dealbreaker until resolved. '
+    :d.financials==='no'?'you haven\'t seen the financials yet. This must be your first priority before going any further. '
+    :'you\'ve seen some financial information but it hasn\'t been independently verified yet. ')
+    +(d.debts==='significant'?'There are also significant debts mentioned, which could transfer to you as the new owner — a lawyer must clarify this.'
+    :d.debts==='some'?'Some debts have been mentioned — make sure you understand exactly what liabilities are included in the sale.'
+    :'No significant debts have been flagged, which is positive.');
+
+  const para3= 'Operationally, '
+    +(d.ownerDep==='yes'?'the business appears to have systems and staff in place to run without the current owner, which is a strong positive. '
+    :d.ownerDep==='no'?'the business relies heavily on the current owner, which is a serious concern. When they leave, you could lose customers, suppliers, or know-how that keeps the business running. '
+    :'the business has some dependency on the current owner, which means a careful handover plan is essential. ')
+    +(d.customers==='repeat'?'The loyal repeat customer base is another strength — it suggests the revenue is not entirely dependent on finding new customers every day. '
+    :d.customers==='few_big'?'The fact that revenue comes from a few large clients is risky — losing even one of them could significantly impact income. '
+    :'The customer base situation needs more clarity before you can confidently assess revenue stability. ');
+
+  const para4= 'As a buyer, '
+    +(d.experience==='never'?'you\'re coming in without prior business ownership experience — which is fine, but means you need to lean heavily on professional advice (accountant + lawyer) and ensure there is a solid handover plan. '
+    :d.experience==='yes'?'your business experience is a real asset here. '
+    :'some business experience will help, though every business is different — still get professional advice. ')
+    +(d.industryExp==='no'?'Buying into an industry you don\'t know adds another layer of risk — consider whether you\'ll need to hire someone with relevant experience. '
+    :d.industryExp==='yes'?'Your industry knowledge means you\'re well positioned to evaluate this opportunity and spot any issues. '
+    :'');
+
+  const para5= 'Bottom line: '
+    +(verdict==='PROCEED'?'This business shows enough positive signs to be worth exploring further — but "proceed" does not mean "sign now." Use the questions above to fill in the gaps, get a lawyer and accountant involved, and don\'t commit until you\'re fully satisfied with the answers.'
+    :verdict==='CAUTION'?'There are real concerns here that need to be resolved before you can make a safe decision. Don\'t walk away yet, but don\'t rush either. Work through the questions above and get professional advice before proceeding.'
+    :'Based on what you\'ve shared, there are too many unresolved red flags to recommend moving forward at this stage. That doesn\'t mean this business can never be viable — it means you need significantly more information, and it\'s possible that once you get it, the picture could change. However, do not sign anything or pay any deposit until those concerns are fully resolved.');
+
+  const analysis=[para1,para2,para3,para4,para5].join('\n\n');
+
+  // ── Verdict copy ──
+  const vTitles={PROCEED:'Looks Promising — Proceed Carefully', CAUTION:'Proceed With Caution', AVOID:'Not Recommended Yet — Too Many Red Flags'};
+  const vSummaries={
+    PROCEED:`This business scores well across the key areas. There are positive signs worth pursuing — but take your time, ask all the questions below, and don't skip the professional checks.`,
+    CAUTION:`There are some promising aspects, but also significant concerns that must be addressed before you can make a safe decision. Don't rush.`,
+    AVOID:`Too many important questions are unanswered or the answers raise serious concerns. Get these resolved before considering any offer.`
+  };
+
+  renderResults({
+    verdict, vTitle:vTitles[verdict], vSummary:vSummaries[verdict],
+    scores:{
+      financial:{score:finScore, note:finNote(d)},
+      operations:{score:opsScore, note:opsNote(d)},
+      market:{score:mktScore, note:mktNote(d)},
+      risk:{score:riskScore, note:riskNote(d)}
+    },
+    greenFlags:green, redFlags:red, questions, nextSteps:ns, analysis
+  });
+}
+
+function clamp(v){ return Math.min(10,Math.max(1,Math.round(v))); }
+
+function finNote(d){
+  if(d.financials==='refused') return 'Owner refused to share financials — serious red flag.';
+  if(d.financials==='yes_verified') return 'Verified financials are a strong positive sign.';
+  if(d.financials==='no') return 'No financials seen yet — essential next step.';
+  if(d.debts==='significant') return 'Significant debts mentioned — needs legal clarification.';
+  if(d.yearsOp==='over10') return 'Long track record suggests financial stability.';
+  return 'Some financial information available but needs verification.';
+}
+function opsNote(d){
+  if(d.ownerDep==='no') return 'Business depends heavily on the current owner — high risk.';
+  if(d.ownerDep==='yes') return 'Business can run independently — strong operational foundation.';
+  if(d.lease==='short') return 'Short lease is a significant operational risk.';
+  return 'Operations appear manageable, with some areas to clarify.';
+}
+function mktNote(d){
+  if(d.customers==='repeat') return 'Loyal repeat customers provide stable, predictable revenue.';
+  if(d.customers==='few_big') return 'Concentration risk — losing one big client would hurt.';
+  if(d.yearsOp==='over10') return 'Long-standing market presence is a positive indicator.';
+  return 'Customer base needs further investigation.';
+}
+function riskNote(d){
+  if(d.professionals==='both') return 'Good — accountant and lawyer engaged reduces risk significantly.';
+  if(d.professionals==='none') return 'No professional advice yet — this increases your risk considerably.';
+  if(d.financials==='refused') return 'Hidden financials represent the biggest unresolved risk.';
+  if(d.experience==='yes'&&d.industryExp==='yes') return 'Your experience significantly lowers execution risk.';
+  return 'Moderate risk — address the red flags before proceeding.';
+}
+
+// ── Render ─────────────────────────────────────────
+function renderResults(r){
+  document.getElementById('loadingPanel').classList.remove('active');
+  document.getElementById('results').style.display='block';
+
+  const icons={PROCEED:'✅',CAUTION:'⚠️',AVOID:'🛑'};
+  const cls={PROCEED:'proceed',CAUTION:'caution',AVOID:'avoid'};
+  const b=document.getElementById('verdictBanner');
+  b.className='verdict '+cls[r.verdict];
+  document.getElementById('vIcon').textContent=icons[r.verdict];
+  document.getElementById('vTitle').textContent=r.vTitle;
+  document.getElementById('vSummary').textContent=r.vSummary;
+
+  const slabels={financial:'💰 Financial Health',operations:'⚙️ Operations',market:'📈 Market & Customers',risk:'🛡️ Risk Level'};
+  const g=document.getElementById('scoresGrid'); g.innerHTML='';
+  Object.entries(r.scores).forEach(([k,v])=>{
+    const c=v.score>=7?'#10b981':v.score>=4?'#f59e0b':'#ef4444';
+    g.innerHTML+=`<div class="sc"><div class="sc-label">${slabels[k]}</div>
+      <div class="sc-row"><div class="sc-num" style="color:${c}">${v.score}/10</div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${v.score*10}%;background:${c}"></div></div></div>
+      <div class="sc-note">${v.note}</div></div>`;
+  });
+
+  const showList=(cardId,listId,items,cls='')=>{
+    if(!items||!items.length) return;
+    document.getElementById(cardId).style.display='block';
+    document.getElementById(listId).innerHTML=items.map(i=>`<li>${i}</li>`).join('');
+  };
+  showList('greenCard','greenList',r.greenFlags);
+  showList('redCard','redList',r.redFlags);
+  showList('qCard','qList',r.questions);
+  if(r.nextSteps&&r.nextSteps.length){
+    document.getElementById('nsCard').style.display='block';
+    document.getElementById('nsList').innerHTML=r.nextSteps
+      .map(s=>`<li style="font-size:13.5px;line-height:1.7;margin-bottom:5px">${s}</li>`).join('');
+  }
+  if(r.analysis){
+    document.getElementById('analysisCard').style.display='block';
+    document.getElementById('analysisText').textContent=r.analysis;
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── AI Modal ───────────────────────────────────────
+let sessionKey = '';
+
+function openAIModal(){
+  document.getElementById('aiModal').classList.add('open');
+  document.getElementById('aiKeyInput').value = sessionKey ? '•'.repeat(20) : '';
+  document.getElementById('modalError').textContent = '';
+  setTimeout(()=> sessionKey || document.getElementById('aiKeyInput').focus(), 100);
+}
+function closeAIModal(){
+  document.getElementById('aiModal').classList.remove('open');
+}
+
+async function runAIAssessment(){
+  const inp = document.getElementById('aiKeyInput').value.trim();
+  if(inp && !inp.startsWith('•')) {
+    if(!inp.startsWith('sk-ant-') && !inp.startsWith('sk-')) {
+      document.getElementById('modalError').textContent = 'Please enter a valid Anthropic API key (starts with sk-ant-).';
+      return;
+    }
+    sessionKey = inp;
+  }
+  if(!sessionKey){
+    document.getElementById('modalError').textContent = 'Please enter your API key.';
+    return;
+  }
+  closeAIModal();
+
+  // Show loading state over current results
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('loadingPanel').classList.add('active');
+  document.getElementById('loadingPanel').querySelector('p').textContent = 'Claude is reading your documents and generating a deeper assessment...';
+
+  const d = {
+    bizType:    rv('bizType'),
+    financials: rv('financials'),
+    yearsOp:    rv('yearsOp'),
+    whySelling: rv('whySelling'),
+    debts:      rv('debts'),
+    staffCount: rv('staffCount'),
+    ownerDep:   rv('ownerDep'),
+    lease:      rv('lease'),
+    customers:  rv('customers'),
+    contracts:  rv('contracts'),
+    experience: rv('experience'),
+    industryExp:rv('industryExp'),
+    funding:    rv('funding'),
+    professionals:rv('professionals'),
+    askingPrice:(document.getElementById('askingPrice')||{}).value||'',
+    turnover:   (document.getElementById('turnover')||{}).value||'',
+    profit:     (document.getElementById('profit')||{}).value||'',
+    listing:    (document.getElementById('listing')||{}).value||'',
+    jobAds:     (document.getElementById('jobAds')||{}).value||'',
+    finDetails: (document.getElementById('financialDetails')||{}).value||'',
+    otherDocs:  (document.getElementById('otherDocs')||{}).value||'',
+    concerns:   (document.getElementById('concerns')||{}).value||'',
+  };
+
+  const prompt = `You are a business acquisition advisor helping a first-time buyer assess a business for sale. Read everything carefully and provide a thorough, plain-English assessment.
+
+BUSINESS TYPE: ${d.bizType || 'not specified'}
+ASKING PRICE: ${d.askingPrice || 'not stated'}
+
+BUSINESS LISTING / DESCRIPTION:
+${d.listing || 'Not provided'}
+
+JOB ADVERTISEMENTS:
+${d.jobAds || 'Not provided'}
+
+FINANCIAL DOCUMENTS & DETAILS:
+${d.finDetails || 'Not provided'}
+Turnover stated: ${d.turnover}
+Profit stated: ${d.profit}
+
+OTHER DOCUMENTS:
+${d.otherDocs || 'Not provided'}
+
+ANSWERS:
+Financial statements seen: ${d.financials}
+Years operating: ${d.yearsOp}
+Why selling: ${d.whySelling}
+Known debts: ${d.debts}
+Staff count: ${d.staffCount}
+Business runs without owner: ${d.ownerDep}
+Lease: ${d.lease}
+Customers: ${d.customers}
+Contracts: ${d.contracts}
+Buyer experience: ${d.experience}
+Industry experience: ${d.industryExp}
+Funding: ${d.funding}
+Professionals consulted: ${d.professionals}
+Buyer concern: ${d.concerns || 'None stated'}
+
+Respond ONLY with a valid JSON object (no markdown, no code fences):
+{
+  "verdict": "PROCEED" or "CAUTION" or "AVOID",
+  "verdictSummary": "2-3 sentence plain English summary",
+  "scores": {
+    "financial": { "score": 1-10, "comment": "one sentence" },
+    "operations": { "score": 1-10, "comment": "one sentence" },
+    "market": { "score": 1-10, "comment": "one sentence" },
+    "risk": { "score": 1-10, "comment": "one sentence" }
+  },
+  "greenFlags": ["positive 1", "positive 2"],
+  "redFlags": ["red flag 1", "red flag 2"],
+  "questionsToAsk": ["question 1", "question 2"],
+  "nextSteps": ["step 1", "step 2"],
+  "fullAnalysis": "4-5 paragraphs, plain English, no jargon, written for a first-time buyer."
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': sessionKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 2500,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      if(res.status === 401){ sessionKey = ''; }
+      throw new Error(err.error?.message || 'API error ' + res.status);
+    }
+
+    const json = await res.json();
+    const text = json.content[0].text;
+    let parsed;
+    try { parsed = JSON.parse(text); }
+    catch(e){
+      const m = text.match(/\{[\s\S]*\}/);
+      if(m) parsed = JSON.parse(m[0]);
+      else throw new Error('Could not parse Claude response');
+    }
+
+    // Render AI results (reuse renderer, mark as AI)
+    const icons  = {PROCEED:'✅',CAUTION:'⚠️',AVOID:'🛑'};
+    const titles = {PROCEED:'Looks Promising — Proceed Carefully',CAUTION:'Proceed With Caution',AVOID:'Not Recommended — Too Many Red Flags'};
+    const cls    = {PROCEED:'proceed',CAUTION:'caution',AVOID:'avoid'};
+
+    document.getElementById('loadingPanel').classList.remove('active');
+    document.getElementById('results').style.display = 'block';
+
+    // Hide upgrade banner now that AI is done
+    document.getElementById('aiUpgradeBanner').style.display = 'none';
+
+    // Show AI badge
+    let badge = document.getElementById('aiResultsBadge');
+    if(!badge){
+      badge = document.createElement('div');
+      badge.id = 'aiResultsBadge';
+      badge.className = 'ai-results-header';
+      badge.innerHTML = '<strong>✨ AI-Powered Assessment</strong>Claude has read your documents and generated this detailed assessment.';
+      document.getElementById('results').prepend(badge);
+    }
+    badge.style.display = 'block';
+
+    const b = document.getElementById('verdictBanner');
+    b.className = 'verdict ' + (cls[parsed.verdict]||'caution');
+    document.getElementById('vIcon').textContent  = icons[parsed.verdict]||'⚠️';
+    document.getElementById('vTitle').textContent = titles[parsed.verdict]||parsed.verdict;
+    document.getElementById('vSummary').textContent = parsed.verdictSummary||'';
+
+    const slabels={financial:'💰 Financial Health',operations:'⚙️ Operations',market:'📈 Market & Customers',risk:'🛡️ Risk Level'};
+    const g=document.getElementById('scoresGrid'); g.innerHTML='';
+    if(parsed.scores){
+      Object.entries(parsed.scores).forEach(([k,v])=>{
+        const c=v.score>=7?'#10b981':v.score>=4?'#f59e0b':'#ef4444';
+        g.innerHTML+=`<div class="sc"><div class="sc-label">${slabels[k]||k}</div>
+          <div class="sc-row"><div class="sc-num" style="color:${c}">${v.score}/10</div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${v.score*10}%;background:${c}"></div></div></div>
+          <div class="sc-note">${v.comment||''}</div></div>`;
+      });
+    }
+
+    const showL=(cId,lId,items)=>{ if(items&&items.length){ document.getElementById(cId).style.display='block'; document.getElementById(lId).innerHTML=items.map(i=>`<li>${i}</li>`).join(''); } };
+    showL('greenCard','greenList',parsed.greenFlags);
+    showL('redCard','redList',parsed.redFlags);
+    showL('qCard','qList',parsed.questionsToAsk);
+    if(parsed.nextSteps&&parsed.nextSteps.length){
+      document.getElementById('nsCard').style.display='block';
+      document.getElementById('nsList').innerHTML=parsed.nextSteps.map(s=>`<li style="font-size:13.5px;line-height:1.7;margin-bottom:5px">${s}</li>`).join('');
+    }
+    if(parsed.fullAnalysis){
+      document.getElementById('analysisCard').style.display='block';
+      document.getElementById('analysisText').textContent=parsed.fullAnalysis;
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+
+  } catch(err){
+    document.getElementById('loadingPanel').classList.remove('active');
+    document.getElementById('results').style.display='block';
+    // Re-show the upgrade banner with an error
+    const banner = document.getElementById('aiUpgradeBanner');
+    banner.style.display='block';
+    banner.querySelector('.ai-upgrade-text span').textContent =
+      '⚠️ ' + err.message + ' — click to try again.';
+  }
+}
+
+// ── URL Fetch ──────────────────────────────────────
+async function fetchURL(inputId, taId, statusId) {
+  const url = document.getElementById(inputId).value.trim();
+  const status = document.getElementById(statusId);
+  if (!url) { status.textContent = 'Please enter a URL first.'; status.className = 'fetch-status err'; return; }
+  if (!url.startsWith('http')) { status.textContent = 'Please enter a full URL starting with https://'; status.className = 'fetch-status err'; return; }
+
+  const btn = document.querySelector(`button[onclick*="${inputId}"]`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Fetching…'; }
+  status.textContent = 'Fetching page content…'; status.className = 'fetch-status loading';
+
+  try {
+    // Use allorigins CORS proxy to fetch the page
+    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(url);
+    const res = await fetch(proxyUrl);
+    if (!res.ok) throw new Error('Could not fetch page');
+    const data = await res.json();
+    const html = data.contents || '';
+
+    // Strip HTML tags and clean up whitespace
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    // Remove script and style elements
+    tmp.querySelectorAll('script, style, nav, footer, header').forEach(el => el.remove());
+    let text = tmp.innerText || tmp.textContent || '';
+    text = text.replace(/\s{3,}/g, '\n\n').trim();
+
+    if (!text || text.length < 50) throw new Error('No readable content found on this page');
+
+    // Append to textarea
+    const ta = document.getElementById(taId);
+    if (ta) {
+      if (ta.value && !ta.value.endsWith('\n')) ta.value += '\n';
+      ta.value += '\n[From: ' + url + ']\n' + text.slice(0, 3000) + (text.length > 3000 ? '\n…(truncated)' : '');
+    }
+    status.textContent = '✅ Content fetched successfully — check the text box below.';
+    status.className = 'fetch-status ok';
+  } catch(err) {
+    status.textContent = '⚠️ Could not fetch this page (' + err.message + '). Try copying and pasting the text manually.';
+    status.className = 'fetch-status err';
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Fetch →'; }
+  }
+}
+
+function restart(){
+  document.querySelectorAll('textarea,input[type=text]').forEach(e=>e.value='');
+  document.querySelectorAll('.rb').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+  document.querySelectorAll('.chips').forEach(c=>c.innerHTML='');
+  ['greenCard','redCard','qCard','nsCard','analysisCard'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+  document.getElementById('results').style.display='none';
+  document.getElementById('scoresGrid').innerHTML='';
+  goToStep(0);
+}
+</script>
+</body>
+</html>
